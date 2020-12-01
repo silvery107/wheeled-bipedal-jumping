@@ -1,0 +1,346 @@
+#VRML_SIM R2020a utf8
+WorldInfo {
+  basicTimeStep 16
+}
+Viewpoint {
+  orientation 0.7628746469464959 -0.6385437872863752 -0.101410575209056 5.872688102339659
+  position 0.7476112601453145 0.7791561944200844 1.5488212697338457
+  follow "MiniNezha"
+  followSmoothness 0
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Floor {
+}
+Robot {
+  translation 0 0.49 0
+  rotation 0 0 1 0
+  children [
+    GPS {
+    }
+    Gyro {
+    }
+    InertialUnit {
+      name "inertial_unit"
+    }
+    DEF LEFT_LEG Transform {
+      translation 0 0 -0.125
+      children [
+        HingeJoint {
+          jointParameters HingeJointParameters {
+            axis 0 0 1
+          }
+          device [
+            PositionSensor {
+              name "left_hip_encoder"
+            }
+            RotationalMotor {
+              name "left_hip_motor"
+            }
+          ]
+          endPoint DEF hip_link Solid {
+            rotation 0 0 1 0
+            children [
+              DEF Hip_motor_shape Transform {
+                rotation 1 0 0 1.57
+                children [
+                  Shape {
+                    geometry Cylinder {
+                      height 0.02
+                      radius 0.02
+                    }
+                  }
+                ]
+              }
+              DEF Hip_link Transform {
+                translation 0 -0.11 0
+                children [
+                  Shape {
+                    appearance PBRAppearance {
+                      baseColor 0 0 0
+                      roughness 0.5
+                      metalness 0.5
+                    }
+                    geometry Box {
+                      size 0.02 0.22 0.02
+                    }
+                  }
+                ]
+              }
+              Transform {
+                translation 0 -0.22 0
+                children [
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0 0 1
+                    }
+                    device [
+                      PositionSensor {
+                        name "left_keen_encoder"
+                      }
+                      RotationalMotor {
+                        name "left_keen_motor"
+                      }
+                    ]
+                    endPoint Solid {
+                      rotation 0 0 1 0
+                      children [
+                        DEF Keen_motor_shape Transform {
+                          translation 0 -0.22 0
+                          rotation 1 0 0 1.57
+                          children [
+                            Shape {
+                              geometry Cylinder {
+                                height 0.02
+                                radius 0.02
+                              }
+                            }
+                          ]
+                        }
+                        DEF Keen_link Transform {
+                          translation 0 -0.11 0
+                          children [
+                            Shape {
+                              appearance PBRAppearance {
+                                baseColor 0 0 0
+                                roughness 0.5
+                                metalness 0.5
+                              }
+                              geometry Box {
+                                size 0.02 0.22 0.02
+                              }
+                            }
+                          ]
+                        }
+                        Transform {
+                          translation 0 -0.11 0
+                          children [
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                axis 0 0 1
+                                anchor 0 -0.11 0
+                              }
+                              device [
+                                DEF left_wheel_encoder PositionSensor {
+                                  name "left_wheel_encoder"
+                                }
+                                RotationalMotor {
+                                  name "left_wheel_motor"
+                                }
+                              ]
+                              endPoint Solid {
+                                translation 0 -0.11 0
+                                rotation 1 0 4.908493704946862e-18 1.57
+                                children [
+                                  DEF wheel Shape {
+                                    appearance PBRAppearance {
+                                      baseColor 1 0 0
+                                      roughness 0.5
+                                      metalness 0.5
+                                    }
+                                    geometry DEF wheel Cylinder {
+                                      height 0.01
+                                      radius 0.05
+                                    }
+                                  }
+                                ]
+                                boundingObject USE wheel
+                                physics Physics {
+                                  density -1
+                                  mass 1
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                      boundingObject USE Keen_motor_shape
+                      physics Physics {
+                        density -1
+                        mass 0.1
+                        centerOfMass [
+                          0 -0.22 0
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+              Shape {
+              }
+            ]
+            boundingObject USE Hip_motor_shape
+            physics Physics {
+              density -1
+              mass 0.1
+              centerOfMass [
+                0 0 0
+              ]
+            }
+          }
+        }
+      ]
+    }
+    DEF RIGHT_LEG Transform {
+      translation 0 0 0.125
+      children [
+        HingeJoint {
+          jointParameters HingeJointParameters {
+            axis 0 0 1
+          }
+          device [
+            PositionSensor {
+              name "right_hip_encoder"
+            }
+            RotationalMotor {
+              name "right_hip_motor"
+            }
+          ]
+          endPoint DEF hip_link Solid {
+            translation 2.802160948195855e-06 6.012470754124876e-06 2.599882749587667e-06
+            rotation -0.9239094562772463 0.3826111820102284 -1.4896141182920551e-06 1.167247058604146e-06
+            children [
+              USE Hip_motor_shape
+              DEF Hip_link Transform {
+                translation 0 -0.11 0
+                children [
+                  Shape {
+                    appearance PBRAppearance {
+                      baseColor 0 0 0
+                      roughness 0.5
+                      metalness 0.5
+                    }
+                    geometry Box {
+                      size 0.02 0.22 0.02
+                    }
+                  }
+                ]
+              }
+              Transform {
+                translation 0 -0.22 0
+                children [
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0 0 1
+                    }
+                    device [
+                      PositionSensor {
+                        name "right_keen_encoder"
+                      }
+                      RotationalMotor {
+                        name "right_keen_motor"
+                      }
+                    ]
+                    endPoint Solid {
+                      rotation 0 0 1 0
+                      children [
+                        USE Keen_motor_shape
+                        DEF Keen_link Transform {
+                          translation 0 -0.11 0
+                          children [
+                            Shape {
+                              appearance PBRAppearance {
+                                baseColor 0 0 0
+                                roughness 0.5
+                                metalness 0.5
+                              }
+                              geometry Box {
+                                size 0.02 0.22 0.02
+                              }
+                            }
+                          ]
+                        }
+                        Transform {
+                          translation 0 -0.11 0
+                          children [
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                axis 0 0 1
+                                anchor 0 -0.11 0
+                              }
+                              device [
+                                PositionSensor {
+                                  name "right_wheel_encoder"
+                                }
+                                RotationalMotor {
+                                  name "right_wheel_motor"
+                                }
+                              ]
+                              endPoint Solid {
+                                translation 0 -0.11 0
+                                rotation 1 -7.853589927914983e-17 -7.853589927914983e-17 1.5699999999999996
+                                children [
+                                  DEF wheel Shape {
+                                    appearance PBRAppearance {
+                                      baseColor 1 0 0
+                                      roughness 0.5
+                                      metalness 0.5
+                                    }
+                                    geometry DEF wheel Cylinder {
+                                      height 0.01
+                                      radius 0.05
+                                    }
+                                  }
+                                ]
+                                boundingObject USE wheel
+                                physics Physics {
+                                  density -1
+                                  mass 1
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                      boundingObject USE Keen_motor_shape
+                      physics Physics {
+                        density -1
+                        mass 0.1
+                        centerOfMass [
+                          0 -0.22 0
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+              Shape {
+              }
+            ]
+            name "solid(1)"
+            boundingObject USE Hip_motor_shape
+            physics Physics {
+              density -1
+              mass 0.1
+              centerOfMass [
+                0 0 0
+              ]
+            }
+          }
+        }
+      ]
+    }
+    DEF BODY Shape {
+      appearance PBRAppearance {
+        baseColor 0.3 0.3 0.3
+        roughness 0.5
+        metalness 0.5
+      }
+      geometry Box {
+        size 0.15 0.1 0.23
+      }
+    }
+  ]
+  name "MiniNezha"
+  boundingObject USE BODY
+  physics Physics {
+    density -1
+    mass 5
+    centerOfMass [
+      0 0 0
+    ]
+  }
+  controller "my_controller_python"
+}
