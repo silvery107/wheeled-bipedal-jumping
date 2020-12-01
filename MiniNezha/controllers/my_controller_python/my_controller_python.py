@@ -64,10 +64,9 @@ blance_pid = PID_Controller(Kp, Kd)
 gps_x, _, _ = gps.getValues()
 x_last = gps_x  # 上次的x坐标
 count = 0
-count_last = 0
 blance_u = 0
-i_1 = 1
-i_2 = 1
+factor1 = 1
+factor2 = 1
 while robot.step(TIME_STEP) != -1:
     # get sensors data
     gps_x, gps_y, gps_z = gps.getValues()  # gps_y is the height of robot
@@ -91,19 +90,24 @@ while robot.step(TIME_STEP) != -1:
         print('count:%.3f' % count)
 
         if count > 100:  # 纠正漂移的部分
-            motors[4].setTorque(0.05 * i_1)
-            motors[5].setTorque(0.05 * i_1)
-            i_1 = i_1 + 0.1  # 使力矩递增的参数（因为用恒力拉不回来，但力递增过快也会翻车，目前参数比较合适）
+            motors[4].setTorque(0.05 * factor1)
+            motors[5].setTorque(0.05 * factor1)
+            factor1 = factor1 + 0.1  # 使力矩递增的参数（因为用恒力拉不回来，但力递增过快也会翻车，目前参数感觉比较合适）
             count = count - 2  # 可以理解为纠正频率，减的数越小，纠正频率越高
-            print(i_1)
         elif count < -100:  # 纠正漂移的部分
-            motors[4].setTorque(-0.05 * i_2)
-            motors[5].setTorque(-0.05 * i_2)
-            i_2 = i_2 + 0.1  # 使力矩递增的参数（因为用恒力拉不回来，但力递增过快也会翻车，目前参数比较合适）
+            motors[4].setTorque(-0.05 * factor2)
+            motors[5].setTorque(-0.05 * factor2)
+            factor2 = factor2 + 0.1  # 使力矩递增的参数（因为用恒力拉不回来，但力递增过快也会翻车，目前参数感觉比较合适）
             count = count + 2  # 可以理解为纠正频率，加的数越小，纠正频率越高
-        else:  # PID部分
-            # i_1 = i_1 - 0.1
-            # i_2 = i_2 - 0.1
+            # print('i2%.2f' % i_2)
+        else:
+            # 降参数，减小平衡后的晃动
+            if factor1 >= 4:
+                factor1 = 1
+            if factor2 >= 4:
+                factor2 = 1
+
+            # PID部分
             err = 0 - pitch
             blance_pid.feedback(err)
             blance_u = blance_pid.get_u()
