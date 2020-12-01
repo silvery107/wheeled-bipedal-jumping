@@ -62,12 +62,11 @@ Kp = 10
 Kd = 10
 blance_pid = PID_Controller(Kp, Kd)
 gps_x, _, _ = gps.getValues()
-x_last = gps_x  # 上次的x坐标
+x_last = gps_x
+x_buffer = gps_x
 count = 0
 count_last = 0
 blance_u = 0
-i_1 = 1
-i_2 = 1
 while robot.step(TIME_STEP) != -1:
     # get sensors data
     gps_x, gps_y, gps_z = gps.getValues()  # gps_y is the height of robot
@@ -77,33 +76,30 @@ while robot.step(TIME_STEP) != -1:
     # change robot position
     if gps_y > 0.45:
         for i in range(4):
-            motors[i].setTorque(0.01)  # free fall
+            motors[i].setTorque(0.001)  # free fall
     else:
         for i in range(0, 4):
             motors[i].setPosition(float('inf'))  # restore velocity control
             motors[i].setVelocity(0)  # lock leg motors
-
-        # 对比和上次的位置，用count记录累加位移的量。
         if x_last > gps_x:
             count = count + 1
-        elif x_last < gps_x:
+        else:
             count = count - 1
-        print('count:%.3f' % count)
-
-        if count > 100:  # 纠正漂移的部分
-            motors[4].setTorque(0.05 * i_1)
-            motors[5].setTorque(0.05 * i_1)
-            i_1 = i_1 + 0.1  # 使力矩递增的参数（因为用恒力拉不回来，但力递增过快也会翻车，目前参数比较合适）
-            count = count - 2  # 可以理解为纠正频率，减的数越小，纠正频率越高
-            print(i_1)
-        elif count < -100:  # 纠正漂移的部分
-            motors[4].setTorque(-0.05 * i_2)
-            motors[5].setTorque(-0.05 * i_2)
-            i_2 = i_2 + 0.1  # 使力矩递增的参数（因为用恒力拉不回来，但力递增过快也会翻车，目前参数比较合适）
-            count = count + 2  # 可以理解为纠正频率，加的数越小，纠正频率越高
-        else:  # PID部分
-            # i_1 = i_1 - 0.1
-            # i_2 = i_2 - 0.1
+        print(count)
+        i = 0
+        if count > 50:
+            while i > 100:
+                motors[4].setTorque(-0.1)
+                motors[5].setTorque(0.1)
+                i = i + 1
+            count = count - 5
+        elif count < -50:
+            while i > 100:
+                motors[4].setTorque(-0.05)
+                motors[5].setTorque(-0.05)
+                i = i + 1
+            count = count + 5
+        else:
             err = 0 - pitch
             blance_pid.feedback(err)
             blance_u = blance_pid.get_u()
@@ -112,6 +108,7 @@ while robot.step(TIME_STEP) != -1:
             motors[5].setTorque(-blance_u)
 
     x_last = gps_x
+    # count_last = count
     print("Y: %.3f" % (gps_y))
     print("X: %.3f" % (gps_x))
     print("Z: %.3f" % (gps_z))

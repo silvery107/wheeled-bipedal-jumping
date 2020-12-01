@@ -3,8 +3,8 @@ WorldInfo {
   basicTimeStep 16
 }
 Viewpoint {
-  orientation 0.7628746469464959 -0.6385437872863752 -0.101410575209056 5.872688102339659
-  position 0.7476112601453145 0.7791561944200844 1.5488212697338457
+  orientation 0.9349824679067317 -0.3401357884858429 -0.10057549452103723 5.670582404982246
+  position 0.8621116536357637 1.3514173005428978 1.48439645725376
   follow "MiniNezha"
   followSmoothness 0
 }
@@ -15,7 +15,7 @@ TexturedBackgroundLight {
 Floor {
 }
 Robot {
-  translation 0 0.49 0
+  translation 0.27 0.49 0
   rotation 0 0 1 0
   children [
     GPS {
