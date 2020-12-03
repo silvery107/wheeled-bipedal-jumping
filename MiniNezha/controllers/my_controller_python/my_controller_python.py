@@ -99,8 +99,8 @@ while robot.step(TIME_STEP) != -1:
             blance_pid.feedback(err)
             blance_u = blance_pid.get_u()
 
-            motors[4].setTorque(-blance_u-0)
-            motors[5].setTorque(-blance_u+0)
+            motors[4].setTorque(-blance_u-0.1)
+            motors[5].setTorque(-blance_u+0.1)
         else:
             if count > 100:  # 抗漂移的部分
                 motors[4].setTorque(0.05 * factor1)
