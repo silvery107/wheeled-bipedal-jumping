@@ -8,7 +8,7 @@ from controller import Motor
 from controller import InertialUnit
 from controller import Gyro
 from PID_control import *
-from set_velocity import *
+# from set_velocity import *
 import os
 import sys
 import time
