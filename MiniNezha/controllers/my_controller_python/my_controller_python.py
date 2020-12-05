@@ -72,6 +72,7 @@ while robot.step(TIME_STEP) != -1:
     panel.updateGPS()
     panel.updateIMU()
     panel.updateGyro()
+    panel.upadteDirection()
 
     if panel.gps_y > 0.45:
         for i in range(4):
