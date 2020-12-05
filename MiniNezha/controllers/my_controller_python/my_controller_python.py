@@ -30,7 +30,7 @@ imu = robot.getInertialUnit("inertial_unit")
 imu.enable(TIME_STEP)
 gps = robot.getGPS("gps")
 gps.enable(TIME_STEP)
-panel = panel(gps,gyro,imu,TIME_STEP)
+panel = panel(gps, gyro, imu, TIME_STEP)
 
 encoders = []  # joint motor encoders
 encoder_names = [
@@ -47,7 +47,7 @@ motor_names = [
     "left_hip_motor",
     "right_hip_motor",
     "left_keen_motor",
-    "right_keen_motor", # 3
+    "right_keen_motor",  # 3
     "left_wheel_motor",
     "right_wheel_motor"
 ]
@@ -62,10 +62,8 @@ for i in range(len(motor_names)):
     motors[i].setVelocity(0)
 
 # main loop
-balance = balance_controller(motors,panel)
-
-
-
+balance = balance_controller(motors, panel)
+vel = velocity_controller(motors, panel)
 
 while robot.step(TIME_STEP) != -1:
     # get sensors data
@@ -82,7 +80,7 @@ while robot.step(TIME_STEP) != -1:
             motors[i].setPosition(float('inf'))  # restore velocity control
             motors[i].setVelocity(0)  # lock leg motors
 
-        balance.balance()
+        # balance.balance()
+        vel.setXVel(0)  # 0就是平衡
 
     # change robot position
-
