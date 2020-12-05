@@ -141,7 +141,7 @@ class velocity_controller:
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
         # 速度 参数我乱调的——hbx
         self.translation_Kp = 80
-        self.translation_Kp1 = 0.0001  # 这一项确定数量级
+        self.translation_Kp1 = 0.0002  # 这一项确定数量级
         self.translation_Ki = 4  # 这一项决定响应时间
 
         self.translation_u = 0.0
@@ -178,7 +178,7 @@ class velocity_controller:
         self.blance_pid.feedback(pitch_err)
         self.blance_u = self.blance_pid.get_u()
 
-        translation_err = Ev / 2 / math.pi - self.panel.rightWheelVel  # 姑且用右轮速度做测试
+        translation_err = Ev / 2.0 / math.pi - self.panel.rightWheelVel  # 姑且用右轮速度做测试
         self.translation_pid.feedback(translation_err)
         self.translation_u = self.translation_pid.get_u()
 
@@ -187,8 +187,8 @@ class velocity_controller:
 
         print("b_u: %.5f" % self.blance_u)
         print("t_u: %.5f" % (self.translation_Kp1 * self.translation_u))
-        # print("EV: %.3f" % (Ev))
-        # print("V: %.3f" % (self.panel.gps_v))
+        print("EV: %.3f" % (Ev))
+        print("V: %.3f" % (self.panel.gps_v))
         # print("Displacement: %.2f" % (self.panel.gps_dd))
         print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
         # print("rWheelVelSP: %.3f" % (self.panel.samplingPeriod))

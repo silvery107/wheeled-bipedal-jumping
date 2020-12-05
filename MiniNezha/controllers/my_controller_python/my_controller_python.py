@@ -81,6 +81,6 @@ while robot.step(TIME_STEP) != -1:
             motors[i].setPosition(float('inf'))  # restore velocity control
             motors[i].setVelocity(0)  # lock leg motors
 
-        vel.setXVel(0.0)  # 0就是直立平衡
+        vel.setXVel(10.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
 
     # change robot position
