@@ -139,10 +139,10 @@ class velocity_controller:
         self.count = 0
         self.blance_u = 0.0
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
-        # 速度
+        # 速度 参数我乱调的——hbx
         self.translation_Kp = 80
-        self.translation_Kp1 = 0.0001
-        self.translation_Ki = 4
+        self.translation_Kp1 = 0.0001  # 这一项确定数量级
+        self.translation_Ki = 4  # 这一项决定响应时间
 
         self.translation_u = 0.0
         self.translation_pid = PID_Controller(self.translation_Kp, 0, self.translation_Ki)
@@ -182,7 +182,7 @@ class velocity_controller:
         self.translation_pid.feedback(translation_err)
         self.translation_u = self.translation_pid.get_u()
 
-        self.motors[4].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)
+        self.motors[4].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)  # 这正负号是试出来的，我也不知道为什么——hbx
         self.motors[5].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)
 
         print("b_u: %.5f" % self.blance_u)
