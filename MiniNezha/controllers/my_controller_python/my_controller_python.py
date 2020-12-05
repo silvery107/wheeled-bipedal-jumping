@@ -30,7 +30,6 @@ imu = robot.getInertialUnit("inertial_unit")
 imu.enable(TIME_STEP)
 gps = robot.getGPS("gps")
 gps.enable(TIME_STEP)
-panel = panel(gps, gyro, imu, TIME_STEP)
 
 encoders = []  # joint motor encoders
 encoder_names = [
@@ -62,6 +61,7 @@ for i in range(len(motor_names)):
     motors[i].setVelocity(0)
 
 # main loop
+panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP)
 balance = balance_controller(motors, panel)
 vel = velocity_controller(motors, panel)
 
@@ -70,7 +70,9 @@ while robot.step(TIME_STEP) != -1:
     panel.updateGPS()
     panel.updateIMU()
     panel.updateGyro()
+    panel.updateEncoder()
     panel.upadteDirection()
+    panel.updateWheelVelocity()
 
     if panel.gps_y > 0.45:
         for i in range(4):
