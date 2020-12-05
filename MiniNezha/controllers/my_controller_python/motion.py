@@ -88,7 +88,6 @@ class panel:
         # self.car_dir = (self.x,self.y,self.z)
 
     def updateEncoder(self):
-
         for i in range(len(self.encoder)):
             self.encoder_last[i] = self.encoder[i]
             self.encoder[i] = self.mEncoders[i].getValue()
