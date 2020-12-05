@@ -62,7 +62,6 @@ for i in range(len(motor_names)):
 
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP)
-balance = balance_controller(motors, panel)
 vel = velocity_controller(motors, panel)
 
 while robot.step(TIME_STEP) != -1:
@@ -82,7 +81,6 @@ while robot.step(TIME_STEP) != -1:
             motors[i].setPosition(float('inf'))  # restore velocity control
             motors[i].setVelocity(0)  # lock leg motors
 
-        # balance.balance()
-        vel.setXVel(0)  # 0就是平衡
+        vel.setXVel(0.0)  # 0就是直立平衡
 
     # change robot position
