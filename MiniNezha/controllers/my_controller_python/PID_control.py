@@ -20,6 +20,7 @@ class PID_Controller:
     # 仅实现了离散PID，增量式离散PID或许更好
     def feedback(self,err):
         self.err_D = err - self.err_D
+        print('err_D: ', self.err_D)
         self.err_I += err
         self.u = self.Kp*err+self.Kd*self.err_D+self.Ki*self.err_I
         self.err_D = err

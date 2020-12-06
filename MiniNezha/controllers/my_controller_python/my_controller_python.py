@@ -11,6 +11,7 @@ from controller import InertialUnit
 from controller import Gyro
 from PID_control import *
 from motion import *
+from panel import *
 import os
 import sys
 import time
