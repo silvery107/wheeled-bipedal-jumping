@@ -6,8 +6,6 @@ from PID_control import *
 import math
 
 
-
-
 class velocity_controller:
 
     def __init__(self, motors, panel):
@@ -16,34 +14,40 @@ class velocity_controller:
         self.factor1 = 1
         self.factor2 = 1
         # 角度
-        self.pitch_Kp = 10
+        self.pitch_Kp = 5
         self.pitch_Kd = 10
         self.count = 0
         self.blance_u = 0.0
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
         # 速度 参数我乱调的——hbx
-        self.translation_Kp = 10
-        self.translation_Kp1 = 0.0002  # 这一项确定数量级
-        self.translation_Ki = 4  # 这一项决定响应时间
+        self.translation_Kp = 80
+        self.translation_Kp1 = 0.00015  # 这一项确定数量级
+        self.translation_Ki = 10  # 这一项决定响应时间
 
         self.translation_u = 0.0
         self.translation_pid = PID_Controller(self.translation_Kp, 0, self.translation_Ki)
 
-    def calc_balance_angle(self,h):
-        theta3 = np.arccos((51*(-(1081600*h*((132625*h)/103 - (11*((70331040000*h**2)/1283689 + 4)**(1/2))/2))/12463)**(1/2))/104)
-        theta2 =  np.pi - np.arccos((-(1081600*h*((132625*h)/103 - (11*((70331040000*h**2)/1283689 + 4)**(1/2))/2))/12463)**(1/2)/2)-theta3;
-        theta1 = -np.pi/2 + np.arccos((-(1081600*h*((132625*h)/103 - (11*((70331040000*h**2)/1283689 + 4)**(1/2))/2))/12463)**(1/2)/2)
-        return theta1,theta2,theta3
-    
-    def setHeight(self,h):
-        t1,t2,t3 = self.calc_balance_angle(h)
+    def calc_balance_angle(self, h):
+        theta3 = np.arccos((51 * (-(1081600 * h * (
+                (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
+                                    1 / 2)) / 104)
+        theta2 = np.pi - np.arccos((-(1081600 * h * (
+                (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
+                                           1 / 2) / 2) - theta3;
+        theta1 = -np.pi / 2 + np.arccos((-(1081600 * h * (
+                (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
+                                                1 / 2) / 2)
+        return theta1, theta2, theta3
+
+    def setHeight(self, h):
+        t1, t2, t3 = self.calc_balance_angle(h)
 
         self.motors[0].setPosition(t1)
         self.motors[1].setPosition(t1)
         self.motors[2].setPosition(t2)
         self.motors[3].setPosition(t2)
 
-    def setXVel(self, Ev):
+    def setXVel(self, Ev): #注意：pitch方向和车方向相反，前倾为负
         # 对比和上次的位置，用count记录累加位移的量。
         # if self.panel.gps_v < Ev:  # 之前只能做到世界坐标系下x方向的位置平衡
         #     self.count = self.count + 1
@@ -70,7 +74,8 @@ class velocity_controller:
         #     factor2 = 1
 
         # PID部分
-        pitch_err = 0 - self.panel.pitch
+        angle = -((Ev - self.panel.rightWheelVel/(2*math.pi))**2 * 0.1)/ 180 * math.pi
+        pitch_err = angle - self.panel.pitch
         self.blance_pid.feedback(pitch_err)
         self.blance_u = self.blance_pid.get_u()
 
@@ -83,10 +88,15 @@ class velocity_controller:
 
         #print("b_u: %.5f" % self.blance_u)
         #print("t_u: %.5f" % (self.translation_Kp1 * self.translation_u))
-        print("EV: %.3f" % (Ev))
-        print("V: %.3f" % (self.panel.gps_v))
+        print("pitch_err: %.3f" % pitch_err)
+        print("pitch: %.3f" % self.panel.pitch)
+        # print("EV: %.3f" % (Ev))
+        print("GPS_V: %.3f" % (self.panel.gps_v))
+        print("wheel_V: %.5f" % (self.panel.rightWheelVel/(2*math.pi)))
+        print("与期望速度差： %.5f" % (Ev - self.panel.rightWheelVel/(2*math.pi)))
+        print("预期倾角：%.3f" % ((-((Ev - self.panel.rightWheelVel/(2*math.pi)) * 0.3))))
         # print("Displacement: %.2f" % (self.panel.gps_dd))
-        #print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
+        # print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
         # print("rWheelVelSP: %.3f" % (self.panel.samplingPeriod))
 
 # def setAVel(self,vel):
