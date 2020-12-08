@@ -81,12 +81,12 @@ class velocity_controller:
         self.motors[4].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)  # 这正负号是试出来的，我也不知道为什么——hbx
         self.motors[5].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)
 
-        print("b_u: %.5f" % self.blance_u)
-        print("t_u: %.5f" % (self.translation_Kp1 * self.translation_u))
+        #print("b_u: %.5f" % self.blance_u)
+        #print("t_u: %.5f" % (self.translation_Kp1 * self.translation_u))
         print("EV: %.3f" % (Ev))
         print("V: %.3f" % (self.panel.gps_v))
         # print("Displacement: %.2f" % (self.panel.gps_dd))
-        print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
+        #print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
         # print("rWheelVelSP: %.3f" % (self.panel.samplingPeriod))
 
 # def setAVel(self,vel):

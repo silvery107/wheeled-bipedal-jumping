@@ -31,6 +31,8 @@ imu = robot.getInertialUnit("inertial_unit")
 imu.enable(TIME_STEP)
 gps = robot.getGPS("gps")
 gps.enable(TIME_STEP)
+mKeyboard = robot.getKeyboard()  # 初始化键盘读入类
+mKeyboard.enable(TIME_STEP)  # 以mTimeStep为周期从键盘读取
 
 encoders = []  # joint motor encoders
 encoder_names = [
@@ -64,7 +66,7 @@ for i in range(len(motor_names)):
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP)
 vel = velocity_controller(motors, panel)
 
-h = 0.3
+h = 0.44
 flag = 0.01
 while robot.step(TIME_STEP) != -1:
     # get sensors data
@@ -75,13 +77,32 @@ while robot.step(TIME_STEP) != -1:
     panel.upadteDirection()
     panel.updateWheelVelocity()
 
-    if h<0.2 or h>0.35:
-        flag = -flag
+    vel.setXVel(0.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
+    # vel.setAVel(0.0,0.0)
+    key = 0  # 初始键盘读入默认为0
+    key = mKeyboard.getKey()  # 从键盘读取输入
+    if key == 87:  # 'w' 前进
+        vel.setXVel(10.0)
+    elif key == 83:  # 's' 后退
+        vel.setXVel(-10.0)
+    elif key == 65:  # 'a' 左转
+        # vel.setAVel(r,anlge)
+        print('left')
+    elif key == 68:  # 'd' 右转
+        # vel.setAVel(r,anlge)
+        print('right')
+    elif key == 315:  # '↑' 升高
+        if h < 0.44:
+            h += flag
+        vel.setHeight(h)
+    elif key == 317:  # '↓' 下降
+        if h > 0.2:
+            h += (-flag)
+        vel.setHeight(h)
 
-    h += flag
-
-    vel.setHeight(h)
-
-    vel.setXVel(10.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
+    # if h<0.2 or h>0.35:
+    #     flag = -flag
+    # vel.setHeight(h)
+    # vel.setXVel(10.0)
 
     # change robot position
