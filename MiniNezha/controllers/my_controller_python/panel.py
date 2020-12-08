@@ -95,7 +95,7 @@ class panel:
         self.leftWheelVel = -(self.encoder[4] - self.encoder_last[4]) / self.samplingPeriod
         self.rightWheelVel = -(self.encoder[5] - self.encoder_last[5]) / self.samplingPeriod
 
-    def updateBodyVelocity(self, h): #TODO 验证这个速度转换公式的合理性；实际中是有偏差的
+    def updateBodyVelocity(self, h):  # TODO 验证这个速度转换公式的合理性；实际中是有偏差的
         self.bodyVel = self.rightWheelVel * (0.05) - abs(self.omega_z * h * math.cos(self.pitch))
 
     def updateGPS(self):
