@@ -22,7 +22,7 @@ class velocity_controller:
         self.blance_u = 0.0
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
         # 速度 参数我乱调的——hbx
-        self.translation_Kp = 80
+        self.translation_Kp = 10
         self.translation_Kp1 = 0.0002  # 这一项确定数量级
         self.translation_Ki = 4  # 这一项决定响应时间
 
