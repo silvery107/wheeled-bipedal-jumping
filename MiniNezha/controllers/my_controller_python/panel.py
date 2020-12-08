@@ -62,6 +62,7 @@ class panel:
         self.encoder_last = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         self.mMotors = motors
         self.mEncoders = encoders
+        self.bodyVel = 0.0
 
         self.gyro = gyro
         self.omega_x, self.omega_y, self.omega_z = 0.0, 0.0, 0.0
@@ -93,6 +94,9 @@ class panel:
         self.samplingPeriod = self.mEncoders[4].getSamplingPeriod() / 1000  # 它们的采样率估计都是一样的
         self.leftWheelVel = -(self.encoder[4] - self.encoder_last[4]) / self.samplingPeriod
         self.rightWheelVel = -(self.encoder[5] - self.encoder_last[5]) / self.samplingPeriod
+
+    def updateBodyVelocity(self, h):
+        self.bodyVel = self.rightWheelVel * (0.05) - abs(self.omega_y * h * math.cos(self.pitch))
 
     def updateGPS(self):
         self.x_last, self.y_last, self.z_last = self.gps_x, self.gps_y, self.gps_z

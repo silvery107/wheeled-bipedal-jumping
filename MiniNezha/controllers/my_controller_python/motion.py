@@ -19,6 +19,12 @@ class velocity_controller:
         self.count = 0
         self.blance_u = 0.0
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
+        # #角速度
+        # self.omgy_Kp = 10
+        # self.omgy_Kd = 10
+        # self.omgy_u = 0.0
+        # self.omgy_pid = PID_Controller(self.omgy_Kp, self.omgy_Kd)
+
         # 速度
         self.translation_Kp = 80
         self.translation_Kp1 = 0.00015  # 这一项确定数量级
@@ -74,12 +80,16 @@ class velocity_controller:
         #     factor2 = 1
 
         # PID部分
-        angle = ((Ev - self.panel.rightWheelVel/(2*math.pi))**2 * 0.1)/ 180 * math.pi
+        angle = -Ev*((Ev - self.panel.bodyVel)**2 * 0.1)/ 180 * math.pi
         pitch_err = angle - self.panel.pitch
         self.blance_pid.feedback(pitch_err)
         self.blance_u = self.blance_pid.get_u()
 
-        translation_err = Ev / 2.0 / math.pi - self.panel.rightWheelVel  # 姑且用右轮速度做测试
+        # omgy_err = 0 - self.panel.omega_y
+        # self.omgy_pid.feedback(omgy_err)
+        # self.omgy_u = self.omgy_pid.get_u()
+
+        translation_err = Ev / 0.05 - self.panel.rightWheelVel  # 姑且用右轮速度做测试
         self.translation_pid.feedback(translation_err)
         self.translation_u = self.translation_pid.get_u()
 
@@ -92,8 +102,10 @@ class velocity_controller:
         print("pitch: %.3f" % self.panel.pitch)
         # print("EV: %.3f" % (Ev))
         print("GPS_V: %.3f" % (self.panel.gps_v))
-        print("wheel_V: %.5f" % (self.panel.rightWheelVel/(2*math.pi)))
-        print("与期望速度差： %.5f" % (Ev - self.panel.rightWheelVel/(2*math.pi)))
+        print("wheel_V: %.5f" % (self.panel.rightWheelVel*0.05))
+        print("body_V: %.5f" % self.panel.bodyVel)
+        print("omega_y: %.5f" % self.panel.omega_y)
+        print("与期望速度差： %.5f" % (Ev - self.panel.rightWheelVel*0.05))
         print("预期倾角：%.3f" % angle)
         # print("Displacement: %.2f" % (self.panel.gps_dd))
         # print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
