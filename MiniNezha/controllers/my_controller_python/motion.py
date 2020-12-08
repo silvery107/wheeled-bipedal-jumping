@@ -89,7 +89,7 @@ class velocity_controller:
         # self.omgz_pid.feedback(omgz_err)
         # self.omgz_u = self.omgz_pid.get_u()
 
-        translation_err = Ev / 0.05 - self.panel.bodyVel  # 姑且用右轮速度做测试
+        translation_err = Ev / 0.05 - self.panel.bodyVel  # 使用身体速度
         self.translation_pid.feedback(translation_err)
         self.translation_u = self.translation_pid.get_u()
 
