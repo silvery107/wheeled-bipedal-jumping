@@ -20,27 +20,27 @@ class velocity_controller:
         self.count = 0
         self.blance_u = 0.0
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
-        # 摆动角速度
-        self.omgz_Kp = 10
-        self.omgz_Kd = 0
-        self.omgz_u = 0.0
-        self.omgz_pid = PID_Controller(self.omgz_Kp, self.omgz_Kd, 100)
+        # # 摆动角速度
+        # self.omgz_Kp = 10
+        # self.omgz_Kd = 0
+        # self.omgz_u = 0.0
+        # self.omgz_pid = PID_Controller(self.omgz_Kp, self.omgz_Kd, 100)
 
         # body速度
-        self.translation_Kp = 10  # 2000 匀速
-        self.translation_Kp1 = 0.003  # 这一项确定数量级
-        self.translation_Ki = 10
+        self.translation_Kp = 80  #
+        self.translation_Kp1 = 0.00004  # 这一项确定数量级
+        self.translation_Ki = 1000      #这一项跟上一项相乘数量级需要基本不变
 
         self.translation_u = 0.0
         self.translation_pid = PID_Controller(self.translation_Kp, 0, self.translation_Ki)
 
-        # 轮子速度
-        self.wheel_Kp = 5
-        self.wheel_Kp1 = 0.0015
-        self.wheel_Ki = 10
-
-        self.wheel_u = 0.0
-        self.wheel_pid = PID_Controller(self.wheel_Kp, 0, self.wheel_Ki)
+        # # 轮子速度
+        # self.wheel_Kp = 50
+        # self.wheel_Kp1 = 0.0015
+        # self.wheel_Ki = 10
+        #
+        # self.wheel_u = 0.0
+        # self.wheel_pid = PID_Controller(self.wheel_Kp, 0, self.wheel_Ki)
 
     def calc_balance_angle(self, h):
         theta3 = np.arccos((51 * (-(1081600 * h * (
@@ -91,17 +91,19 @@ class velocity_controller:
 
         # PID部分
         if Ev > 0 and self.panel.bodyVel < Ev:
-            self.Ev = self.panel.bodyVel + 0.2
+            self.Ev = self.panel.bodyVel + 0.1
         elif Ev < 0 and self.panel.bodyVel > Ev:
-            self.Ev = self.panel.bodyVel - 0.2
+            self.Ev = self.panel.bodyVel - 0.1
         if 0 < Ev < self.Ev:
             self.Ev = Ev
         elif 0 > Ev > self.Ev:
             self.Ev = Ev
         if Ev == 0.0:
             self.Ev = 0
+            angle = 0
+        else:
+            angle = 0#Ev/abs(Ev) * 0.05
 
-        angle = -Ev * 0.1
         pitch_err = angle - self.panel.pitch
         self.blance_pid.feedback(pitch_err)
         self.blance_u = self.blance_pid.get_u()
@@ -114,7 +116,7 @@ class velocity_controller:
         self.translation_pid.feedback(translation_err)
         self.translation_u = self.translation_pid.get_u()
 
-        # wheel_err = self.panel.bodyVel - self.panel.rightWheelVel*0.05  #
+        # wheel_err = self.Ev - self.panel.rightWheelVel*0.05  #
         # self.wheel_pid.feedback(wheel_err)
         # self.wheel_u = self.wheel_pid.get_u()
 
