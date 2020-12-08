@@ -14,7 +14,7 @@ class velocity_controller:
         self.factor1 = 1
         self.factor2 = 1
         # 角度
-        self.pitch_Kp = 4
+        self.pitch_Kp = 100 #4 的时候平衡车，kp越大越稳超调量越大
         self.pitch_Kd = 10
         self.count = 0
         self.blance_u = 0.0
