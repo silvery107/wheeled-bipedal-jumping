@@ -105,4 +105,4 @@ while robot.step(TIME_STEP) != -1:
     # vel.setHeight(h)
     # vel.setXVel(10.0)
 
-    # change robot position
+    # change robot position.
