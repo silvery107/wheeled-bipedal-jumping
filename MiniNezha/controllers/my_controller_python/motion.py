@@ -1,6 +1,7 @@
 from controller import Motor
 from controller import InertialUnit
 from controller import Gyro
+import numpy as np
 from PID_control import *
 import math
 
@@ -27,6 +28,20 @@ class velocity_controller:
 
         self.translation_u = 0.0
         self.translation_pid = PID_Controller(self.translation_Kp, 0, self.translation_Ki)
+
+    def calc_balance_angle(self,h):
+        theta3 = np.arccos((51*(-(1081600*h*((132625*h)/103 - (11*((70331040000*h**2)/1283689 + 4)**(1/2))/2))/12463)**(1/2))/104)
+        theta2 =  np.pi - np.arccos((-(1081600*h*((132625*h)/103 - (11*((70331040000*h**2)/1283689 + 4)**(1/2))/2))/12463)**(1/2)/2)-theta3;
+        theta1 = -np.pi/2 + np.arccos((-(1081600*h*((132625*h)/103 - (11*((70331040000*h**2)/1283689 + 4)**(1/2))/2))/12463)**(1/2)/2)
+        return theta1,theta2,theta3
+    
+    def setHeight(self,h):
+        t1,t2,t3 = self.calc_balance_angle(h)
+
+        self.motors[0].setPosition(t1)
+        self.motors[1].setPosition(t1)
+        self.motors[2].setPosition(t2)
+        self.motors[3].setPosition(t2)
 
     def setXVel(self, Ev):
         # 对比和上次的位置，用count记录累加位移的量。

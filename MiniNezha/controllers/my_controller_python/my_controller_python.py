@@ -58,13 +58,14 @@ for i in range(len(motor_names)):
     encoders.append(robot.getPositionSensor(encoder_names[i]))
     encoders[i].enable(TIME_STEP)
     qs.append(encoders[i].getValue())
-    motors[i].setPosition(float('inf'))  # enable velocity control
-    motors[i].setVelocity(0)
+    motors[i].setPosition(0)  # enable velocity control
 
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP)
 vel = velocity_controller(motors, panel)
 
+h = 0.3
+flag = 0.01
 while robot.step(TIME_STEP) != -1:
     # get sensors data
     panel.updateGPS()
@@ -74,14 +75,13 @@ while robot.step(TIME_STEP) != -1:
     panel.upadteDirection()
     panel.updateWheelVelocity()
 
-    if panel.gps_y > 0.45:
-        for i in range(4):
-            motors[i].setTorque(0.01)  # free fall
-    else:
-        for i in range(0, 4):
-            motors[i].setPosition(float('inf'))  # restore velocity control
-            motors[i].setVelocity(0)  # lock leg motors
+    if h<0.2 or h>0.35:
+        flag = -flag
 
-        vel.setXVel(10.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
+    h += flag
+
+    vel.setHeight(h)
+
+    vel.setXVel(10.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
 
     # change robot position
