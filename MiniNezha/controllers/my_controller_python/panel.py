@@ -1,5 +1,6 @@
 import math
 
+
 class Point(object):
     def __init__(self, xParam=0.0, yParam=0.0, zParam=0.0):
         self.x = xParam
@@ -69,6 +70,7 @@ class panel:
         self.roll, self.pitch, self.yaw = 0.0, 0.0, 0.0
 
         self.gps = gps
+        self.gps_v = 0.0
         self.gps_dx, self.gps_dy, self.gps_dz, self.gps_dd = 0.0, 0.0, 0.0, 0.0  # 与前一个timestep的位置差,通过gps获取的数据
         self.gps_x, self.gps_y, self.gps_z, self.gps_d = 0.0, 0.0, 0.0, 0.0  # 从GPS获取的位置
         self.x_last, self.y_last, self.z_last, self.d_last = 0.0, 0.0, 0.0, 0.0  # 前一个timestep的位置
@@ -92,27 +94,27 @@ class panel:
         self.leftWheelVel = -(self.encoder[4] - self.encoder_last[4]) / self.samplingPeriod
         self.rightWheelVel = -(self.encoder[5] - self.encoder_last[5]) / self.samplingPeriod
 
-    def updateGPS(self):  # 虽然不用gps，但可以用这个测速度...
+    def updateGPS(self):
         self.x_last, self.y_last, self.z_last = self.gps_x, self.gps_y, self.gps_z
         self.gps_x, self.gps_y, self.gps_z = self.gps.getValues()
 
         self.gps_dir = Point(self.gps_x, self.gps_y, self.gps_z)
         self.gps_dir_last = Point(self.x_last, self.y_last, self.z_last)
 
-        self.gps_ddir = Point.diff(self.gps_dir, self.gps_dir_last)
+        # self.gps_ddir = Point.diff(self.gps_dir, self.gps_dir_last)
 
         # self.gps_dx = self.gps_x - self.x_last
         # self.gps_dy = self.gps_y - self.y_last
         # self.gps_dz = self.gps_z - self.z_last
 
         # 位置差  旋转180°的时候dir会反复横跳，背身的时候会加速要修改
-        if Point.dotMultiple(self.gps_ddir, self.x) != 0:
-            self.dir = Point.dotMultiple(self.gps_ddir, self.x) / abs(
-                Point.dotMultiple(self.gps_ddir, self.x))  # 计算位移向量和方向向量夹角
-        self.gps_dd = self.dir * Point.distance(self.gps_dir, self.gps_dir_last)  # 最终位移
+        # if Point.dotMultiple(self.gps_ddir, self.x) != 0:
+        #     self.dir = Point.dotMultiple(self.gps_ddir, self.x) / abs(
+        #         Point.dotMultiple(self.gps_ddir, self.x))  # 计算位移向量和方向向量夹角
+        # self.gps_dd = self.dir * Point.distance(self.gps_dir, self.gps_dir_last)  # 最终位移
 
         # 速度 用gps算速度主要是想着不会有打滑的问题
-        self.gps_v = self.gps_dd / self.TIME_STEP
+        self.gps_v = self.gps.getSpeed()  # self.gps_dd / self.TIME_STEP
 
     def updateIMU(self):  # pitch is the angle in rad w.r.t z-axis
         self.roll, self.pitch, self.yaw = self.imu.getRollPitchYaw()
