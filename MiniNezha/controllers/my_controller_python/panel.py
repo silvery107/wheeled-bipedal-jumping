@@ -63,6 +63,8 @@ class panel:
         self.mMotors = motors
         self.mEncoders = encoders
         self.bodyVel = 0.0
+        self.bodyVel_last = 0.0
+        self.bodyAcce = 0.0
 
         self.gyro = gyro
         self.omega_x, self.omega_y, self.omega_z = 0.0, 0.0, 0.0
@@ -96,7 +98,9 @@ class panel:
         self.rightWheelVel = -(self.encoder[5] - self.encoder_last[5]) / self.samplingPeriod
 
     def updateBodyVelocity(self, h):  # TODO 验证这个速度转换公式的合理性；实际中是有偏差的
-        self.bodyVel = self.rightWheelVel * (0.05) - abs(self.omega_z * h * math.cos(self.pitch))
+        self.bodyVel_last = self.bodyVel
+        self.bodyVel = self.rightWheelVel * (0.05) - abs(self.pitch)/self.pitch*self.omega_z * h * math.cos(self.pitch)
+        self.bodyAcce = (self.bodyVel-self.bodyVel_last)/self.TIME_STEP
 
     def updateGPS(self):
         self.x_last, self.y_last, self.z_last = self.gps_x, self.gps_y, self.gps_z

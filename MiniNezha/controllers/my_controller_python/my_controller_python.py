@@ -83,9 +83,9 @@ while robot.step(TIME_STEP) != -1:
     key = 0  # 初始键盘读入默认为0
     key = mKeyboard.getKey()  # 从键盘读取输入
     if key == 87:  # 'w' 前进
-        vel.setXVel(1.0)
+        vel.setXVel(0.5)
     elif key == 83:  # 's' 后退
-        vel.setXVel(-1.0)
+        vel.setXVel(0.5)
     elif key == 65:  # 'a' 左转
         # vel.setAVel(r,anlge)
         print('left')
