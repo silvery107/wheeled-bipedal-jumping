@@ -15,24 +15,24 @@ class velocity_controller:
         self.factor1 = 1
         self.factor2 = 1
         # 角度
-        self.pitch_Kp = 5.0 # 4 的时候平衡车，kp越大越稳
-        self.pitch_Kd = 20.0
+        self.pitch_Kp = 4.0 # 4 的时候平衡车，kp越大越稳
+        self.pitch_Kd = 20.0 #再大就会抖
         self.count = 0
         self.blance_u = 0.0
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
         # 摆动角速度
         self.omgz_Kp = 0.0
-        self.omgz_Kd = 10.0
+        self.omgz_Kd = 20.0 #再大一点就会抖
         self.omgz_u = 0.0
         self.omgz_pid = PID_Controller(self.omgz_Kp, self.omgz_Kd, 0.0)
 
         # body速度
         self.translation_Kp = 1000  #
-        self.translation_Kp1 = 0.0002  # 这一项确定数量级
-        self.translation_Ki = 100      #这一项跟上一项相乘数量级需要基本不变
+        self.translation_Kp1 = 0.0001  # 这一项确定数量级
+        self.translation_Ki = 100      #
 
         self.translation_u = 0.0
-        self.translation_pid = PID_Controller(self.translation_Kp, 10, self.translation_Ki)
+        self.translation_pid = PID_Controller(self.translation_Kp, 40, self.translation_Ki)
 
         # 轮子速度
         self.wheel_Kp = 50
@@ -91,9 +91,9 @@ class velocity_controller:
 
         # PID部分
         if Ev > 0 and self.panel.bodyVel < Ev:
-            self.Ev = self.panel.bodyVel + 0.03
+            self.Ev = self.panel.bodyVel + 0.01
         elif Ev < 0 and self.panel.bodyVel > Ev:
-            self.Ev = self.panel.bodyVel - 0.03
+            self.Ev = self.panel.bodyVel - 0.01
         if 0 < Ev < self.Ev:
             self.Ev = Ev
         elif 0 > Ev > self.Ev:
@@ -102,7 +102,7 @@ class velocity_controller:
             self.Ev = 0
             angle = 0.013
         else:
-            angle = 0 #-(Ev-self.Ev)/abs(Ev) * 0.0001
+            angle = 0.013
 
         pitch_err = angle - self.panel.pitch
         self.blance_pid.feedback(pitch_err)
@@ -137,7 +137,7 @@ class velocity_controller:
         print("body_V: %.5f" % self.panel.bodyVel)
         # print("omega_y: %.5f" % self.panel.omega_y)
         # print("omega_x: %.5f" % self.panel.omega_x)
-        # print("omega_z: %.5f" % self.panel.omega_z)
+        print("omega_z: %.5f" % self.panel.omega_z)
         print("期望速度： %.5f" % self.Ev)
         # print("与期望速度差： %.5f" % (Ev - self.panel.rightWheelVel * 0.05))
         print("预期倾角：%.5f" % angle)
