@@ -15,8 +15,8 @@ class velocity_controller:
         self.factor1 = 1
         self.factor2 = 1
         # 角度
-        self.pitch_Kp = 10.0 # 4 的时候平衡车，kp越大越稳
-        self.pitch_Kd = 10.0
+        self.pitch_Kp = 5.0 # 4 的时候平衡车，kp越大越稳
+        self.pitch_Kd = 20.0
         self.count = 0
         self.blance_u = 0.0
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
@@ -91,18 +91,18 @@ class velocity_controller:
 
         # PID部分
         if Ev > 0 and self.panel.bodyVel < Ev:
-            self.Ev = self.panel.bodyVel + 0.1
+            self.Ev = self.panel.bodyVel + 0.03
         elif Ev < 0 and self.panel.bodyVel > Ev:
-            self.Ev = self.panel.bodyVel - 0.1
+            self.Ev = self.panel.bodyVel - 0.03
         if 0 < Ev < self.Ev:
             self.Ev = Ev
         elif 0 > Ev > self.Ev:
             self.Ev = Ev
         if Ev == 0.0:
             self.Ev = 0
-            angle = 0
+            angle = 0.013
         else:
-            angle = 0#Ev/abs(Ev) * 0.05
+            angle = 0 #-(Ev-self.Ev)/abs(Ev) * 0.0001
 
         pitch_err = angle - self.panel.pitch
         self.blance_pid.feedback(pitch_err)
@@ -140,7 +140,7 @@ class velocity_controller:
         # print("omega_z: %.5f" % self.panel.omega_z)
         print("期望速度： %.5f" % self.Ev)
         # print("与期望速度差： %.5f" % (Ev - self.panel.rightWheelVel * 0.05))
-        print("预期倾角：%.3f" % angle)
+        print("预期倾角：%.5f" % angle)
         # print("Displacement: %.2f" % (self.panel.gps_dd))
         # print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
         # print("rWheelVelSP: %.3f" % (self.panel.samplingPeriod))
