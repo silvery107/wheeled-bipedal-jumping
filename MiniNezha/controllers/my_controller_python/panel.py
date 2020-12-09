@@ -100,7 +100,7 @@ class panel:
     def updateBodyVelocity(self, h):  # TODO 验证这个速度转换公式的合理性；实际中是有偏差的
         self.bodyVel_last = self.bodyVel
         # self.bodyVel = self.rightWheelVel * (0.05) - abs(self.pitch)/self.pitch*self.omega_z * h * math.cos(self.pitch)
-        self.bodyVel = self.rightWheelVel * (0.05) - self.omega_z * (h + 0.05) * math.cos(self.pitch)  # 想来想去h都不该+0.05，但是实际加了就是接近gps值
+        self.bodyVel = (self.rightWheelVel * (0.05)+self.rightWheelVel * (0.05))/2 - self.omega_z * (h + 0.05) * math.cos(self.pitch)  # 想来想去h都不该+0.05，但是实际加了就是接近gps值
         self.bodyAcce = (self.bodyVel - self.bodyVel_last) / self.TIME_STEP
 
     def updateGPS(self):
