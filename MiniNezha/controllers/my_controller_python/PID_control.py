@@ -3,7 +3,7 @@ import numpy as np
 
 class PID_Controller:
     """
-    
+
     """
     err_D = 0
     err_I = 0
@@ -21,10 +21,10 @@ class PID_Controller:
     def feedback(self, err):
         self.err_D = (err - self.err_D)
         self.err_I += err
-        # if self.err_I > 11000:
-        #     self.err_I = 11000
-        # if self.err_I < -11000:
-        #     self.err_I = -11000
+        if self.err_I > 110:
+            self.err_I = 110
+        if self.err_I < -110:
+            self.err_I = -110
         self.u = self.Kp * err + self.Kd * self.err_D + self.Ki * self.err_I
         self.err_D = err
 

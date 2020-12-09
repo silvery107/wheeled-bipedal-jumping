@@ -63,6 +63,8 @@ class panel:
         self.mMotors = motors
         self.mEncoders = encoders
         self.bodyVel = 0.0
+        self.bodyVel_last = 0.0
+        self.bodyAcce = 0.0
 
         self.gyro = gyro
         self.omega_x, self.omega_y, self.omega_z = 0.0, 0.0, 0.0
@@ -79,7 +81,7 @@ class panel:
         self.gps_ddir = Point(self.gps_dx, self.gps_dy, self.gps_dz)
         self.gps_dir_last = Point(self.x_last, self.y_last, self.z_last)
 
-    def upadteDirection(self):  # TODO 这里不太确定，先假设水平了——hbx
+    def updateDirection(self):  # TODO 这里不太确定，先假设水平了——hbx
         self.x = Point.multiple(self.x, Point(math.cos(self.yaw), math.sin(self.yaw), 0))
         self.y = Point.multiple(self.y, Point(-math.sin(self.yaw), math.cos(self.yaw), 0))
         self.z = (0, 0, 1)
@@ -96,7 +98,10 @@ class panel:
         self.rightWheelVel = -(self.encoder[5] - self.encoder_last[5]) / self.samplingPeriod
 
     def updateBodyVelocity(self, h):  # TODO 验证这个速度转换公式的合理性；实际中是有偏差的
-        self.bodyVel = self.rightWheelVel * (0.05) - abs(self.omega_z * h * math.cos(self.pitch))
+        self.bodyVel_last = self.bodyVel
+        # self.bodyVel = self.rightWheelVel * (0.05) - abs(self.pitch)/self.pitch*self.omega_z * h * math.cos(self.pitch)
+        self.bodyVel = self.rightWheelVel * (0.05) - self.omega_z * (h + 0.05) * math.cos(self.pitch)  # 想来想去h都不该+0.05，但是实际加了就是接近gps值
+        self.bodyAcce = (self.bodyVel - self.bodyVel_last) / self.TIME_STEP
 
     def updateGPS(self):
         self.x_last, self.y_last, self.z_last = self.gps_x, self.gps_y, self.gps_z
