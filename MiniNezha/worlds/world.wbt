@@ -38,6 +38,8 @@ Robot {
             }
             RotationalMotor {
               name "left_hip_motor"
+              maxVelocity 23.5
+              maxTorque 35
             }
           ]
           endPoint DEF hip_link Solid {
@@ -82,6 +84,8 @@ Robot {
                       }
                       RotationalMotor {
                         name "left_keen_motor"
+                        maxVelocity 23.5
+                        maxTorque 35
                       }
                     ]
                     endPoint Solid {
@@ -128,6 +132,8 @@ Robot {
                                 }
                                 RotationalMotor {
                                   name "left_wheel_motor"
+                                  maxVelocity 23.5
+                                  maxTorque 35
                                 }
                               ]
                               endPoint Solid {
@@ -196,6 +202,8 @@ Robot {
             }
             RotationalMotor {
               name "right_hip_motor"
+              maxVelocity 23.5
+              maxTorque 35
             }
           ]
           endPoint DEF hip_link Solid {
@@ -231,6 +239,8 @@ Robot {
                       }
                       RotationalMotor {
                         name "right_keen_motor"
+                        maxVelocity 23.5
+                        maxTorque 35
                       }
                     ]
                     endPoint Solid {
@@ -266,6 +276,8 @@ Robot {
                                 }
                                 RotationalMotor {
                                   name "right_wheel_motor"
+                                  maxVelocity 23.5
+                                  maxTorque 35
                                 }
                               ]
                               endPoint Solid {

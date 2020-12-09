@@ -2,7 +2,10 @@ from controller import Motor
 from controller import InertialUnit
 from controller import Gyro
 import numpy as np
+from controller import Robot
 from PID_control import *
+from panel import *
+
 import math
 
 
@@ -15,21 +18,21 @@ class velocity_controller:
         self.factor1 = 1
         self.factor2 = 1
         # 角度
-        self.pitch_Kp = 4.0 # 4 的时候平衡车，kp越大越稳
-        self.pitch_Kd = 20.0 #再大就会抖
+        self.pitch_Kp = 4.0  # 4 的时候平衡车，kp越大越稳
+        self.pitch_Kd = 20.0  # 再大就会抖
         self.count = 0
         self.blance_u = 0.0
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
         # 摆动角速度
         self.omgz_Kp = 0.0
-        self.omgz_Kd = 20.0 #再大一点就会抖
+        self.omgz_Kd = 20.0  # 再大一点就会抖
         self.omgz_u = 0.0
         self.omgz_pid = PID_Controller(self.omgz_Kp, self.omgz_Kd, 0.0)
 
         # body速度
         self.translation_Kp = 1000  #
         self.translation_Kp1 = 0.0001  # 这一项确定数量级
-        self.translation_Ki = 100      #
+        self.translation_Ki = 100  #
 
         self.translation_u = 0.0
         self.translation_pid = PID_Controller(self.translation_Kp, 40, self.translation_Ki)
@@ -61,6 +64,12 @@ class velocity_controller:
         self.motors[1].setPosition(t1)
         self.motors[2].setPosition(t2)
         self.motors[3].setPosition(t2)
+
+    def printAngle(self, h):
+        t1, t2, t3 = self.calc_balance_angle(h)
+        print('Angle1: %3f' % t1)
+        print('Angle2: %3f' % t2)
+        print('Angle3: %3f' % t3)
 
     def setXVel(self, Ev):  # 注意：pitch方向和车方向相反，前倾为负
         # 对比和上次的位置，用count记录累加位移的量。
@@ -134,6 +143,7 @@ class velocity_controller:
         print("omgz_u: %.3f" % (0.01 * self.omgz_u))
         # print("EV: %.3f" % (Ev))
         print("GPS_V: %.3f" % self.panel.gps_v)
+        print("GPS_height: %.3f" % self.panel.gps_y)
         print("wheel_V: %.3f" % (self.panel.rightWheelVel * 0.05))
         print("body_V: %.3f" % self.panel.bodyVel)
         # print("omega_y: %.5f" % self.panel.omega_y)
@@ -145,5 +155,68 @@ class velocity_controller:
         # print("Displacement: %.2f" % (self.panel.gps_dd))
         # print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
         # print("rWheelVelSP: %.3f" % (self.panel.samplingPeriod))
+
+    def jump(self, robot, panel):
+
+        # samplingPeriod = self.motors[2].getTorqueFeedbackSamplingPeriod() / 1000
+        # print('sam:%3f' % samplingPeriod)
+        # self.motors[2].enableTorqueFeedback(samplingPeriod)
+        self.motors[2].enableTorqueFeedback(1)
+        self.motors[2].setPosition(0)
+        self.motors[3].setPosition(0)
+        tor2 = self.motors[2].getTorqueFeedback()
+        velocity2 = self.motors[2].getVelocity()
+        print('torque[2]:%3f' % tor2)
+        print('Velocity[2]:%3f' % velocity2)
+
+        self.motors[0].enableTorqueFeedback(1)
+        self.motors[0].setPosition(0)
+        self.motors[1].setPosition(0)
+        tor0 = self.motors[2].getTorqueFeedback()
+        velocity0 = self.motors[0].getVelocity()
+        print('torque[0]:%3f' % tor0)
+        print('Velocity[0]:%3f' % velocity0)
+
+        last_v = 0
+        count = 0
+        while 1:
+            # 在空中不采取行动
+            TIME_STEP = int(robot.getBasicTimeStep())
+            robot.step(TIME_STEP)
+            panel.updateEncoder()
+            panel.updateWheelVelocity()
+            print('jumping rightWheelVel:', panel.rightWheelVel)
+            # 轮子腾空后空转，转速先增后降，通过转速降来判断腾空后的落地过程（用GPS效果更好但是是流氓办法）
+            if abs(last_v) > abs(panel.rightWheelVel):
+                count += 1
+                if count >= 3:
+                    break  # 若轮子速度连续下降，即进入平衡车状态
+            last_v = panel.rightWheelVel
+
+            # if abs(panel.rightWheelVel) >= 5:
+            #     while 1:
+            #         TIME_STEP = int(robot.getBasicTimeStep())
+            #         robot.step(TIME_STEP)
+            #         panel.updateEncoder()
+            #         panel.updateWheelVelocity()
+            #         print('2::', panel.rightWheelVel)
+            #         if abs(panel.rightWheelVel) < 5:
+            #             break
+            #     break
+
+            # key = mKeyboard.getKey()  # 从键盘读取输入
+            # if key == 66:
+            #     break
+
+        # self.motors[2].set_available_torque()
+        # self.motors[3].set_available_torque()
+        # self.motors[2].setPosition(float('+inf'))
+        # self.motors[3].setPosition(float('+inf'))
+
+        # self.motors[0].setTorque(-1)
+        # self.motors[1].setTorque(-1)
+
+        # self.motors[0].setPosition(float('+inf'))
+        # self.motors[1].setPosition(float('+inf'))
 
 # def setAVel(self,vel):
