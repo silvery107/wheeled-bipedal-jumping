@@ -9,6 +9,7 @@ from controller import Robot
 from controller import Motor
 from controller import InertialUnit
 from controller import Gyro
+from controller import Keyboard
 from PID_control import *
 from motion import *
 from panel import *
@@ -31,7 +32,7 @@ imu = robot.getInertialUnit("inertial_unit")
 imu.enable(TIME_STEP)
 gps = robot.getGPS("gps")
 gps.enable(TIME_STEP)
-mKeyboard = robot.getKeyboard()  # 初始化键盘读入类
+mKeyboard = Keyboard()  # 初始化键盘读入类
 mKeyboard.enable(TIME_STEP)  # 以mTimeStep为周期从键盘读取
 
 encoders = []  # joint motor encoders
@@ -101,11 +102,9 @@ while robot.step(TIME_STEP) != -1:
         if h > 0.2:
             h += (-flag)
         vel.setHeight(h)
-    elif key == 19: #'空格‘ 跳跃
+    elif key == 32: #'空格‘ 跳跃
         print('jump')
 
-    # if h<0.2 or h>0.35:
-    #     flag = -flag
     # vel.setHeight(h)
     # vel.setXVel(10.0)
 

@@ -42,7 +42,10 @@ class velocity_controller:
         self.wheel_u = 0.0
         self.wheel_pid = PID_Controller(self.wheel_Kp, 0, self.wheel_Ki)
 
-    def calc_balance_angle(self, h):
+    def calc_balance_angle_1(self, h):
+        '''
+        legs without mass
+        '''
         theta3 = np.arccos((51 * (-(1081600 * h * (
                 (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
                                     1 / 2)) / 104)
@@ -55,7 +58,7 @@ class velocity_controller:
         return theta1, theta2, theta3
 
     def setHeight(self, h):
-        t1, t2, t3 = self.calc_balance_angle(h)
+        t1, t2, t3 = self.calc_balance_angle_1(h)
 
         self.motors[0].setPosition(t1)
         self.motors[1].setPosition(t1)
