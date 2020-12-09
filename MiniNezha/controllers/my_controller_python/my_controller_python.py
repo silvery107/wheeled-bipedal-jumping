@@ -66,7 +66,7 @@ for i in range(len(motor_names)):
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP)
 vel = velocity_controller(motors, panel)
 
-h = 0.30 #44
+h = 0.35 #44
 vel.setHeight(h)
 flag = 0.01
 while robot.step(TIME_STEP) != -1:
