@@ -3,8 +3,8 @@ WorldInfo {
   basicTimeStep 16
 }
 Viewpoint {
-  orientation 0.9349824679067317 -0.3401357884858429 -0.10057549452103723 5.670582404982246
-  position 0.8621116536357637 1.3514173005428978 1.48439645725376
+  orientation 0.7586813756903381 -0.6453132176163057 -0.08929401631860176 5.922378410282784
+  position 0.7212188246792709 0.664282579498482 1.2704000396063426
   follow "MiniNezha"
   followSmoothness 0
 }
@@ -43,14 +43,15 @@ Robot {
             }
           ]
           endPoint DEF hip_link Solid {
-            rotation 0 0 1 0
+            translation -1.0311498431386323e-05 1.1853529323604264e-05 5.136538708261363e-09
+            rotation 0.7544000485867818 0.6564149348484377 4.2741343522005795e-07 5.847637912734942e-07
             children [
               DEF Hip_motor_shape Transform {
                 rotation 1 0 0 1.57
                 children [
                   Shape {
                     geometry Cylinder {
-                      height 0.02
+                      height 0.03
                       radius 0.02
                     }
                   }
@@ -91,13 +92,24 @@ Robot {
                     endPoint Solid {
                       rotation 0 0 1 0
                       children [
-                        DEF Keen_motor_shape Transform {
+                        Transform {
                           translation 0 -0.22 0
+                          rotation 1 0 0 1.57
+                          children [
+                            DEF Motor_Shape Shape {
+                              geometry Cylinder {
+                                height 0.03
+                                radius 0.02
+                              }
+                            }
+                          ]
+                        }
+                        DEF Keen_motor_shape Transform {
                           rotation 1 0 0 1.57
                           children [
                             Shape {
                               geometry Cylinder {
-                                height 0.02
+                                height 0.03
                                 radius 0.02
                               }
                             }
@@ -137,8 +149,8 @@ Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0 -0.11 0
-                                rotation 1 0 4.908493704946862e-18 1.57
+                                translation 0 -0.11 -0.025000000000000015
+                                rotation 1 7.853589927914979e-17 -7.853589927914979e-17 1.57
                                 children [
                                   DEF wheel Shape {
                                     appearance PBRAppearance {
@@ -147,7 +159,7 @@ Robot {
                                       metalness 0.5
                                     }
                                     geometry DEF wheel Cylinder {
-                                      height 0.01
+                                      height 0.03
                                       radius 0.05
                                     }
                                   }
@@ -207,8 +219,8 @@ Robot {
             }
           ]
           endPoint DEF hip_link Solid {
-            translation 2.802160948195855e-06 6.012470754124876e-06 2.599882749587667e-06
-            rotation -0.9239094562772463 0.3826111820102284 -1.4896141182920551e-06 1.167247058604146e-06
+            translation -7.490386524828039e-06 1.7845785698466682e-05 2.5947286801664134e-06
+            rotation -0.9992183949954672 0.039529724275496905 -1.1771243453057986e-06 1.5231290267921623e-06
             children [
               USE Hip_motor_shape
               DEF Hip_link Transform {
@@ -244,8 +256,16 @@ Robot {
                       }
                     ]
                     endPoint Solid {
-                      rotation 0 0 1 0
+                      translation 1.2261248381270289e-05 1.6065078163967865e-05 -1.1195204624447895e-08
+                      rotation -0.7939420595358966 0.6079934260334308 -1.731979270997535e-07 5.280984981855572e-07
                       children [
+                        Transform {
+                          translation 0 -0.22 0
+                          rotation 1 0 0 1.57
+                          children [
+                            USE Motor_Shape
+                          ]
+                        }
                         USE Keen_motor_shape
                         DEF Keen_link Transform {
                           translation 0 -0.11 0
@@ -281,8 +301,8 @@ Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0 -0.11 0
-                                rotation 1 -7.853589927914983e-17 -7.853589927914983e-17 1.5699999999999996
+                                translation 0 -0.11 0.024999999999999988
+                                rotation 1 3.92679496395749e-17 1.570717985582996e-16 1.57
                                 children [
                                   DEF wheel Shape {
                                     appearance PBRAppearance {
@@ -291,7 +311,7 @@ Robot {
                                       metalness 0.5
                                     }
                                     geometry DEF wheel Cylinder {
-                                      height 0.01
+                                      height 0.03
                                       radius 0.05
                                     }
                                   }
@@ -336,9 +356,8 @@ Robot {
     }
     DEF BODY Shape {
       appearance PBRAppearance {
-        baseColor 0.3 0.3 0.3
-        roughness 0.5
-        metalness 0.5
+        roughness 0.1
+        metalness 0.8
       }
       geometry Box {
         size 0.15 0.1 0.23

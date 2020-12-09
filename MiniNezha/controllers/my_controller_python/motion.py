@@ -17,25 +17,26 @@ class velocity_controller:
         self.motors = motors
         self.factor1 = 1
         self.factor2 = 1
+        # 平衡小车之家说还要乘0.6,我没乘
         # 角度
-        self.pitch_Kp = 4.0  # 4 的时候平衡车，kp越大越稳
-        self.pitch_Kd = 20.0  # 再大就会抖
+        self.pitch_Kp = 2.8  # 4 的时候平衡车，kp越大越稳
+        self.pitch_Kd = 0.0  # 再大就会抖
         self.count = 0
         self.blance_u = 0.0
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
         # 摆动角速度
-        self.omgz_Kp = 0.0
-        self.omgz_Kd = 20.0  # 再大一点就会抖
+        self.omgz_Kp = 2
+        self.omgz_Kd = 0.0  # 再大一点就会抖
         self.omgz_u = 0.0
         self.omgz_pid = PID_Controller(self.omgz_Kp, self.omgz_Kd, 0.0)
 
         # body速度
-        self.translation_Kp = 1000  #
-        self.translation_Kp1 = 0.0001  # 这一项确定数量级
-        self.translation_Ki = 100  #
+        self.translation_Kp = 8000  #
+        self.translation_Kp1 = 0.00008  # 这一项确定数量级
+        self.translation_Ki = 10.0  #
 
         self.translation_u = 0.0
-        self.translation_pid = PID_Controller(self.translation_Kp, 40, self.translation_Ki)
+        self.translation_pid = PID_Controller(self.translation_Kp, 10000, self.translation_Ki)
 
         # 轮子速度
         self.wheel_Kp = 50
@@ -43,9 +44,12 @@ class velocity_controller:
         self.wheel_Ki = 10
 
         self.wheel_u = 0.0
-        self.wheel_pid = PID_Controller(self.wheel_Kp, 0, self.wheel_Ki)
+        self.wheel_pid = PID_Controller(self.wheel_Kp, 20, self.wheel_Ki)
 
-    def calc_balance_angle(self, h):
+    def calc_balance_angle_1(self, h):
+        '''
+        legs without mass
+        '''
         theta3 = np.arccos((51 * (-(1081600 * h * (
                 (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
                                     1 / 2)) / 104)
@@ -58,7 +62,7 @@ class velocity_controller:
         return theta1, theta2, theta3
 
     def setHeight(self, h):
-        t1, t2, t3 = self.calc_balance_angle(h)
+        t1, t2, t3 = self.calc_balance_angle_1(h)
 
         self.motors[0].setPosition(t1)
         self.motors[1].setPosition(t1)
@@ -98,42 +102,47 @@ class velocity_controller:
         #     factor2 = 1
 
         # PID部分
-        if Ev > 0 and self.panel.bodyVel < Ev:
-            self.Ev = self.panel.bodyVel + 0.01
-        elif Ev < 0 and self.panel.bodyVel > Ev:
-            self.Ev = self.panel.bodyVel - 0.01
-        if 0 < Ev < self.Ev:
-            self.Ev = Ev
-        elif 0 > Ev > self.Ev:
-            self.Ev = Ev
+        # if Ev > 0 and self.panel.bodyVel < Ev:
+        #     v = self.panel.bodyVel*0.7
+        #     self.Ev = self.panel.bodyVel_last*0.3+v
+        # elif Ev < 0 and self.panel.bodyVel > Ev:
+        #     v = self.panel.bodyVel * 0.7
+        #     self.Ev = self.panel.bodyVel_last * 0.3 + v
+        # if 0 < Ev < self.Ev:
+        #     self.Ev = Ev
+        # elif 0 > Ev > self.Ev:
+        #     self.Ev = Ev
         if Ev == 0.0:
-            self.Ev = 0
-            angle = 0.013
+            angle = -0.04
         else:
-            angle = 0.013
+            angle = -0.04
 
+        # 直立
         pitch_err = angle - self.panel.pitch
         self.blance_pid.feedback(pitch_err)
         self.blance_u = self.blance_pid.get_u()
-
-        omgz_err = 0 - self.panel.omega_z
+        omgz_err = self.panel.omega_z
         self.omgz_pid.feedback(omgz_err)
-        self.omgz_u = self.omgz_pid.get_u()
+        self.omgz_u = -self.omgz_pid.get_u()
 
-        translation_err = self.Ev - self.panel.bodyVel  # 使用身体速度
+        # 速度
+        v_least = -self.panel.bodyVel + Ev  # 使用身体速度
+        self.Ev *= 0.8
+        self.Ev += v_least * 0.4
+        translation_err = self.Ev
         self.translation_pid.feedback(translation_err)
         self.translation_u = self.translation_pid.get_u()
 
         # wheel_err = self.Ev - self.panel.rightWheelVel*0.05  #
         # self.wheel_pid.feedback(wheel_err)
         # self.wheel_u = self.wheel_pid.get_u()
-        self.motors[4].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)
-        self.motors[5].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)
 
+        # self.motors[4].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)
+        # self.motors[5].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)
         self.motors[4].setTorque(
-            -self.blance_u - 0.05 * self.omgz_u + self.translation_Kp1 * self.translation_u + self.wheel_Kp1 * self.wheel_u)
+            -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u + self.wheel_Kp1 * self.wheel_u)
         self.motors[5].setTorque(
-            -self.blance_u - 0.05 * self.omgz_u + self.translation_Kp1 * self.translation_u + self.wheel_Kp1 * self.wheel_u)
+            -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u + self.wheel_Kp1 * self.wheel_u)
 
         print("b_u: %.5f" % self.blance_u)
         print("t_u: %.5f" % (self.translation_Kp1 * self.translation_u))
