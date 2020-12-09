@@ -93,7 +93,7 @@ class velocity_controller:
         self.translation_pid.feedback(translation_err)
         self.translation_u = self.translation_pid.get_u()
 
-        self.motors[4].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)  # 这正负号是试出来的，我也不知道为什么——hbx
+        self.motors[4].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)
         self.motors[5].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)
 
         # print("b_u: %.5f" % self.blance_u)
@@ -102,8 +102,8 @@ class velocity_controller:
         print("pitch: %.3f" % self.panel.pitch)
         # print("EV: %.3f" % (Ev))
         print("GPS_V: %.3f" % self.panel.gps_v)
-        print("wheel_V: %.5f" % (self.panel.rightWheelVel * 0.05))
-        print("body_V: %.5f" % self.panel.bodyVel)
+        print("wheel_V: %.3f" % (self.panel.rightWheelVel * 0.05))
+        print("body_V: %.3f" % self.panel.bodyVel)
         # print("omega_y: %.5f" % self.panel.omega_y)
         # print("omega_x: %.5f" % self.panel.omega_x)
         print("omega_z: %.5f" % self.panel.omega_z)

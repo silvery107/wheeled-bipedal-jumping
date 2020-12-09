@@ -74,9 +74,9 @@ while robot.step(TIME_STEP) != -1:
     panel.updateIMU()
     panel.updateGyro()
     panel.updateEncoder()
-    panel.upadteDirection()
-    panel.updateBodyVelocity(h)
+    panel.updateDirection()
     panel.updateWheelVelocity()
+    panel.updateBodyVelocity(h)
 
     vel.setXVel(0.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
     # vel.setAVel(0.0,0.0)
@@ -87,10 +87,10 @@ while robot.step(TIME_STEP) != -1:
     elif key == 83:  # 's' 后退
         vel.setXVel(-1.0)
     elif key == 65:  # 'a' 左转
-        # vel.setAVel(r,anlge)
+        # vel.setAVel(r,angle)
         print('left')
     elif key == 68:  # 'd' 右转
-        # vel.setAVel(r,anlge)
+        # vel.setAVel(r,angle)
         print('right')
     elif key == 315:  # '↑' 升高
         if h < 0.44:
