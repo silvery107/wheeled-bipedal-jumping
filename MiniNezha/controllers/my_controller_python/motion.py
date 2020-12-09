@@ -2,9 +2,7 @@ from controller import Motor
 from controller import InertialUnit
 from controller import Gyro
 import numpy as np
-from controller import Robot
 from PID_control import *
-from panel import *
 
 import math
 
