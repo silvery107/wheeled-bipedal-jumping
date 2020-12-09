@@ -103,7 +103,7 @@ class velocity_controller:
         if Ev == 0.0:
             angle = -0.04
         else:
-            angle = 0.013
+            angle = -0.04
 
         # 直立
         pitch_err = angle - self.panel.pitch
