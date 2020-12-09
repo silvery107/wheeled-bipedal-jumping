@@ -53,7 +53,7 @@ class velocity_controller:
                                     1 / 2)) / 104)
         theta2 = np.pi - np.arccos((-(1081600 * h * (
                 (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
-                                           1 / 2) / 2) - theta3;
+                                           1 / 2) / 2) - theta3
         theta1 = -np.pi / 2 + np.arccos((-(1081600 * h * (
                 (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
                                                 1 / 2) / 2)
@@ -68,7 +68,7 @@ class velocity_controller:
         self.motors[3].setPosition(t2)
 
     def printAngle(self, h):
-        t1, t2, t3 = self.calc_balance_angle(h)
+        t1, t2, t3 = self.calc_balance_angle_1(h)
         print('Angle1: %3f' % t1)
         print('Angle2: %3f' % t2)
         print('Angle3: %3f' % t3)
@@ -184,36 +184,51 @@ class velocity_controller:
         print('torque[0]:%3f' % tor0)
         print('Velocity[0]:%3f' % velocity0)
 
-        last_v = 0
-        count = 0
         while 1:
-            # 在空中不采取行动
-            TIME_STEP = int(robot.getBasicTimeStep())
+            TIME_STEP = int(robot.getBasicTimeStep()/16)
             robot.step(TIME_STEP)
-            panel.updateEncoder()
-            panel.updateWheelVelocity()
-            print('jumping rightWheelVel:', panel.rightWheelVel)
-            # 轮子腾空后空转，转速先增后降，通过转速降来判断腾空后的落地过程（用GPS效果更好但是是流氓办法）
-            if abs(last_v) > abs(panel.rightWheelVel):
-                count += 1
-                if count >= 3:
-                    break  # 若轮子速度连续下降，即进入平衡车状态
-            last_v = panel.rightWheelVel
+            panel.updateGPS()
+            print("1")
+            if panel.gps_y >= 0.5:
+                while 1:
+                    print("2")
+                    TIME_STEP = int(robot.getBasicTimeStep()/16)
+                    robot.step(TIME_STEP)
+                    panel.updateGPS()
+                    if panel.gps_y < 0.5:
+                        break
+                break
+        # TODO 下面为轮子速度版本代码 未完全成熟
+        # last_v = 0
+        # count = 0
+        # while 1:
+        #     # 在空中不采取行动
+        #     TIME_STEP = int(robot.getBasicTimeStep())
+        #     robot.step(TIME_STEP)
+        #     panel.updateEncoder()
+        #     panel.updateWheelVelocity()
+        #     print('jumping rightWheelVel:', panel.rightWheelVel)
+        #     # 轮子腾空后空转，转速先增后降，通过转速降来判断腾空后的落地过程（用GPS效果更好但是是流氓办法）
+        #     if abs(last_v) > abs(panel.rightWheelVel):
+        #         count += 1
+        #         if count >= 5:
+        #             break  # 若轮子速度连续下降，即进入平衡车状态
+        #     last_v = panel.rightWheelVel
 
-            # if abs(panel.rightWheelVel) >= 5:
-            #     while 1:
-            #         TIME_STEP = int(robot.getBasicTimeStep())
-            #         robot.step(TIME_STEP)
-            #         panel.updateEncoder()
-            #         panel.updateWheelVelocity()
-            #         print('2::', panel.rightWheelVel)
-            #         if abs(panel.rightWheelVel) < 5:
-            #             break
-            #     break
+        # if abs(panel.rightWheelVel) >= 5:
+        #     while 1:
+        #         TIME_STEP = int(robot.getBasicTimeStep())
+        #         robot.step(TIME_STEP)
+        #         panel.updateEncoder()
+        #         panel.updateWheelVelocity()
+        #         print('2::', panel.rightWheelVel)
+        #         if abs(panel.rightWheelVel) < 5:
+        #             break
+        #     break
 
-            # key = mKeyboard.getKey()  # 从键盘读取输入
-            # if key == 66:
-            #     break
+        # key = mKeyboard.getKey()  # 从键盘读取输入
+        # if key == 66:
+        #     break
 
         # self.motors[2].set_available_torque()
         # self.motors[3].set_available_torque()
