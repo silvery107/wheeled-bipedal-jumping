@@ -163,7 +163,7 @@ class velocity_controller:
         # print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
         # print("rWheelVelSP: %.3f" % (self.panel.samplingPeriod))
 
-    def jump(self, robot, panel):
+    def jump(self, robot, panel, vel):
 
         # samplingPeriod = self.motors[2].getTorqueFeedbackSamplingPeriod() / 1000
         # print('sam:%3f' % samplingPeriod)
@@ -183,20 +183,43 @@ class velocity_controller:
         velocity0 = self.motors[0].getVelocity()
         print('torque[0]:%3f' % tor0)
         print('Velocity[0]:%3f' % velocity0)
-
+        # self.motors[4].setPosition(float('+inf'))
+        # self.motors[4].setPosition(float('+inf'))
+        # self.motors[4].setVelocity(0)
+        # self.motors[5].setVelocity(0)
+        count = 0
         while 1:
-            TIME_STEP = int(robot.getBasicTimeStep()/16)
+            TIME_STEP = int(robot.getBasicTimeStep() / 16)
             robot.step(TIME_STEP)
             panel.updateGPS()
-            print("1")
-            if panel.gps_y >= 0.5:
+            print("jump phase 1")
+            if panel.gps_y > 0.49:
                 while 1:
-                    print("2")
-                    TIME_STEP = int(robot.getBasicTimeStep()/16)
+                    print("jump phase 2")
+                    TIME_STEP = int(robot.getBasicTimeStep() / 16)
                     robot.step(TIME_STEP)
                     panel.updateGPS()
-                    if panel.gps_y < 0.5:
+                    if panel.gps_y <= 0.49:
+                        while 1:
+                            print("jump phase 3")
+                            TIME_STEP = int(robot.getBasicTimeStep() / 16)
+                            robot.step(TIME_STEP)
+                            panel.updateGPS()
+                            if panel.gps_y > 0.49:
+                                while 1:
+                                    print("jump phase 4")
+                                    TIME_STEP = int(robot.getBasicTimeStep() / 16)
+                                    robot.step(TIME_STEP)
+                                    panel.updateGPS()
+                                    if panel.gps_y <= 0.49:
+                                        break
+                                break
                         break
+                vel.setHeight(0.43)
+                self.motors[4].setPosition(float('+inf'))
+                self.motors[5].setPosition(float('+inf'))
+                self.motors[4].setVelocity(0)
+                self.motors[5].setVelocity(0)
                 break
         # TODO 下面为轮子速度版本代码 未完全成熟
         # last_v = 0

@@ -67,8 +67,8 @@ for i in range(len(motor_names)):
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP)
 vel = velocity_controller(motors, panel)
 
-h = 0.44  # 44
-# vel.setHeight(h)
+h = 0.43  # 44
+vel.setHeight(h)
 flag = 0.01
 while robot.step(TIME_STEP) != -1:
     # get sensors data
@@ -80,7 +80,6 @@ while robot.step(TIME_STEP) != -1:
     panel.updateWheelVelocity()
     panel.updateBodyVelocity(h)
     print('-----------------')
-    vel.setXVel(0.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
     # vel.setAVel(0.0,0.0)
     key = 0  # 初始键盘读入默认为0
     key = mKeyboard.getKey()  # 从键盘读取输入
@@ -104,9 +103,14 @@ while robot.step(TIME_STEP) != -1:
         vel.setHeight(h)
     elif key == 32:  # '空格‘ 跳跃  # 原key ==19
         # 限定能起跳的初始条件（pitch和轮子速度），能显著提高落地后成功率
-        if abs(panel.pitch) < 0.025 and abs(panel.rightWheelVel * 0.05) <= 0.25 and abs(panel.rightWheelVel * 0.05 - panel.pitch) <= 0.14:
-            vel.jump(robot, panel)
+        if abs(panel.pitch) < 0.025 and abs(
+                panel.rightWheelVel * 0.05) <= 0.25:  # and abs(panel.rightWheelVel * 0.05 - panel.pitch) <= 0.14
+            vel.jump(robot, panel, vel)
             print('jump end')
+        else:
+            vel.setXVel(0.0)
+    else:
+        vel.setXVel(0.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
 
     vel.printAngle(h)
     print('-----------------')
