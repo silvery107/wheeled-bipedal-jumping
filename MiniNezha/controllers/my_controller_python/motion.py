@@ -212,14 +212,25 @@ class velocity_controller:
                                     robot.step(TIME_STEP)
                                     panel.updateGPS()
                                     if panel.gps_y <= 0.49:
+                                        # h = 0.44
+                                        # self.motors[4].setPosition(float('+inf'))
+                                        # self.motors[5].setPosition(float('+inf'))
+                                        # self.motors[4].setVelocity(0)
+                                        # self.motors[5].setVelocity(0)
+                                        # while 1:
+                                        #     print("jump phase 5")
+                                        #     TIME_STEP = int(robot.getBasicTimeStep() / 16)
+                                        #     robot.step(TIME_STEP)
+                                        #     panel.updateGPS()
+                                        #     if panel.gps_y <= h + 0.05:
+                                        #         h -= 0.01
+                                        #         vel.setHeight(h)
+                                        #     if h <= 0.3:
+                                        #         break
                                         break
                                 break
                         break
-                vel.setHeight(0.43)
-                self.motors[4].setPosition(float('+inf'))
-                self.motors[5].setPosition(float('+inf'))
-                self.motors[4].setVelocity(0)
-                self.motors[5].setVelocity(0)
+                # vel.setHeight(0.43)
                 break
         # TODO 下面为轮子速度版本代码 未完全成熟
         # last_v = 0
