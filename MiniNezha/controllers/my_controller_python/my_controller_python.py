@@ -81,7 +81,7 @@ while robot.step(TIME_STEP) != -1:
     panel.updateBodyVelocity(h)
     print('-----------------')
     # vel.setAVel(0.0,0.0)
-    key = 0  # 初始键盘读入默认为0
+    # key = 0  # 初始键盘读入默认为0
     key = mKeyboard.getKey()  # 从键盘读取输入
     if key == 87:  # 'w' 前进
         vel.setXVel(0.5)
@@ -103,9 +103,10 @@ while robot.step(TIME_STEP) != -1:
         vel.setHeight(h)
     elif key == 32:  # '空格‘ 跳跃  # 原key ==19
         # 限定能起跳的初始条件（pitch和轮子速度），能显著提高落地后成功率
-        if abs(panel.pitch) < 0.025 and abs(
-                panel.rightWheelVel * 0.05) <= 0.25:  # and abs(panel.rightWheelVel * 0.05 - panel.pitch) <= 0.14
-            vel.jump(robot, panel, vel)
+        # if abs(panel.pitch) < 0.025 and abs(
+        #         panel.rightWheelVel * 0.05) <= 0.35:  # and abs(panel.rightWheelVel * 0.05 - panel.pitch) <= 0.14
+        if 1:
+            vel.jump(robot, panel, vel, h)
             print('jump end')
         else:
             vel.setXVel(0.0)

@@ -163,8 +163,8 @@ class velocity_controller:
         # print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
         # print("rWheelVelSP: %.3f" % (self.panel.samplingPeriod))
 
-    def jump(self, robot, panel, vel):
-
+    def jump(self, robot, panel, vel, h=0.27):
+        pre_velocity = panel.rightWheelVel
         # samplingPeriod = self.motors[2].getTorqueFeedbackSamplingPeriod() / 1000
         # print('sam:%3f' % samplingPeriod)
         # self.motors[2].enableTorqueFeedback(samplingPeriod)
@@ -183,56 +183,63 @@ class velocity_controller:
         velocity0 = self.motors[0].getVelocity()
         print('torque[0]:%3f' % tor0)
         print('Velocity[0]:%3f' % velocity0)
-        # self.motors[4].setPosition(float('+inf'))
-        # self.motors[4].setPosition(float('+inf'))
-        # self.motors[4].setVelocity(0)
-        # self.motors[5].setVelocity(0)
-        count = 0
+
         while 1:
-            TIME_STEP = int(robot.getBasicTimeStep() / 16)
+            TIME_STEP = int(robot.getBasicTimeStep())
             robot.step(TIME_STEP)
             panel.updateGPS()
             print("jump phase 1")
             if panel.gps_y > 0.49:
                 while 1:
                     print("jump phase 2")
-                    TIME_STEP = int(robot.getBasicTimeStep() / 16)
+                    TIME_STEP = int(robot.getBasicTimeStep())
                     robot.step(TIME_STEP)
                     panel.updateGPS()
-                    if panel.gps_y <= 0.49:
-                        while 1:
+                    vel.setHeight(h)
+                    if panel.gps_y <= h + 0.06:
+                        while 1:  # 为了保留结构暂时这么写，不要奇怪这个while break
                             print("jump phase 3")
-                            TIME_STEP = int(robot.getBasicTimeStep() / 16)
+                            TIME_STEP = int(robot.getBasicTimeStep())
                             robot.step(TIME_STEP)
                             panel.updateGPS()
-                            if panel.gps_y > 0.49:
-                                while 1:
-                                    print("jump phase 4")
-                                    TIME_STEP = int(robot.getBasicTimeStep() / 16)
-                                    robot.step(TIME_STEP)
-                                    panel.updateGPS()
-                                    if panel.gps_y <= 0.49:
-                                        # h = 0.44
-                                        # self.motors[4].setPosition(float('+inf'))
-                                        # self.motors[5].setPosition(float('+inf'))
-                                        # self.motors[4].setVelocity(0)
-                                        # self.motors[5].setVelocity(0)
-                                        # while 1:
-                                        #     print("jump phase 5")
-                                        #     TIME_STEP = int(robot.getBasicTimeStep() / 16)
-                                        #     robot.step(TIME_STEP)
-                                        #     panel.updateGPS()
-                                        #     if panel.gps_y <= h + 0.05:
-                                        #         h -= 0.01
-                                        #         vel.setHeight(h)
-                                        #     if h <= 0.3:
-                                        #         break
-                                        break
-                                break
+                            # self.motors[0].setPosition(0)
+                            # self.motors[1].setPosition(0)
+                            # self.motors[2].setPosition(0)
+                            # self.motors[3].setPosition(0)
+                            self.motors[4].setPosition(float('+inf'))
+                            self.motors[5].setPosition(float('+inf'))
+                            self.motors[4].setVelocity(-pre_velocity)
+                            self.motors[5].setVelocity(-pre_velocity)
+                            break
+                            # if panel.gps_y > 0.49:
+                            #     while 1:
+                            #         print("jump phase 4")
+                            #         TIME_STEP = int(robot.getBasicTimeStep() / 16)
+                            #         robot.step(TIME_STEP)
+                            #         panel.updateGPS()
+                            #         if panel.gps_y <= 0.49:
+                            #             # h = 0.44
+                            #             # self.motors[4].setPosition(float('+inf'))
+                            #             # self.motors[5].setPosition(float('+inf'))
+                            #             # self.motors[4].setVelocity(0)
+                            #             # self.motors[5].setVelocity(0)
+                            #             # while 1:
+                            #             #     print("jump phase 5")
+                            #             #     TIME_STEP = int(robot.getBasicTimeStep() / 16)
+                            #             #     robot.step(TIME_STEP)
+                            #             #     panel.updateGPS()
+                            #             #     if panel.gps_y <= h + 0.05:
+                            #             #         h -= 0.01
+                            #             #         vel.setHeight(h)
+                            #             #     if h <= 0.3:
+                            #             #         break
+                            #             break
+                            #     break
                         break
                 # vel.setHeight(0.43)
                 break
-        # TODO 下面为轮子速度版本代码 未完全成熟
+
+        # TODO 下面为轮子空转版本 可以不使用GPS 但未完全成熟
         # last_v = 0
         # count = 0
         # while 1:
@@ -259,20 +266,5 @@ class velocity_controller:
         #         if abs(panel.rightWheelVel) < 5:
         #             break
         #     break
-
-        # key = mKeyboard.getKey()  # 从键盘读取输入
-        # if key == 66:
-        #     break
-
-        # self.motors[2].set_available_torque()
-        # self.motors[3].set_available_torque()
-        # self.motors[2].setPosition(float('+inf'))
-        # self.motors[3].setPosition(float('+inf'))
-
-        # self.motors[0].setTorque(-1)
-        # self.motors[1].setTorque(-1)
-
-        # self.motors[0].setPosition(float('+inf'))
-        # self.motors[1].setPosition(float('+inf'))
 
 # def setAVel(self,vel):
