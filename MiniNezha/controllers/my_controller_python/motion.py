@@ -169,27 +169,27 @@ class velocity_controller:
         # print('sam:%3f' % samplingPeriod)
         # self.motors[2].enableTorqueFeedback(samplingPeriod)
         self.motors[2].enableTorqueFeedback(1)
+        self.motors[0].enableTorqueFeedback(1)
         self.motors[2].setPosition(0)
         self.motors[3].setPosition(0)
-        tor2 = self.motors[2].getTorqueFeedback()
-        velocity2 = self.motors[2].getVelocity()
-        print('torque[2]:%3f' % tor2)
-        print('Velocity[2]:%3f' % velocity2)
-
-        self.motors[0].enableTorqueFeedback(1)
         self.motors[0].setPosition(0)
         self.motors[1].setPosition(0)
+        tor2 = self.motors[2].getTorqueFeedback()
         tor0 = self.motors[2].getTorqueFeedback()
+        velocity2 = self.motors[2].getVelocity()
         velocity0 = self.motors[0].getVelocity()
+        print('torque[2]:%3f' % tor2)
+        print('Velocity[2]:%3f' % velocity2)
         print('torque[0]:%3f' % tor0)
         print('Velocity[0]:%3f' % velocity0)
 
+        # GPS版（项目临时）
         while 1:
             TIME_STEP = int(robot.getBasicTimeStep())
             robot.step(TIME_STEP)
             panel.updateGPS()
             print("jump phase 1")
-            if panel.gps_y > 0.49:
+            if panel.gps_y > 0.49:  # 直立时gps0.488
                 while 1:
                     print("jump phase 2")
                     TIME_STEP = int(robot.getBasicTimeStep())
@@ -202,14 +202,10 @@ class velocity_controller:
                             TIME_STEP = int(robot.getBasicTimeStep())
                             robot.step(TIME_STEP)
                             panel.updateGPS()
-                            # self.motors[0].setPosition(0)
-                            # self.motors[1].setPosition(0)
-                            # self.motors[2].setPosition(0)
-                            # self.motors[3].setPosition(0)
                             self.motors[4].setPosition(float('+inf'))
                             self.motors[5].setPosition(float('+inf'))
-                            self.motors[4].setVelocity(-pre_velocity)
-                            self.motors[5].setVelocity(-pre_velocity)
+                            self.motors[4].setVelocity(pre_velocity)
+                            self.motors[5].setVelocity(pre_velocity)
                             break
                             # if panel.gps_y > 0.49:
                             #     while 1:
