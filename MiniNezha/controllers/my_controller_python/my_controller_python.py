@@ -17,9 +17,6 @@ import math
 # init robot
 robot = Robot()
 TIME_STEP = int(robot.getBasicTimeStep())
-X = 0
-Y = 1
-Z = 2
 
 # init sensors and drivers
 gyro = robot.getGyro("gyro")
@@ -66,8 +63,8 @@ vel.setHeight(h)
 flag = 0.01
 while robot.step(TIME_STEP) != -1:
     if vel.isFall():
-        break
-
+        continue
+    
     vel.showMsg()
     # get sensors data
     panel.updateGPS()

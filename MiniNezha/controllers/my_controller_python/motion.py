@@ -242,9 +242,9 @@ class velocity_controller:
         #     break
 
     def isFall(self):
-        if abs(self.panel.pitch)>20/180*np.pi:
+        if abs(self.panel.pitch) > 20/180*np.pi:
             for i in range(4):
-                self.motors[i].setTorque(0.1)
+                self.motors[i].setTorque(0.2)
                 
             self.motors[4].setPosition(0)
             self.motors[5].setPosition(0)
