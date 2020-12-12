@@ -20,11 +20,14 @@ class velocity_controller:
         self.pitch_Kp = 2.8  # 4 的时候平衡车，kp越大越稳
         self.pitch_Kd = 0.0  # 再大就会抖
         self.count = 0
+        self.pitch_exp = 0
+
         self.blance_u = 0.0
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
         # 摆动角速度
         self.omgz_Kp = 2
         self.omgz_Kd = 0.0  # 再大一点就会抖
+
         self.omgz_u = 0.0
         self.omgz_pid = PID_Controller(self.omgz_Kp, self.omgz_Kd, 0.0)
 
@@ -67,11 +70,6 @@ class velocity_controller:
         self.motors[2].setPosition(t2)
         self.motors[3].setPosition(t2)
 
-    def printAngle(self, h):
-        t1, t2, t3 = self.calc_balance_angle_1(h)
-        print('Angle1: %3f' % t1)
-        print('Angle2: %3f' % t2)
-        print('Angle3: %3f' % t3)
 
     def setXVel(self, Ev):  # 注意：pitch方向和车方向相反，前倾为负
         # 对比和上次的位置，用count记录累加位移的量。
@@ -111,12 +109,12 @@ class velocity_controller:
         # elif 0 > Ev > self.Ev:
         #     self.Ev = Ev
         if Ev == 0.0:
-            angle = -0.04
+            self.pitch_exp = -0.04
         else:
-            angle = -0.04
+            self.pitch_exp = -0.04
 
         # 直立
-        pitch_err = angle - self.panel.pitch
+        pitch_err = self.pitch_exp - self.panel.pitch
         self.blance_pid.feedback(pitch_err)
         self.blance_u = self.blance_pid.get_u()
         omgz_err = self.panel.omega_z
@@ -142,26 +140,6 @@ class velocity_controller:
         self.motors[5].setTorque(
             -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u + self.wheel_Kp1 * self.wheel_u)
 
-        print("b_u: %.5f" % self.blance_u)
-        print("t_u: %.5f" % (self.translation_Kp1 * self.translation_u))
-        # print("w_u: %.5f" % (self.wheel_Kp1 * self.wheel_u))
-        # print("pitch_err: %.3f" % pitch_err)
-        print("pitch: %.3f" % self.panel.pitch)
-        print("omgz_u: %.3f" % (0.01 * self.omgz_u))
-        # print("EV: %.3f" % (Ev))
-        print("GPS_V: %.3f" % self.panel.gps_v)
-        print("GPS_height: %.3f" % self.panel.gps_y)
-        print("wheel_V: %.3f" % (self.panel.rightWheelVel * 0.05))
-        print("body_V: %.3f" % self.panel.bodyVel)
-        # print("omega_y: %.5f" % self.panel.omega_y)
-        # print("omega_x: %.5f" % self.panel.omega_x)
-        print("omega_z: %.5f" % self.panel.omega_z)
-        print("期望速度： %.5f" % self.Ev)
-        # print("与期望速度差： %.5f" % (Ev - self.panel.rightWheelVel * 0.05))
-        print("预期倾角：%.5f" % angle)
-        # print("Displacement: %.2f" % (self.panel.gps_dd))
-        # print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
-        # print("rWheelVelSP: %.3f" % (self.panel.samplingPeriod))
 
     def jump(self, robot, panel, vel, h=0.27):
         pre_velocity = panel.rightWheelVel
@@ -263,4 +241,40 @@ class velocity_controller:
         #             break
         #     break
 
-# def setAVel(self,vel):
+    def isFall(self):
+        if abs(self.panel.pitch)>20/180*np.pi:
+            for i in range(4):
+                self.motors[i].setTorque(0.1)
+                
+            self.motors[4].setPosition(0)
+            self.motors[5].setPosition(0)
+            return True
+        
+        return False
+
+    def showMsg(self):
+        print('-----------------')
+        print("b_u: %.5f" % self.blance_u)
+        print("t_u: %.5f" % (self.translation_Kp1 * self.translation_u))
+        # print("w_u: %.5f" % (self.wheel_Kp1 * self.wheel_u))
+        # print("pitch_err: %.3f" % pitch_err)
+        print("pitch: %.3f" % self.panel.pitch)
+        print("omgz_u: %.3f" % (0.01 * self.omgz_u))
+        # print("EV: %.3f" % (Ev))
+        print("GPS_V: %.3f" % self.panel.gps_v)
+        print("GPS_height: %.3f" % self.panel.gps_y)
+        print("wheel_V: %.3f" % (self.panel.rightWheelVel * 0.05))
+        print("body_V: %.3f" % self.panel.bodyVel)
+        # print("omega_y: %.5f" % self.panel.omega_y)
+        # print("omega_x: %.5f" % self.panel.omega_x)
+        print("omega_z: %.5f" % self.panel.omega_z)
+        print("期望速度： %.5f" % self.Ev)
+        # print("与期望速度差： %.5f" % (Ev - self.panel.rightWheelVel * 0.05))
+        print("预期倾角：%.5f" % self.pitch_exp)
+        # print("Displacement: %.2f" % (self.panel.gps_dd))
+        # print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
+        # print("rWheelVelSP: %.3f" % (self.panel.samplingPeriod))
+        print('Angle1: %3f' % self.panel.encoder[0])
+        print('Angle2: %3f' % self.panel.encoder[2])
+        print('Angle3: %3f' % self.panel.encoder[4])
+        print('-----------------')

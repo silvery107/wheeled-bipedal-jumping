@@ -71,6 +71,9 @@ h = 0.43  # 44
 vel.setHeight(h)
 flag = 0.01
 while robot.step(TIME_STEP) != -1:
+    if vel.isFall():
+        break
+    vel.showMsg()
     # get sensors data
     panel.updateGPS()
     panel.updateIMU()
@@ -79,7 +82,6 @@ while robot.step(TIME_STEP) != -1:
     panel.updateDirection()
     panel.updateWheelVelocity()
     panel.updateBodyVelocity(h)
-    print('-----------------')
     # vel.setAVel(0.0,0.0)
     # key = 0  # 初始键盘读入默认为0
     key = mKeyboard.getKey()  # 从键盘读取输入
@@ -112,9 +114,6 @@ while robot.step(TIME_STEP) != -1:
             vel.setXVel(0.0)
     else:
         vel.setXVel(0.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
-
-    vel.printAngle(h)
-    print('-----------------')
 
     # vel.setHeight(h)
     # vel.setXVel(10.0)
