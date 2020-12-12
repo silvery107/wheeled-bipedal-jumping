@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 """my_controller_python controller."""
 
-# You may need to import some classes of the controller module. Ex:
-#  from controller import Robot, Motor, DistanceSensor
-import panel as panel
-
 from controller import Robot
 from controller import Motor
 from controller import InertialUnit
@@ -55,12 +51,10 @@ motor_names = [
     "right_wheel_motor"
 ]
 
-qs = []  # joint variables
 for i in range(len(motor_names)):
     motors.append(robot.getMotor(motor_names[i]))
     encoders.append(robot.getPositionSensor(encoder_names[i]))
     encoders[i].enable(TIME_STEP)
-    qs.append(encoders[i].getValue())
     motors[i].setPosition(0)  # enable velocity control
 
 # main loop
@@ -73,6 +67,7 @@ flag = 0.01
 while robot.step(TIME_STEP) != -1:
     if vel.isFall():
         break
+
     vel.showMsg()
     # get sensors data
     panel.updateGPS()
@@ -82,8 +77,6 @@ while robot.step(TIME_STEP) != -1:
     panel.updateDirection()
     panel.updateWheelVelocity()
     panel.updateBodyVelocity(h)
-    # vel.setAVel(0.0,0.0)
-    # key = 0  # 初始键盘读入默认为0
     key = mKeyboard.getKey()  # 从键盘读取输入
     if key == 87:  # 'w' 前进
         vel.setXVel(0.5)
@@ -103,7 +96,7 @@ while robot.step(TIME_STEP) != -1:
         if h > 0.27:
             h += (-flag)
         vel.setHeight(h)
-    elif key == 32:  # '空格‘ 跳跃  # 原key ==19
+    elif key == 32:  # '空格' 跳跃  # 原key ==19
         # 限定能起跳的初始条件（pitch和轮子速度），能显著提高落地后成功率
         # if abs(panel.pitch) < 0.025 and abs(
         #         panel.rightWheelVel * 0.05) <= 0.35:  # and abs(panel.rightWheelVel * 0.05 - panel.pitch) <= 0.14
@@ -115,7 +108,5 @@ while robot.step(TIME_STEP) != -1:
     else:
         vel.setXVel(0.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
 
-    # vel.setHeight(h)
-    # vel.setXVel(10.0)
 
     # change robot position.
