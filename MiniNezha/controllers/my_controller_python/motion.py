@@ -135,11 +135,29 @@ class velocity_controller:
 
         # self.motors[4].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)
         # self.motors[5].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)
-        self.motors[4].setTorque(
-            -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u + self.wheel_Kp1 * self.wheel_u)
-        self.motors[5].setTorque(
-            -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u + self.wheel_Kp1 * self.wheel_u)
+        if abs(self.rotation_u) > 8.3:
+            if self.rotation_u > 0:
+                self.rotation_u = 8.3
+            else:
+                self.rotation_u = -8.3
 
+        self.motors[4].setTorque(
+            -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u + 0.028 * self.wheel_u)
+        self.motors[5].setTorque(
+            -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u - 0.028 * self.wheel_u)
+
+    def setAVel(self,key,vel):
+        rotation_err = vel - self.panel.omega_y
+        self.rotation_pid.feedback(rotation_err)
+        if key == 65:
+            self.rotation_u = self.rotation_pid.get_u()
+            self.panel.rotation = 1
+        elif key == 68:
+            self.rotation_u = -self.rotation_pid.get_u()
+            self.panel.rotation = -1
+        elif key == 70:
+            self.rotation_u = 0.0
+            self.panel.rotation = 0
 
     def jump(self, robot, panel, vel, h=0.27):
         pre_velocity = panel.rightWheelVel

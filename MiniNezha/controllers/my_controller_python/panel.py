@@ -81,6 +81,8 @@ class panel:
         self.gps_ddir = Point(self.gps_dx, self.gps_dy, self.gps_dz)
         self.gps_dir_last = Point(self.x_last, self.y_last, self.z_last)
 
+        self.rotation = 0
+
     def updateDirection(self):  # TODO 这里不太确定，先假设水平了——hbx
         self.x = Point.multiple(self.x, Point(math.cos(self.yaw), math.sin(self.yaw), 0))
         self.y = Point.multiple(self.y, Point(-math.sin(self.yaw), math.cos(self.yaw), 0))
@@ -130,3 +132,6 @@ class panel:
 
     def updateGyro(self):
         self.omega_x, self.omega_y, self.omega_z = self.gyro.getValues()
+
+    def getRotation(self):
+        return self.rotation

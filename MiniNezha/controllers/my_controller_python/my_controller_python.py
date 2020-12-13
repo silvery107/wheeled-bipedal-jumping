@@ -80,10 +80,10 @@ while robot.step(TIME_STEP) != -1:
     elif key == 83:  # 's' 后退
         vel.setXVel(-0.5)
     elif key == 65:  # 'a' 左转
-        # vel.setAVel(r,angle)
+        vel.setAVel(key, 0.3)
         print('left')
     elif key == 68:  # 'd' 右转
-        # vel.setAVel(r,angle)
+        vel.setAVel(key, 0.3)
         print('right')
     elif key == 315:  # '↑' 升高
         if h < 0.43:
@@ -105,5 +105,11 @@ while robot.step(TIME_STEP) != -1:
     else:
         vel.setXVel(0.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
 
-
+    rotation = panel.getRotation()
+    if rotation == 1:
+        vel.setAVel(65, 0.3)
+    elif rotation == -1:
+        vel.setAVel(68, 0.3)
+    elif rotation == 0:
+        vel.setAVel(70, 0.0)
     # change robot position.
