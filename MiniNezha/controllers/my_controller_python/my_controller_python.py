@@ -58,13 +58,9 @@ for i in range(len(motor_names)):
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP)
 vel = velocity_controller(motors, panel)
 
-h = 0.43  # 44
-vel.setHeight(h)
-flag = 0.01
+vel.setHeight(0.4)
+
 while robot.step(TIME_STEP) != -1:
-    if vel.isFall():
-        continue
-    
     vel.showMsg()
     # get sensors data
     panel.updateGPS()
@@ -73,43 +69,10 @@ while robot.step(TIME_STEP) != -1:
     panel.updateEncoder()
     panel.updateDirection()
     panel.updateWheelVelocity()
-    panel.updateBodyVelocity(h)
+    panel.updateBodyVelocity(vel.cur_height)
     key = mKeyboard.getKey()  # 从键盘读取输入
-    if key == 87:  # 'w' 前进
-        vel.setXVel(0.5)
-    elif key == 83:  # 's' 后退
-        vel.setXVel(-0.5)
-    elif key == 65:  # 'a' 左转
-        vel.setAVel(key, 0.3)
-        print('left')
-    elif key == 68:  # 'd' 右转
-        vel.setAVel(key, 0.3)
-        print('right')
-    elif key == 315:  # '↑' 升高
-        if h < 0.43:
-            h += flag
-        vel.setHeight(h)
-    elif key == 317:  # '↓' 下降
-        if h > 0.27:
-            h += (-flag)
-        vel.setHeight(h)
-    elif key == 32:  # '空格' 跳跃  # 原key ==19
-        # 限定能起跳的初始条件（pitch和轮子速度），能显著提高落地后成功率
-        # if abs(panel.pitch) < 0.025 and abs(
-        #         panel.rightWheelVel * 0.05) <= 0.35:  # and abs(panel.rightWheelVel * 0.05 - panel.pitch) <= 0.14
-        if 1:
-            vel.jump(robot, panel, vel, h)
-            print('jump end')
-        else:
-            vel.setXVel(0.0)
+    if vel.isFall():
+        continue
     else:
-        vel.setXVel(0.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
+        vel.keyboard_control(robot,key)
 
-    rotation = panel.getRotation()
-    if rotation == 1:
-        vel.setAVel(65, 0.3)
-    elif rotation == -1:
-        vel.setAVel(68, 0.3)
-    elif rotation == 0:
-        vel.setAVel(70, 0.0)
-    # change robot position.
