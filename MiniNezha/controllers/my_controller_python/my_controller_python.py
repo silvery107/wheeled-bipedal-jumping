@@ -71,37 +71,35 @@ vel.setHeight(0.4)
 
 fall_flag = False
 restart_flag = False
-
+restart_pid = PID_Controller(5, 1)
 while robot.step(TIME_STEP) != -1:
     # vel.showMsg()
-    # get sensors data
-    panel.updateGPS()
-    panel.updateIMU()
-    panel.updateGyro()
-    panel.updateEncoder()
-    panel.updateDirection()
-    panel.updateWheelVelocity()
-    panel.updateBodyVelocity(vel.cur_height)
+    vel.sensor_update()
     key = mKeyboard.getKey()  # 从键盘读取输入
 
     if fall_flag:
-        print("fall_begin")
         if not restart_flag:
-            restart_flag = vel.isRestart()
+            restart_flag = vel.isRestart(0.05)
         if restart_flag:
             print("restart")
-            vel.restart(brakes,6,0.27)
-            if not vel.isFall(30): 
-                print("fall_end")
-                restart_flag = False
-                fall_flag = False
+            vel.restart(brakes,5,0.3)
+            if not vel.isFall(5):
+                while not vel.isBalance(0.5):
+                    vel.sensor_update()
+                    restart_pid.feedback(vel.panel.pitch)
+                    u = restart_pid.get_u()
+                    motors[4].setTorque(u)
+                    motors[5].setTorque(u)
+                    # vel.setXVel(0)
+                    print("try balance")
+                    restart_flag = False
+                    fall_flag = False
+                    robot.step(TIME_STEP)
         else:
             print("shutdown")
-            vel.shutdown(brakes)
+            vel.shutdown(brakes,0.3)
             continue
     else:
         vel.keyboardControl(robot,key)
-        fall_flag = vel.isFall(40)
-        # if fall_flag:
-        #     vel.shutdown(brakes)
+        fall_flag = vel.isFall(30)
 

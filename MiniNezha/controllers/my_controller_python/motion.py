@@ -22,8 +22,6 @@ class velocity_controller:
         self.pitch_Kd = 0.0  # 再大就会抖
         self.count = 0
         self.pitch_exp = 0
-        self.fall_flag = False
-        self.restart_flag = False
         self.cur_height = 0.43
 
         self.blance_u = 0.0
@@ -74,12 +72,22 @@ class velocity_controller:
         return theta1, theta2, theta3
 
     def setHeight(self, h):
-        t1, t2, t3 = self.calc_balance_angle_1(h)
-
-        self.motors[0].setPosition(t1)
-        self.motors[1].setPosition(t1)
-        self.motors[2].setPosition(t2)
-        self.motors[3].setPosition(t2)
+        '''
+        :h: -1 for extract
+        '''
+        if h==-1:
+            self.motors[0].setPosition(0)
+            self.motors[1].setPosition(0)
+            self.motors[2].setPosition(0)
+            self.motors[3].setPosition(0)
+            self.cur_height = 0.45
+        else:
+            t1, t2, _ = self.calc_balance_angle_1(h)
+            self.motors[0].setPosition(t1)
+            self.motors[1].setPosition(t1)
+            self.motors[2].setPosition(t2)
+            self.motors[3].setPosition(t2)
+            self.cur_height = h
 
 
     def setXVel(self, Ev):  # 注意：pitch方向和车方向相反，前倾为负
@@ -144,8 +152,6 @@ class velocity_controller:
         # self.wheel_pid.feedback(wheel_err)
         # self.wheel_u = self.wheel_pid.get_u()
 
-        # self.motors[4].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)
-        # self.motors[5].setTorque(-self.blance_u + self.translation_Kp1 * self.translation_u)
         if abs(self.rotation_u) > 8.3:
             if self.rotation_u > 0:
                 self.rotation_u = 8.3
@@ -270,28 +276,31 @@ class velocity_controller:
         #             break
         #     break
 
-    def isFall(self,thr):
-        if abs(self.panel.pitch) > thr/180*np.pi:
-            self.fall_flag = True
+    def isFall(self,angle_thr=30):
+        if abs(self.panel.pitch) > angle_thr/180*np.pi:
             return True
         return False
 
-    def isRestart(self):
-        if abs(self.panel.bodyVel)<0.1:
-            self.restart_flag = True
+    def isBalance(self,acc_thr=0.1):
+        if abs(self.panel.bodyAcce)<acc_thr:
             return True
         return False
 
-    def shutdown(self,brakes):
+    def isRestart(self,vel_thr=0.05):
+        if abs(self.panel.bodyVel)<vel_thr:
+            return True
+        return False
+
+    def shutdown(self,brakes,height=0.2):
         # for i in range(4):
         #     self.motors[i].setTorque(0.2)
-        self.setHeight(0.2)
+        self.setHeight(height)
         # self.motors[4].setPosition(0)
         # self.motors[5].setPosition(0)
         brakes[0].setDampingConstant(1000)
         brakes[1].setDampingConstant(1000)
 
-    def restart(self,brakes,torque,height):
+    def restart(self,brakes,torque=5,height=0.27):
         if self.panel.pitch>=0:
             brakes[0].setDampingConstant(0)
             brakes[1].setDampingConstant(0)
@@ -305,7 +314,6 @@ class velocity_controller:
             self.motors[4].setTorque(-torque)
             self.motors[5].setTorque(-torque)
             self.setHeight(height)
-
 
     def showMsg(self):
         print('-----------------')
@@ -348,12 +356,12 @@ class velocity_controller:
             self.setAVel(key, 0.3)
             print('right')
         elif key == 315:  # '↑' 升高
-            if self.cur_height < 0.43:
+            if self.cur_height < 0.45:
                 self.cur_height += 0.01
             self.setHeight(self.cur_height)
         elif key == 317:  # '↓' 下降
-            if self.cur_height > 0.27:
-                self.cur_height += -0.01
+            if self.cur_height > 0.2:
+                self.cur_height -= 0.01
             self.setHeight(self.cur_height)
         elif key == 32:  # '空格' 跳跃  # 原key ==19
             # 限定能起跳的初始条件（pitch和轮子速度），能显著提高落地后成功率
@@ -375,3 +383,13 @@ class velocity_controller:
         elif rotation == 0:
             self.setAVel(70, 0.0)
         # change robot position.
+
+    def sensor_update(self):
+        # get sensors data
+        self.panel.updateGPS()
+        self.panel.updateIMU()
+        self.panel.updateGyro()
+        self.panel.updateEncoder()
+        self.panel.updateDirection()
+        self.panel.updateWheelVelocity()
+        self.panel.updateBodyVelocity(self.cur_height)
