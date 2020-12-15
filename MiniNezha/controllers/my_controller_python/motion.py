@@ -47,6 +47,13 @@ class velocity_controller:
         self.wheel_u = 0.0
         self.wheel_pid = PID_Controller(self.wheel_Kp, 20, self.wheel_Ki)
 
+        # 转弯控制
+        self.rotation_u = 0.0
+        self.rotation_Kp = 10.0
+        self.rotation_Ki = 5.0
+        self.rotation_Kd = 0.0
+        self.rotation_pid = PID_Controller(self.rotation_Kp, self.rotation_Kd, self.rotation_Ki)
+
     def calc_balance_angle_1(self, h):
         '''
         legs without mass
