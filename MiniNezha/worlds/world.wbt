@@ -139,6 +139,9 @@ Robot {
                                 anchor 0 -0.11 0
                               }
                               device [
+                                Brake {
+                                  name "left_brake"
+                                }
                                 DEF left_wheel_encoder PositionSensor {
                                   name "left_wheel_encoder"
                                 }
@@ -220,7 +223,7 @@ Robot {
           ]
           endPoint DEF hip_link Solid {
             translation -7.490386524828039e-06 1.7845785698466682e-05 2.5947286801664134e-06
-            rotation -0.9992183949954672 0.039529724275496905 -1.1771243453057986e-06 1.5231290267921623e-06
+            rotation -0.9992183949954672 0.039529724275496905 -1.1771243453057959e-06 1.5231290267921623e-06
             children [
               USE Hip_motor_shape
               DEF Hip_link Transform {
@@ -291,6 +294,9 @@ Robot {
                                 anchor 0 -0.11 0
                               }
                               device [
+                                Brake {
+                                  name "right_brake"
+                                }
                                 PositionSensor {
                                   name "right_wheel_encoder"
                                 }

@@ -1,6 +1,7 @@
 from controller import Motor
 from controller import InertialUnit
 from controller import Gyro
+from controller import Brake
 import numpy as np
 from PID_control import *
 
@@ -22,6 +23,7 @@ class velocity_controller:
         self.count = 0
         self.pitch_exp = 0
         self.fall_flag = False
+        self.restart_flag = False
         self.cur_height = 0.43
 
         self.blance_u = 0.0
@@ -268,29 +270,41 @@ class velocity_controller:
         #             break
         #     break
 
-    def isFall(self):
-        if abs(self.panel.pitch) > 30/180*np.pi:
-            # for i in range(4):
-            #     self.motors[i].setTorque(0.2)
-            self.setHeight(0.2)
-            
-            self.motors[4].setPosition(0)
-            self.motors[5].setPosition(0)
+    def isFall(self,thr):
+        if abs(self.panel.pitch) > thr/180*np.pi:
             self.fall_flag = True
-            # return True
-        
+            return True
         return False
 
-    def restart(self):
+    def isRestart(self):
+        if abs(self.panel.bodyVel)<0.1:
+            self.restart_flag = True
+            return True
+        return False
+
+    def shutdown(self,brakes):
+        # for i in range(4):
+        #     self.motors[i].setTorque(0.2)
+        self.setHeight(0.2)
+        # self.motors[4].setPosition(0)
+        # self.motors[5].setPosition(0)
+        brakes[0].setDampingConstant(1000)
+        brakes[1].setDampingConstant(1000)
+
+    def restart(self,brakes,torque,height):
         if self.panel.pitch>=0:
-            self.motors[4].setTorque(10)
-            self.motors[5].setTorque(10)
+            brakes[0].setDampingConstant(0)
+            brakes[1].setDampingConstant(0)
+            self.motors[4].setTorque(torque)
+            self.motors[5].setTorque(torque)
+            self.setHeight(height)
 
         elif self.panel.pitch<0:
-            self.motors[4].setTorque(-10)
-            self.motors[5].setTorque(-10)
-        
-        self.fall_flag = False
+            brakes[0].setDampingConstant(0)
+            brakes[1].setDampingConstant(0)
+            self.motors[4].setTorque(-torque)
+            self.motors[5].setTorque(-torque)
+            self.setHeight(height)
 
 
     def showMsg(self):
@@ -320,7 +334,7 @@ class velocity_controller:
         print('Angle3: %3f' % self.panel.encoder[4])
         print('-----------------')
 
-    def keyboard_control(self,robot,key):
+    def keyboardControl(self,robot,key):
         if key == 87:  # 'w' 前进
             self.setXVel(0.5)
             print('forward')

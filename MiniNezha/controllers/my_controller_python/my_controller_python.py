@@ -6,6 +6,8 @@ from controller import Motor
 from controller import InertialUnit
 from controller import Gyro
 from controller import Keyboard
+from controller import Brake
+
 from PID_control import *
 from motion import *
 from panel import *
@@ -27,6 +29,7 @@ gps = robot.getGPS("gps")
 gps.enable(TIME_STEP)
 mKeyboard = Keyboard()  # 初始化键盘读入类
 mKeyboard.enable(TIME_STEP)  # 以mTimeStep为周期从键盘读取
+
 
 encoders = []  # joint motor encoders
 encoder_names = [
@@ -50,9 +53,15 @@ motor_names = [
 
 for i in range(len(motor_names)):
     motors.append(robot.getMotor(motor_names[i]))
-    encoders.append(robot.getPositionSensor(encoder_names[i]))
+    encoders.append(motors[i].getPositionSensor())
     encoders[i].enable(TIME_STEP)
     motors[i].setPosition(0)  # enable velocity control
+
+brakes = []
+motors[4].enableTorqueFeedback(TIME_STEP)
+motors[5].enableTorqueFeedback(TIME_STEP)
+brakes.append(motors[4].getBrake())
+brakes.append(motors[5].getBrake())
 
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP)
@@ -60,8 +69,11 @@ vel = velocity_controller(motors, panel)
 
 vel.setHeight(0.4)
 
+fall_flag = False
+restart_flag = False
+
 while robot.step(TIME_STEP) != -1:
-    vel.showMsg()
+    # vel.showMsg()
     # get sensors data
     panel.updateGPS()
     panel.updateIMU()
@@ -71,8 +83,25 @@ while robot.step(TIME_STEP) != -1:
     panel.updateWheelVelocity()
     panel.updateBodyVelocity(vel.cur_height)
     key = mKeyboard.getKey()  # 从键盘读取输入
-    if vel.isFall():
-        continue
+
+    if fall_flag:
+        print("fall_begin")
+        if not restart_flag:
+            restart_flag = vel.isRestart()
+        if restart_flag:
+            print("restart")
+            vel.restart(brakes,6,0.27)
+            if not vel.isFall(30): 
+                print("fall_end")
+                restart_flag = False
+                fall_flag = False
+        else:
+            print("shutdown")
+            vel.shutdown(brakes)
+            continue
     else:
-        vel.keyboard_control(robot,key)
+        vel.keyboardControl(robot,key)
+        fall_flag = vel.isFall(40)
+        # if fall_flag:
+        #     vel.shutdown(brakes)
 
