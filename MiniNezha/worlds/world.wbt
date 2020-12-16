@@ -1,6 +1,16 @@
 #VRML_SIM R2020a utf8
 WorldInfo {
   basicTimeStep 8
+  contactProperties [
+    ContactProperties {
+    }
+    ContactProperties {
+      material1 "body"
+      coulombFriction [
+        0.5
+      ]
+    }
+  ]
 }
 Viewpoint {
   orientation 0.7979164900384174 -0.5910503140227883 -0.11827426270467942 5.791743218574491
@@ -223,7 +233,7 @@ Robot {
           ]
           endPoint DEF hip_link Solid {
             translation -7.490386524828039e-06 1.7845785698466682e-05 2.5947286801664134e-06
-            rotation -0.9992183949954674 0.03952972427549692 -1.1771243453057817e-06 1.5231290267921623e-06
+            rotation -0.9992183949954673 0.03952972427549691 -1.1771243453057777e-06 1.5231290267921623e-06
             children [
               USE Hip_motor_shape
               DEF Hip_link Transform {
@@ -371,6 +381,7 @@ Robot {
     }
   ]
   name "MiniNezha"
+  contactMaterial "body"
   boundingObject USE BODY
   physics Physics {
     density -1

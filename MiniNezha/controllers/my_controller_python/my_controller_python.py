@@ -67,11 +67,10 @@ brakes.append(motors[5].getBrake())
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP)
 vel = velocity_controller(motors, panel)
 
-vel.setHeight(0.4)
+vel.setHeight(0.3)
 
 fall_flag = False
 restart_flag = False
-restart_pid = PID_Controller(5, 1)
 while robot.step(TIME_STEP) != -1:
     # vel.showMsg()
     vel.sensor_update()
@@ -82,24 +81,20 @@ while robot.step(TIME_STEP) != -1:
             restart_flag = vel.isRestart(0.05)
         if restart_flag:
             print("restart")
-            vel.restart(brakes,5,0.3)
-            if not vel.isFall(5):
+            vel.restart(brakes,3,0.25)
+            if not vel.isFall(10):
                 while not vel.isBalance(0.5):
                     vel.sensor_update()
-                    restart_pid.feedback(vel.panel.pitch)
-                    u = restart_pid.get_u()
-                    motors[4].setTorque(u)
-                    motors[5].setTorque(u)
-                    # vel.setXVel(0)
+                    vel.setXVel(0)
                     print("try balance")
                     restart_flag = False
                     fall_flag = False
                     robot.step(TIME_STEP)
         else:
             print("shutdown")
-            vel.shutdown(brakes,0.3)
+            vel.shutdown(brakes,0.25)
             continue
     else:
         vel.keyboardControl(robot,key)
-        fall_flag = vel.isFall(30)
+        fall_flag = vel.isFall(20)
 

@@ -356,7 +356,7 @@ class velocity_controller:
             self.setAVel(key, 0.3)
             print('right')
         elif key == 315:  # '↑' 升高
-            if self.cur_height < 0.45:
+            if self.cur_height < 0.43:
                 self.cur_height += 0.01
             self.setHeight(self.cur_height)
         elif key == 317:  # '↓' 下降
