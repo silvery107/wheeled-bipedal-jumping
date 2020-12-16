@@ -129,7 +129,7 @@ class velocity_controller:
         # elif 0 > Ev > self.Ev:
         #     self.Ev = Ev
         if Ev == 0.0:
-            self.pitch_exp = -0.007+0.07*self.panel.bodyVel
+            self.pitch_exp = -0.007+0.07*self.panel.bodyVel-0.048*(0.3-self.cur_height)
         elif Ev>0:
             self.pitch_exp = -0.007+0.05*(self.panel.bodyVel-Ev)/Ev
         else:
