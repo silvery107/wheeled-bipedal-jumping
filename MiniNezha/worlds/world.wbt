@@ -3,18 +3,23 @@ WorldInfo {
   basicTimeStep 8
   contactProperties [
     ContactProperties {
+      bounce 0
     }
     ContactProperties {
       material1 "body"
       coulombFriction [
-        0.5
+        0.1
+      ]
+      bounce 0
+      forceDependentSlip [
+        1
       ]
     }
   ]
 }
 Viewpoint {
-  orientation 0.7979164900384174 -0.5910503140227883 -0.11827426270467942 5.791743218574491
-  position 1.2472862052264684 1.3307640200156392 2.2092992302739236
+  orientation 0.9593741537646234 -0.2809307483045207 -0.026060463262853543 6.0903987237535455
+  position 0.5906764424318276 0.7053489862613359 2.5769578126537263
   follow "MiniNezha"
   followSmoothness 0
 }
@@ -233,7 +238,7 @@ Robot {
           ]
           endPoint DEF hip_link Solid {
             translation -7.490386524828039e-06 1.7845785698466682e-05 2.5947286801664134e-06
-            rotation -0.9992183949954673 0.03952972427549691 -1.1771243453057777e-06 1.5231290267921623e-06
+            rotation -0.9992183949954672 0.039529724275496905 -1.177124345305769e-06 1.5231290267921623e-06
             children [
               USE Hip_motor_shape
               DEF Hip_link Transform {

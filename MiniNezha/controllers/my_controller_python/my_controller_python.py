@@ -78,12 +78,12 @@ while robot.step(TIME_STEP) != -1:
 
     if fall_flag:
         if not restart_flag:
-            restart_flag = vel.isRestart(0.05)
+            restart_flag = vel.checkVel(0.005)
         if restart_flag:
             print("restart")
-            vel.restart(brakes,3,0.25)
-            if not vel.isFall(10):
-                while not vel.isBalance(0.5):
+            vel.restart(brakes,3.5,0.25)
+            if vel.checkPitch(7):
+                while (not vel.checkAcc(0.1) and not vel.checkVel(0.1)):
                     vel.sensor_update()
                     vel.setXVel(0)
                     print("try balance")
@@ -96,5 +96,5 @@ while robot.step(TIME_STEP) != -1:
             continue
     else:
         vel.keyboardControl(robot,key)
-        fall_flag = vel.isFall(20)
+        fall_flag = not vel.checkPitch(30)
 

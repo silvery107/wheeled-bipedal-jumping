@@ -202,7 +202,7 @@ class velocity_controller:
             robot.step(TIME_STEP)
             self.panel.updateGPS()
             print("jump phase 1")
-            if self.panel.gps_y > 0.49:  # 直立时gps0.488
+            if self.panel.gps_y > 0.48:  # 直立时gps0.488
                 while 1:
                     print("jump phase 2")
                     TIME_STEP = int(robot.getBasicTimeStep())
@@ -276,22 +276,22 @@ class velocity_controller:
         #             break
         #     break
 
-    def isFall(self,angle_thr=30):
-        if abs(self.panel.pitch) > angle_thr/180*np.pi:
+    def checkPitch(self,angle_thr=30): # check body pitch
+        if abs(self.panel.pitch) <= angle_thr/180*np.pi:
             return True
         return False
 
-    def isBalance(self,acc_thr=0.1):
+    def checkAcc(self,acc_thr=0.1): # check body acceleration
         if abs(self.panel.bodyAcce)<acc_thr:
             return True
         return False
 
-    def isRestart(self,vel_thr=0.05):
+    def checkVel(self,vel_thr=0.05): # check body velocity
         if abs(self.panel.bodyVel)<vel_thr:
             return True
         return False
 
-    def shutdown(self,brakes,height=0.2):
+    def shutdown(self,brakes,height=0.25):
         # for i in range(4):
         #     self.motors[i].setTorque(0.2)
         self.setHeight(height)
@@ -300,20 +300,17 @@ class velocity_controller:
         brakes[0].setDampingConstant(1000)
         brakes[1].setDampingConstant(1000)
 
-    def restart(self,brakes,torque=5,height=0.27):
+    def restart(self,brakes,torque=3.5,height=0.25):
+        brakes[0].setDampingConstant(0)
+        brakes[1].setDampingConstant(0)
         if self.panel.pitch>=0:
-            brakes[0].setDampingConstant(0)
-            brakes[1].setDampingConstant(0)
             self.motors[4].setTorque(torque)
             self.motors[5].setTorque(torque)
-            self.setHeight(height)
-
-        elif self.panel.pitch<0:
-            brakes[0].setDampingConstant(0)
-            brakes[1].setDampingConstant(0)
+        else:
             self.motors[4].setTorque(-torque)
             self.motors[5].setTorque(-torque)
-            self.setHeight(height)
+
+        self.setHeight(height)
 
     def showMsg(self):
         print('-----------------')
