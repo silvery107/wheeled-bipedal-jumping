@@ -72,7 +72,7 @@ vel.setHeight(0.3)
 fall_flag = False
 restart_flag = False
 while robot.step(TIME_STEP) != -1:
-    # vel.showMsg()
+    vel.showMsg()
     vel.sensor_update()
     key = mKeyboard.getKey()  # 从键盘读取输入
 
@@ -81,8 +81,8 @@ while robot.step(TIME_STEP) != -1:
             restart_flag = vel.checkVel(0.005)
         if restart_flag:
             print("restart")
-            vel.restart(brakes,3.5,0.25)
-            if vel.checkPitch(7):
+            vel.restart(brakes,3,0.25)
+            if vel.checkPitch(8):
                 while (not vel.checkAcc(0.1) and not vel.checkVel(0.1)):
                     vel.sensor_update()
                     vel.setXVel(0)

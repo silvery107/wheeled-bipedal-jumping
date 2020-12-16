@@ -297,8 +297,8 @@ class velocity_controller:
         self.setHeight(height)
         # self.motors[4].setPosition(0)
         # self.motors[5].setPosition(0)
-        brakes[0].setDampingConstant(1000)
-        brakes[1].setDampingConstant(1000)
+        brakes[0].setDampingConstant(10000)
+        brakes[1].setDampingConstant(10000)
 
     def restart(self,brakes,torque=3.5,height=0.25):
         brakes[0].setDampingConstant(0)
@@ -307,8 +307,10 @@ class velocity_controller:
             self.motors[4].setTorque(torque)
             self.motors[5].setTorque(torque)
         else:
-            self.motors[4].setTorque(-torque)
-            self.motors[5].setTorque(-torque)
+            self.shutdown(brakes,0.15)
+            print("restart failed") # 这里偷懒了,前倾站不起来
+            # self.motors[4].setTorque(-torque)
+            # self.motors[5].setTorque(-torque)
 
         self.setHeight(height)
 

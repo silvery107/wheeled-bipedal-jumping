@@ -8,18 +8,15 @@ WorldInfo {
     ContactProperties {
       material1 "body"
       coulombFriction [
-        0.1
+        0
       ]
       bounce 0
-      forceDependentSlip [
-        1
-      ]
     }
   ]
 }
 Viewpoint {
-  orientation 0.9593741537646234 -0.2809307483045207 -0.026060463262853543 6.0903987237535455
-  position 0.5906764424318276 0.7053489862613359 2.5769578126537263
+  orientation 0.3961312481743148 -0.9101456622124322 -0.12130501958184835 5.634067993325745
+  position 1.1245423145478681 0.6099953389143395 1.238105484765123
   follow "MiniNezha"
   followSmoothness 0
 }
@@ -57,14 +54,17 @@ Robot {
               maxTorque 35
             }
           ]
-          endPoint DEF hip_link Solid {
-            translation -1.0311498431386323e-05 1.1853529323604264e-05 5.136538708261363e-09
-            rotation 0.7544000485867818 0.6564149348484377 4.2741343522005795e-07 5.847637912734942e-07
+          endPoint Solid {
+            rotation 0 0 1 0
             children [
-              DEF Hip_motor_shape Transform {
+              DEF Hip_Motor_Transform Transform {
                 rotation 1 0 0 1.57
                 children [
-                  Shape {
+                  DEF Motor_Shape Shape {
+                    appearance DEF Motor_Color PBRAppearance {
+                      baseColor 0.9 0.9 0.9
+                      metalness 0.2
+                    }
                     geometry Cylinder {
                       height 0.03
                       radius 0.02
@@ -77,9 +77,9 @@ Robot {
                 children [
                   Shape {
                     appearance PBRAppearance {
-                      baseColor 0 0 0
-                      roughness 0.5
-                      metalness 0.5
+                      baseColor 0.93 0.423 0
+                      metalness 0.4
+                      emissiveColor 0.53 0.023 0
                     }
                     geometry Box {
                       size 0.02 0.22 0.02
@@ -107,44 +107,26 @@ Robot {
                     endPoint Solid {
                       rotation 0 0 1 0
                       children [
+                        Solid {
+                          rotation 1 0 0 0
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                          name "solid(1)"
+                          boundingObject USE Hip_Motor_Transform
+                          physics Physics {
+                            density -1
+                            mass 0.1
+                          }
+                        }
                         Transform {
                           translation 0 -0.22 0
-                          rotation 1 0 0 1.57
+                          rotation 1 0 0 -0.000795307179585869
                           children [
-                            DEF Motor_Shape Shape {
-                              geometry Cylinder {
-                                height 0.03
-                                radius 0.02
-                              }
-                            }
+                            USE Hip_Motor_Transform
                           ]
                         }
-                        DEF Keen_motor_shape Transform {
-                          rotation 1 0 0 1.57
-                          children [
-                            Shape {
-                              geometry Cylinder {
-                                height 0.03
-                                radius 0.02
-                              }
-                            }
-                          ]
-                        }
-                        DEF Keen_link Transform {
-                          translation 0 -0.11 0
-                          children [
-                            Shape {
-                              appearance PBRAppearance {
-                                baseColor 0 0 0
-                                roughness 0.5
-                                metalness 0.5
-                              }
-                              geometry Box {
-                                size 0.02 0.22 0.02
-                              }
-                            }
-                          ]
-                        }
+                        USE Hip_link
                         Transform {
                           translation 0 -0.11 0
                           children [
@@ -192,10 +174,10 @@ Robot {
                           ]
                         }
                       ]
-                      boundingObject USE Keen_motor_shape
+                      boundingObject USE Hip_link
                       physics Physics {
                         density -1
-                        mass 0.1
+                        mass 0.5
                         centerOfMass [
                           0 -0.22 0
                         ]
@@ -204,13 +186,11 @@ Robot {
                   }
                 ]
               }
-              Shape {
-              }
             ]
-            boundingObject USE Hip_motor_shape
+            boundingObject USE Hip_link
             physics Physics {
               density -1
-              mass 0.1
+              mass 0.5
               centerOfMass [
                 0 0 0
               ]
@@ -237,25 +217,10 @@ Robot {
             }
           ]
           endPoint DEF hip_link Solid {
-            translation -7.490386524828039e-06 1.7845785698466682e-05 2.5947286801664134e-06
-            rotation -0.9992183949954672 0.039529724275496905 -1.177124345305769e-06 1.5231290267921623e-06
+            rotation 0 0 1 0
             children [
-              USE Hip_motor_shape
-              DEF Hip_link Transform {
-                translation 0 -0.11 0
-                children [
-                  Shape {
-                    appearance PBRAppearance {
-                      baseColor 0 0 0
-                      roughness 0.5
-                      metalness 0.5
-                    }
-                    geometry Box {
-                      size 0.02 0.22 0.02
-                    }
-                  }
-                ]
-              }
+              USE Hip_link
+              USE Hip_Motor_Transform
               Transform {
                 translation 0 -0.22 0
                 children [
@@ -274,30 +239,25 @@ Robot {
                       }
                     ]
                     endPoint Solid {
-                      translation 1.2261248381270289e-05 1.6065078163967865e-05 -1.1195204624447895e-08
-                      rotation -0.7939420595358966 0.6079934260334308 -1.731979270997535e-07 5.280984981855572e-07
+                      rotation 0 0 1 0
                       children [
+                        Solid {
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                          name "solid(1)"
+                          boundingObject USE Hip_Motor_Transform
+                          physics Physics {
+                            density -1
+                            mass 0.1
+                          }
+                        }
+                        USE Hip_link
                         Transform {
                           translation 0 -0.22 0
-                          rotation 1 0 0 1.57
+                          rotation 1 0 0 -0.000795307179585869
                           children [
-                            USE Motor_Shape
-                          ]
-                        }
-                        USE Keen_motor_shape
-                        DEF Keen_link Transform {
-                          translation 0 -0.11 0
-                          children [
-                            Shape {
-                              appearance PBRAppearance {
-                                baseColor 0 0 0
-                                roughness 0.5
-                                metalness 0.5
-                              }
-                              geometry Box {
-                                size 0.02 0.22 0.02
-                              }
-                            }
+                            USE Hip_Motor_Transform
                           ]
                         }
                         Transform {
@@ -347,10 +307,10 @@ Robot {
                           ]
                         }
                       ]
-                      boundingObject USE Keen_motor_shape
+                      boundingObject USE Hip_link
                       physics Physics {
                         density -1
-                        mass 0.1
+                        mass 0.5
                         centerOfMass [
                           0 -0.22 0
                         ]
@@ -363,10 +323,10 @@ Robot {
               }
             ]
             name "solid(1)"
-            boundingObject USE Hip_motor_shape
+            boundingObject USE Hip_link
             physics Physics {
               density -1
-              mass 0.1
+              mass 0.5
               centerOfMass [
                 0 0 0
               ]
@@ -376,9 +336,13 @@ Robot {
       ]
     }
     DEF BODY Shape {
-      appearance PBRAppearance {
-        roughness 0.1
-        metalness 0.8
+      appearance Appearance {
+        material Material {
+          diffuseColor 0 0.247 0.263
+          emissiveColor 0 0.047 0.063
+        }
+        texture ImageTexture {
+        }
       }
       geometry Box {
         size 0.15 0.1 0.23
