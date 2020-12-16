@@ -27,16 +27,16 @@ class velocity_controller:
         self.blance_u = 0.0
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
         # 摆动角速度
-        self.omgz_Kp = 2
+        self.omgz_Kp = 0.0#2
         self.omgz_Kd = 0.0  # 再大一点就会抖
 
         self.omgz_u = 0.0
         self.omgz_pid = PID_Controller(self.omgz_Kp, self.omgz_Kd, 0.0)
 
         # body速度
-        self.translation_Kp = 8000  #
-        self.translation_Kp1 = 0.00008  # 这一项确定数量级
-        self.translation_Ki = 10.0  #
+        self.translation_Kp = 0.0#8000  #
+        self.translation_Kp1 = 0.0#0.00008  # 这一项确定数量级
+        self.translation_Ki = 0.0#10.0  #
 
         self.translation_u = 0.0
         self.translation_pid = PID_Controller(self.translation_Kp, 10000, self.translation_Ki)
@@ -128,9 +128,11 @@ class velocity_controller:
         # elif 0 > Ev > self.Ev:
         #     self.Ev = Ev
         if Ev == 0.0:
-            self.pitch_exp = -0.04
+            self.pitch_exp = -0.02
+        elif Ev>0:
+            self.pitch_exp = -0.1
         else:
-            self.pitch_exp = -0.04
+            self.pitch_exp = -0.07
 
         # 直立
         pitch_err = self.pitch_exp - self.panel.pitch
@@ -159,9 +161,9 @@ class velocity_controller:
                 self.rotation_u = -8.3
 
         self.motors[4].setTorque(
-            -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u + 0.028 * self.wheel_u)
+            -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u + 0.028 * self.rotation_u)
         self.motors[5].setTorque(
-            -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u - 0.028 * self.wheel_u)
+            -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u - 0.028 * self.rotation_u)
 
     def setAVel(self,key,vel):
         rotation_err = vel - self.panel.omega_y
