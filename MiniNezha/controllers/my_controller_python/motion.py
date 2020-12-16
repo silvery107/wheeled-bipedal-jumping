@@ -18,7 +18,7 @@ class velocity_controller:
         self.factor2 = 1
         # 平衡小车之家说还要乘0.6,我没乘
         # 角度
-        self.pitch_Kp = 2.8  # 4 的时候平衡车，kp越大越稳
+        self.pitch_Kp = 3.0#2.8  # 4 的时候平衡车，kp越大越稳
         self.pitch_Kd = 0.0  # 再大就会抖
         self.count = 0
         self.pitch_exp = 0
@@ -27,15 +27,15 @@ class velocity_controller:
         self.blance_u = 0.0
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
         # 摆动角速度
-        self.omgz_Kp = 2
+        self.omgz_Kp = 2.0#2
         self.omgz_Kd = 0.0  # 再大一点就会抖
 
         self.omgz_u = 0.0
         self.omgz_pid = PID_Controller(self.omgz_Kp, self.omgz_Kd, 0.0)
 
         # body速度
-        self.translation_Kp = 8000  #
-        self.translation_Kp1 = 0.00008  # 这一项确定数量级
+        self.translation_Kp = 1000.0#8000  #
+        self.translation_Kp1 = 0.0001#0.00008  # 这一项确定数量级
         self.translation_Ki = 0.0  #
 
         self.translation_u = 0.0
@@ -129,12 +129,11 @@ class velocity_controller:
         # elif 0 > Ev > self.Ev:
         #     self.Ev = Ev
         if Ev == 0.0:
-            self.pitch_exp = -0.02
+            self.pitch_exp = -0.007
         elif Ev>0:
-            self.pitch_exp = -0.1
+            self.pitch_exp = -0.01
         else:
             self.pitch_exp = -0.07
-
         # 直立
         pitch_err = self.pitch_exp - self.panel.pitch
         self.blance_pid.feedback(pitch_err)
@@ -323,19 +322,19 @@ class velocity_controller:
         print("t_u: %.5f" % (self.translation_Kp1 * self.translation_u))
         # print("w_u: %.5f" % (self.wheel_Kp1 * self.wheel_u))
         # print("pitch_err: %.3f" % pitch_err)
-        print("pitch: %.3f" % self.panel.pitch)
-        print("omgz_u: %.3f" % (0.01 * self.omgz_u))
+        print("pitch: %.5f" % self.panel.pitch)
+        #print("omgz_u: %.3f" % (0.01 * self.omgz_u))
         # print("EV: %.3f" % (Ev))
-        print("GPS_V: %.3f" % self.panel.gps_v)
-        print("GPS_height: %.3f" % self.panel.gps_y)
-        print("wheel_V: %.3f" % (self.panel.rightWheelVel * 0.05))
-        print("body_V: %.3f" % self.panel.bodyVel)
+        #print("GPS_V: %.3f" % self.panel.gps_v)
+        #print("GPS_height: %.3f" % self.panel.gps_y)
+        #print("wheel_V: %.3f" % (self.panel.rightWheelVel * 0.05))
+        print("body_V: %.5f" % self.panel.bodyVel)
         # print("omega_y: %.5f" % self.panel.omega_y)
         # print("omega_x: %.5f" % self.panel.omega_x)
         print("omega_z: %.5f" % self.panel.omega_z)
-        print("期望速度： %.5f" % self.Ev)
+        #print("期望速度： %.5f" % self.Ev)
         # print("与期望速度差： %.5f" % (Ev - self.panel.rightWheelVel * 0.05))
-        print("预期倾角：%.5f" % self.pitch_exp)
+        #print("预期倾角：%.5f" % self.pitch_exp)
         # print("Displacement: %.2f" % (self.panel.gps_dd))
         # print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
         # print("rWheelVelSP: %.3f" % (self.panel.samplingPeriod))
