@@ -18,7 +18,7 @@ class velocity_controller:
         self.factor2 = 1
         # 平衡小车之家说还要乘0.6,我没乘
         # 角度
-        self.pitch_Kp = 3.0#2.8  # 4 的时候平衡车，kp越大越稳
+        self.pitch_Kp = 10.0#2.8  # 4 的时候平衡车，kp越大越稳
         self.pitch_Kd = 0.0  # 再大就会抖
         self.count = 0
         self.pitch_exp = 0
@@ -129,11 +129,11 @@ class velocity_controller:
         # elif 0 > Ev > self.Ev:
         #     self.Ev = Ev
         if Ev == 0.0:
-            self.pitch_exp = -0.007+0.01*self.panel.bodyVel
+            self.pitch_exp = -0.007+0.07*self.panel.bodyVel
         elif Ev>0:
-            self.pitch_exp = -0.007+0.017*(self.panel.bodyVel-Ev)/Ev
+            self.pitch_exp = -0.007+0.05*(self.panel.bodyVel-Ev)/Ev
         else:
-            self.pitch_exp = -0.007+-0.003*(self.panel.bodyVel-Ev)/Ev
+            self.pitch_exp = -0.007-0.05*(self.panel.bodyVel-Ev)/Ev
         # 直立
         pitch_err = self.pitch_exp - self.panel.pitch
         self.blance_pid.feedback(pitch_err)
