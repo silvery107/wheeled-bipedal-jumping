@@ -27,27 +27,28 @@ class velocity_controller:
         self.blance_u = 0.0
         self.blance_pid = PID_Controller(self.pitch_Kp, self.pitch_Kd)
         # 摆动角速度
-        self.omgz_Kp = 0.0#2
+        self.omgz_Kp = 2
         self.omgz_Kd = 0.0  # 再大一点就会抖
 
         self.omgz_u = 0.0
         self.omgz_pid = PID_Controller(self.omgz_Kp, self.omgz_Kd, 0.0)
 
         # body速度
-        self.translation_Kp = 0.0#8000  #
-        self.translation_Kp1 = 0.0#0.00008  # 这一项确定数量级
-        self.translation_Ki = 0.0#10.0  #
+        self.translation_Kp = 8000  #
+        self.translation_Kp1 = 0.00008  # 这一项确定数量级
+        self.translation_Ki = 0.0  #
 
         self.translation_u = 0.0
         self.translation_pid = PID_Controller(self.translation_Kp, 10000, self.translation_Ki)
 
-        # 轮子速度
-        self.wheel_Kp = 50
-        self.wheel_Kp1 = 0.0015
-        self.wheel_Ki = 10
-
-        self.wheel_u = 0.0
-        self.wheel_pid = PID_Controller(self.wheel_Kp, 20, self.wheel_Ki)
+        # # 轮子速度
+        # self.wheel_Kp = 50
+        # self.wheel_Kp1 = 0.0015
+        # self.wheel_Ki = 10
+        #
+        #
+        # self.wheel_u = 0.0
+        # self.wheel_pid = PID_Controller(self.wheel_Kp, 20, self.wheel_Ki)
 
         # 转弯控制
         self.rotation_u = 0.0
