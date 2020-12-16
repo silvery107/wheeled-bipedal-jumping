@@ -133,7 +133,7 @@ class velocity_controller:
         elif Ev>0:
             self.pitch_exp = -0.01
         else:
-            self.pitch_exp = -0.07
+            self.pitch_exp = 0.01
         # 直立
         pitch_err = self.pitch_exp - self.panel.pitch
         self.blance_pid.feedback(pitch_err)
