@@ -34,12 +34,12 @@ class velocity_controller:
         self.omgz_pid = PID_Controller(self.omgz_Kp, self.omgz_Kd, 0.0)
 
         # body速度
-        self.translation_Kp = 1000.0#8000  #
-        self.translation_Kp1 = 0.0001#0.00008  # 这一项确定数量级
+        self.translation_Kp = 10000.0#8000  #
+        self.translation_Kp1 = 0.00001#0.00008  # 这一项确定数量级
         self.translation_Ki = 0.0  #
 
         self.translation_u = 0.0
-        self.translation_pid = PID_Controller(self.translation_Kp, 10000, self.translation_Ki)
+        self.translation_pid = PID_Controller(self.translation_Kp, 100000, self.translation_Ki)
 
         # # 轮子速度
         # self.wheel_Kp = 50
@@ -129,11 +129,11 @@ class velocity_controller:
         # elif 0 > Ev > self.Ev:
         #     self.Ev = Ev
         if Ev == 0.0:
-            self.pitch_exp = -0.007
+            self.pitch_exp = -0.007+0.01*self.panel.bodyVel
         elif Ev>0:
-            self.pitch_exp = -0.01
+            self.pitch_exp = -0.007+0.017*(self.panel.bodyVel-Ev)/Ev
         else:
-            self.pitch_exp = 0.01
+            self.pitch_exp = -0.007+-0.003*(self.panel.bodyVel-Ev)/Ev
         # 直立
         pitch_err = self.pitch_exp - self.panel.pitch
         self.blance_pid.feedback(pitch_err)
