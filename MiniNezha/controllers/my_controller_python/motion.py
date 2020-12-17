@@ -52,9 +52,14 @@ class velocity_controller:
 
         # 转弯控制
         self.rotation_u = 0.0
-        self.rotation_Kp = 10.0
-        self.rotation_Ki = 5.0
-        self.rotation_Kd = 0.0
+        # self.rotation_Kp = 10.0
+        # self.rotation_Ki = 5.0
+        # self.rotation_Kd = 0.0
+
+        self.rotation_Kp = 50.0
+        self.rotation_Ki = 2.5
+        self.rotation_Kd = 5.0
+
         self.rotation_pid = PID_Controller(self.rotation_Kp, self.rotation_Kd, self.rotation_Ki)
         
     def calc_balance_angle_1(self, h):
@@ -154,11 +159,12 @@ class velocity_controller:
         # self.wheel_pid.feedback(wheel_err)
         # self.wheel_u = self.wheel_pid.get_u()
 
-        if abs(self.rotation_u) > 8.3:
-            if self.rotation_u > 0:
-                self.rotation_u = 8.3
-            else:
-                self.rotation_u = -8.3
+        #         if abs(self.rotation_u) > 8.3:
+        # if self.rotation_u > 0:
+        #         self.rotation_u = 8.3
+        #     else:
+        #         self.rotation_u = -8.3
+        print(self.panel.omega_y)
 
         self.motors[4].setTorque(
             -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u + 0.028 * self.rotation_u)
@@ -172,7 +178,7 @@ class velocity_controller:
             self.rotation_u = self.rotation_pid.get_u()
             self.panel.rotation = 1
         elif key == 68:
-            self.rotation_u = -self.rotation_pid.get_u()
+            self.rotation_u = self.rotation_pid.get_u()
             self.panel.rotation = -1
         elif key == 70:
             self.rotation_u = 0.0
@@ -351,11 +357,13 @@ class velocity_controller:
             self.setXVel(-0.5)
             print('backward')
         elif key == 65:  # 'a' 左转
-            self.setAVel(key, 0.3)
+            self.setAVel(key, 0.6)
             print('left')
         elif key == 68:  # 'd' 右转
-            self.setAVel(key, 0.3)
+            self.setAVel(key, -0.6)
             print('right')
+        elif key == 70:  # 'f' 停止旋转
+            self.setAVel(key, 0.0)
         elif key == 315:  # '↑' 升高
             if self.cur_height < 0.43:
                 self.cur_height += 0.01
@@ -378,9 +386,9 @@ class velocity_controller:
 
         rotation = self.panel.getRotation()
         if rotation == 1:
-            self.setAVel(65, 0.3)
+            self.setAVel(65, 0.6)
         elif rotation == -1:
-            self.setAVel(68, 0.3)
+            self.setAVel(68, -0.6)
         elif rotation == 0:
             self.setAVel(70, 0.0)
         # change robot position.
