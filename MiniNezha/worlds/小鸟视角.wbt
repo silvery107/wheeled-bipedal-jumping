@@ -12,11 +12,11 @@ WorldInfo {
   }
 }
 Viewpoint {
-  orientation -0.08116420431368863 0.7184397522679993 0.6908376757960019 2.9094350535438918
-  position -10.874258589688333 3.5430713398340665 2.3318965923455037
+  orientation 0.11321982214764523 0.9547532567266109 0.2750045284041446 3.7349309028886575
+  position -27.49363205256295 9.009095488065379 -11.477295148586649
   near 0.2
   follow "MiniNezha"
-  followType "Mounted Shot"
+  followType "None"
   followSmoothness 0.2
 }
 TexturedBackground {
@@ -36,7 +36,7 @@ Robot {
   children [
     SliderJoint {
       jointParameters JointParameters {
-        position 0.3384000000000006
+        position 6.2462399999999985
       }
       device [
         PositionSensor {
@@ -45,7 +45,7 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation 0 0 0.3384000000000006
+        translation 0 0 6.2462399999999985
         rotation 0 0 1 -1.5708003061004252
         children [
           Shape {
@@ -193,8 +193,8 @@ Forest {
   minRadius 3
 }
 Robot {
-  translation -11.724377837730984 0.47812274519649567 2.40026669164343
-  rotation -0.0003187059184571443 0.9999969382460745 0.002453961086537609 -0.2610643567413913
+  translation -24.317147079221108 0.4681217103753843 -1.410696421433134
+  rotation -0.00047204075815273126 0.9975534191516165 0.06990674585790538 -0.015711480358177883
   children [
     GPS {
     }
@@ -208,7 +208,7 @@ Robot {
       children [
         HingeJoint {
           jointParameters HingeJointParameters {
-            position -0.21570227875879888
+            position -0.3056820329394645
             axis 0 0 1
           }
           device [
@@ -222,7 +222,7 @@ Robot {
             }
           ]
           endPoint Solid {
-            rotation 0 0 -1 0.21570227875879797
+            rotation 0 0 -1 0.3056820329394647
             children [
               DEF Hip_Motor_Transform Transform {
                 rotation 1 0 0 1.57
@@ -259,7 +259,7 @@ Robot {
                 children [
                   HingeJoint {
                     jointParameters HingeJointParameters {
-                      position 0.42719514719923823
+                      position 0.6053030778271269
                       axis 0 0 1
                     }
                     device [
@@ -273,7 +273,7 @@ Robot {
                       }
                     ]
                     endPoint Solid {
-                      rotation 0 0 1 0.42719514719923796
+                      rotation 0 0 1 0.6053030778271269
                       children [
                         Solid {
                           rotation 1 0 0 0
@@ -300,7 +300,7 @@ Robot {
                           children [
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                position 0.9595498985709943
+                                position -368.56072220326564
                                 axis 0 0 1
                                 anchor 0 -0.11 0
                               }
@@ -318,8 +318,8 @@ Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0 -0.11 -0.024999999999999974
-                                rotation 0.8053243942384155 0.4190302787004958 0.4193640966710357 1.784856362833854
+                                translation 0 -0.11 -0.025000000000000015
+                                rotation -0.35812552829524424 -0.6599439034016754 -0.660469643773438 3.8298886990348278
                                 children [
                                   DEF wheel Shape {
                                     appearance PBRAppearance {
@@ -338,8 +338,8 @@ Robot {
                                   density -1
                                   mass 1
                                 }
-                                linearVelocity -0.00010369717192252253 8.897140590455285e-08 -2.7735379913146753e-05
-                                angularVelocity -0.0005553338947774594 2.7472626695485503e-07 0.0020763384279376593
+                                linearVelocity -0.00013446042591052016 -8.012100816314646e-11 -2.1078037298198265e-06
+                                angularVelocity -4.2199705202995426e-05 -5.030256494455109e-07 0.0026922458958863237
                               }
                             }
                           ]
@@ -353,8 +353,8 @@ Robot {
                           0 -0.22 0
                         ]
                       }
-                      linearVelocity -0.00010397741938702077 4.093433237929803e-08 -2.7829276489096613e-05
-                      angularVelocity -2.7570070878036827e-06 2.7764526588638825e-07 8.00695875840507e-06
+                      linearVelocity -0.00013448112862692377 -2.6195578501876618e-09 -2.1134851973861362e-06
+                      angularVelocity -4.290403813955096e-09 -5.005283114504622e-07 2.3666170503646132e-07
                     }
                   }
                 ]
@@ -368,8 +368,8 @@ Robot {
                 0 0 0
               ]
             }
-            linearVelocity -0.0001063362178186102 -6.321337256939946e-08 -2.8704675012531722e-05
-            angularVelocity -1.76883167396013e-06 2.778204951018155e-07 4.307419781312199e-06
+            linearVelocity -0.0001345723254242915 3.424056621278789e-10 -2.1088119861814473e-06
+            angularVelocity -4.300687538107457e-09 -5.005321549854549e-07 2.366624133584893e-07
           }
         }
       ]
@@ -379,7 +379,7 @@ Robot {
       children [
         HingeJoint {
           jointParameters HingeJointParameters {
-            position -0.21570221527125047
+            position -0.3056820329306218
             axis 0 0 1
           }
           device [
@@ -393,7 +393,7 @@ Robot {
             }
           ]
           endPoint DEF hip_link Solid {
-            rotation 0 0 -1 0.2157022152712505
+            rotation 0 0 -1 0.3056820329306221
             children [
               USE Hip_link
               USE Hip_Motor_Transform
@@ -402,7 +402,7 @@ Robot {
                 children [
                   HingeJoint {
                     jointParameters HingeJointParameters {
-                      position 0.427194546582017
+                      position 0.6053030772756511
                       axis 0 0 1
                     }
                     device [
@@ -416,7 +416,7 @@ Robot {
                       }
                     ]
                     endPoint Solid {
-                      rotation 0 0 1 0.4271945465820172
+                      rotation 0 0 1 0.6053030772756514
                       children [
                         Solid {
                           children [
@@ -442,7 +442,7 @@ Robot {
                           children [
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                position 2.1506213118510367
+                                position -365.65734313365135
                                 axis 0 0 1
                                 anchor 0 -0.11 0
                               }
@@ -460,8 +460,8 @@ Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0 -0.11 0.02499999999999994
-                                rotation 0.35685581764597313 0.6602874403554068 0.6608134544038347 2.455549654908045
+                                translation 0 -0.11 0.02499999999999998
+                                rotation 0.7063522662994123 -0.5003336203350105 -0.5007322081274036 1.910888997466216
                                 children [
                                   DEF wheel Shape {
                                     appearance PBRAppearance {
@@ -480,8 +480,8 @@ Robot {
                                   density -1
                                   mass 1
                                 }
-                                linearVelocity -0.00010556669457990276 -9.50931722341066e-08 -2.8232907353469025e-05
-                                angularVelocity -0.0005653180164234431 2.84077264456705e-07 0.0021137078187258695
+                                linearVelocity -0.000134610573948071 9.589079088817187e-11 -2.109762111900771e-06
+                                angularVelocity -4.224687511723337e-05 -4.916101837866992e-07 0.002695250552325415
                               }
                             }
                           ]
@@ -495,8 +495,8 @@ Robot {
                           0 -0.22 0
                         ]
                       }
-                      linearVelocity -0.0001055582759956812 -1.094047249727631e-07 -2.8250291849115928e-05
-                      angularVelocity -4.877880961463327e-07 2.7767800246379304e-07 -4.885544031540884e-07
+                      linearVelocity -0.00013460625104407356 -2.4715124784848663e-09 -2.1151772523196797e-06
+                      angularVelocity -4.35837174376957e-09 -5.005362985042031e-07 2.366604065226199e-07
                     }
                   }
                 ]
@@ -513,8 +513,8 @@ Robot {
                 0 0 0
               ]
             }
-            linearVelocity -0.00010626603880711189 9.006878824882786e-08 -2.8685333639339982e-05
-            angularVelocity -1.6061362470352548e-06 2.778532693620432e-07 3.6973630567648286e-06
+            linearVelocity -0.00013469744514843515 4.932386595619927e-10 -2.11064966381786e-06
+            angularVelocity -4.347657797924402e-09 -5.005322649549949e-07 2.3666168241954713e-07
           }
         }
       ]
@@ -549,8 +549,8 @@ Robot {
     ]
   }
   controller "my_controller_python"
-  linearVelocity -0.00010630112312625157 1.3346349522428706e-08 -2.8694497800855014e-05
-  angularVelocity -1.6539413766828245e-06 2.780372623674473e-07 3.875913677285239e-06
+  linearVelocity -0.0001346348800770214 4.1803873486511376e-10 -2.109730734770153e-06
+  angularVelocity -4.32404847513057e-09 -5.005323299894593e-07 2.366625262254426e-07
 }
 Solid {
   translation -11.1065 0 2.12198
@@ -558,8 +558,7 @@ Solid {
   scale 1.5 1.5 1.5
   children [
     Solid {
-      translation 1.578983857244667e-15 -0.004186632360501744 0
-      rotation -0.0009768802523520681 0.9999994956542632 -0.00023322991186053226 1.110223584561688e-16
+      translation 0 -0.001395819864535408 0
       children [
         DEF ramp Shape {
           appearance PBRAppearance {
@@ -588,8 +587,7 @@ Solid {
       boundingObject USE ramp
       physics Physics {
       }
-      linearVelocity -4.383851237715173e-14 6.78879789886543e-16 -1.0959628094287933e-14
-      angularVelocity 2.010624564331145e-22 -1.3559026324073853e-15 9.683491443776263e-23
+      linearVelocity 0 -6.968552484806683e-16 0
     }
   ]
   name "<STL_BINARY>"
