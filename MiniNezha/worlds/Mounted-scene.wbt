@@ -12,10 +12,11 @@ WorldInfo {
   }
 }
 Viewpoint {
-  orientation 0.5295743264133107 -0.8233991129875771 -0.20387479867595168 5.7708447798874225
-  position -40.621820691333454 0.9554358557017768 -0.15607504187191262
+  orientation -0.014918583187040903 -0.9990168282181889 -0.041747009624174714 3.513337803056105
+  position -25.20226661246963 0.5348505284014977 -4.8340747238965305
   near 0.2
   follow "MiniNezha"
+  followType "Mounted Shot"
   followSmoothness 0.2
 }
 TexturedBackground {
@@ -35,7 +36,7 @@ Robot {
   children [
     SliderJoint {
       jointParameters JointParameters {
-        position 1.7897600000000002
+        position 0.5200000000000004
       }
       device [
         PositionSensor {
@@ -44,7 +45,7 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation 0 0 1.7897600000000002
+        translation 0 0 0.5200000000000004
         rotation 0 0 1 -1.5708003061004252
         children [
           Shape {
@@ -192,8 +193,8 @@ Forest {
   minRadius 3
 }
 Robot {
-  translation -41.52 0.49 -1.79
-  rotation 0 1 0 -0.261795307179586
+  translation -26.0042 0.471892 -2.16655
+  rotation -0.0002319931378719415 0.9999986738299929 0.0016119917616012178 -0.26180674114510194
   children [
     GPS {
     }
@@ -207,6 +208,7 @@ Robot {
       children [
         HingeJoint {
           jointParameters HingeJointParameters {
+            position -0.2148878642339067
             axis 0 0 1
           }
           device [
@@ -220,7 +222,7 @@ Robot {
             }
           ]
           endPoint Solid {
-            rotation 0 0 1 0
+            rotation 0 0 -0.9999999999999999 0.21488786423390582
             children [
               DEF Hip_Motor_Transform Transform {
                 rotation 1 0 0 1.57
@@ -257,6 +259,7 @@ Robot {
                 children [
                   HingeJoint {
                     jointParameters HingeJointParameters {
+                      position 0.42558125699392324
                       axis 0 0 1
                     }
                     device [
@@ -270,7 +273,7 @@ Robot {
                       }
                     ]
                     endPoint Solid {
-                      rotation 0 0 1 0
+                      rotation 0 0 1 0.4255812569939228
                       children [
                         Solid {
                           rotation 1 0 0 0
@@ -297,6 +300,7 @@ Robot {
                           children [
                             HingeJoint {
                               jointParameters HingeJointParameters {
+                                position -0.19947073479435543
                                 axis 0 0 1
                                 anchor 0 -0.11 0
                               }
@@ -315,7 +319,7 @@ Robot {
                               ]
                               endPoint Solid {
                                 translation 0 -0.11 -0.025000000000000015
-                                rotation 1 7.853589927914979e-17 -7.853589927914979e-17 1.57
+                                rotation 0.9901267103486494 -0.0990793882525959 -0.0991583192558911 1.579922227034972
                                 children [
                                   DEF wheel Shape {
                                     appearance PBRAppearance {
@@ -369,6 +373,7 @@ Robot {
       children [
         HingeJoint {
           jointParameters HingeJointParameters {
+            position -0.21488786497805723
             axis 0 0 1
           }
           device [
@@ -382,7 +387,7 @@ Robot {
             }
           ]
           endPoint DEF hip_link Solid {
-            rotation 0 0 1 0
+            rotation 0 0 -1 0.21488786497805748
             children [
               USE Hip_link
               USE Hip_Motor_Transform
@@ -391,6 +396,7 @@ Robot {
                 children [
                   HingeJoint {
                     jointParameters HingeJointParameters {
+                      position 0.4255812581364738
                       axis 0 0 1
                     }
                     device [
@@ -404,7 +410,7 @@ Robot {
                       }
                     ]
                     endPoint Solid {
-                      rotation 0 0 1 0
+                      rotation 0 0 1 0.42558125813647335
                       children [
                         Solid {
                           children [
@@ -430,6 +436,7 @@ Robot {
                           children [
                             HingeJoint {
                               jointParameters HingeJointParameters {
+                                position -0.1993989048062466
                                 axis 0 0 1
                                 anchor 0 -0.11 0
                               }
@@ -448,7 +455,7 @@ Robot {
                               ]
                               endPoint Solid {
                                 translation 0 -0.11 0.024999999999999988
-                                rotation 1 3.92679496395749e-17 1.570717985582996e-16 1.57
+                                rotation 0.99013376163202 -0.09904417725109381 -0.09912308020375453 1.579915105759686
                                 children [
                                   DEF wheel Shape {
                                     appearance PBRAppearance {
@@ -508,7 +515,7 @@ Robot {
         }
         texture ImageTexture {
           url [
-            "sustech1.png"
+            "textures/sustech1.png"
           ]
         }
         textureTransform TextureTransform {
@@ -537,6 +544,7 @@ Solid {
   scale 1.5 1.5 1.5
   children [
     Solid {
+      translation 0 -0.0013949928125521573 0
       children [
         DEF ramp Shape {
           appearance PBRAppearance {
@@ -565,6 +573,7 @@ Solid {
       boundingObject USE ramp
       physics Physics {
       }
+      linearVelocity 0 -2.0223125583004864e-05 0
     }
   ]
   name "<STL_BINARY>"
