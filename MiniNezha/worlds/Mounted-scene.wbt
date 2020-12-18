@@ -515,7 +515,7 @@ Robot {
         }
         texture ImageTexture {
           url [
-            "textures/sustech1.png"
+            "sustech1.png"
           ]
         }
         textureTransform TextureTransform {
