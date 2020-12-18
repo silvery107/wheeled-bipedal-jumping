@@ -1,0 +1,45 @@
+#VRML_SIM R2020a utf8
+WorldInfo {
+}
+Viewpoint {
+  orientation 0.8972709358806856 -0.4260487920723784 -0.11570347616846159 5.805759200097199
+  position 1.335186759176811 2.934770312023541 5.5423044378029545
+}
+Floor {
+}
+TexturedBackgroundLight {
+}
+Background {
+  skyColor [
+    0.15 0.45 1
+  ]
+}
+Robot {
+  children [
+    SliderJoint {
+      jointParameters JointParameters {
+      }
+      device [
+        PositionSensor {
+        }
+        LinearMotor {
+        }
+      ]
+      endPoint Solid {
+        rotation 0 0 1 -1.5708003061004252
+        children [
+          Shape {
+            geometry Cylinder {
+              radius 0.05
+            }
+          }
+        ]
+      }
+    }
+    Shape {
+      appearance PBRAppearance {
+      }
+    }
+  ]
+  controller "linear"
+}
