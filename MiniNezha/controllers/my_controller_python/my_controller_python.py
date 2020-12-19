@@ -81,7 +81,7 @@ while robot.step(TIME_STEP) != -1:
             restart_flag = vel.checkVel(0.005)
         if restart_flag:
             print("restart")
-            vel.restart(brakes,3,0.25)
+            vel.restart(brakes,5,0.25)
             if vel.checkPitch(8):
                 while (not vel.checkAcc(0.1) and not vel.checkVel(0.1)):
                     vel.sensor_update()
