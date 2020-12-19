@@ -12,11 +12,12 @@ WorldInfo {
   }
 }
 Viewpoint {
-  orientation 0.36756112372292793 -0.911511200416582 -0.18451599346035075 5.644477977928594
-  position -36.356337661208414 2.5580841079863426 5.610817875024039
+  orientation 0.9646005820668323 -0.21668417263908776 -0.15031196360916318 5.472852690538575
+  position -18.04257285344798 7.579884607085499 -17.21761051606888
   near 0.2
   follow "MiniNezha"
-  followSmoothness 0.2
+  followType "None"
+  followSmoothness 0.8
 }
 TexturedBackground {
   luminosity 3
@@ -24,7 +25,7 @@ TexturedBackground {
 TexturedBackgroundLight {
 }
 Floor {
-  size 400 400
+  size 3402 3400
   tileSize 6 6
   appearance SandyGround {
   }
@@ -65,6 +66,138 @@ Robot {
 Robot {
   translation -41.67 0.49 -1.08
   rotation 0 0 1 0
+CrashBarrier {
+  translation -15.2429 -1.18637e-05 2.52816
+  rotation 3.0578999999772855e-06 0.9999999999925719 2.3464099999825706e-06 1.309
+  name "crash barrier(1)"
+  poleAppearance PBRAppearance {
+    roughness 0.7
+    IBLStrength 2
+  }
+  path [
+    0 0 0
+    2.1 0 0
+  ]
+  enableBoundingObject TRUE
+}
+Road {
+  translation -43.8 0.01 -9.2
+  rotation 0 1 0 1.1781
+  width 1
+  numberOfLanes 1
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    0 0 100
+    200 0 200
+  ]
+  splineSubdivision 8
+  appearance NULL
+}
+WoodenBox {
+  translation -23.5212 0.2 -1.30482
+  rotation -4.450439999940937e-06 0.9999999999867288 2.5953599999655566e-06 -1.8325953071795862
+  name "wooden box(1)"
+  size 0.3 0.3 0.3
+}
+Road {
+  translation -43.8 0.012 -9.2
+  rotation 0 1 0 1.1781
+  name "road(1)"
+  width 1.5
+  numberOfLanes 1
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    0 0 100
+    200 0 200
+  ]
+  splineSubdivision 8
+}
+CrashBarrier {
+  translation -4.71204 -2.50961e-05 5.34955
+  rotation 3.0578999999772855e-06 0.9999999999925719 2.3464099999825706e-06 1.309
+  name "crash barrier(2)"
+  poleAppearance PBRAppearance {
+    roughness 0.7
+    IBLStrength 2
+  }
+  path [
+    0 0 0
+    2.1 0 0
+  ]
+  enableBoundingObject TRUE
+}
+WoodenBox {
+  translation -20.1322 0.2 -0.18
+  rotation -0.9351132545462786 -0.25056306820553154 -0.25056206820525934 1.63783
+  name "wooden box(2)"
+  size 0.3 0.3 0.3
+}
+SmallManor {
+  translation -50.35 0 -11.25
+  rotation 0 1 0 4.32
+}
+TeslaModel3Simple {
+  translation -41.5139 0.31 -4.34169
+  rotation 0 -1 0 -1.309
+  color 1 1 1
+}
+Pine {
+  translation -14.0083 0 14.4828
+  rotation 0 1 0 3.14159
+}
+Pine {
+  translation -19.6195 0 24.3783
+  rotation 0 1 0 2.87979
+  name "pine tree(1)"
+}
+Pine {
+  translation -10.6926 0 25.1339
+  name "pine tree(4)"
+}
+Pine {
+  translation -23.6341 0 -9.1421
+  name "pine tree(5)"
+}
+Pine {
+  translation -26.6328 0 7.1707
+  name "pine tree(6)"
+}
+Pine {
+  translation -14.6876 0 -10.9509
+  rotation 0 1 0 -2.618
+  name "pine tree(2)"
+}
+Forest {
+  translation 0 -0.01 0
+  shape [
+    200 200
+    200 0
+    50 0
+    50 50
+    -50 50
+    -50 -50
+    50 -50
+    50 0
+    200 0
+    200 -200
+    -200 -200
+    -200 200
+  ]
+  density 0.01
+  type "cherry tree"
+  randomSeed 1
+  maxHeight 20
+  minHeight 6
+  maxRadius 6
+  minRadius 3
+}
+Robot {
+  translation -18.5617 0.5 -24.0214
+  rotation 0 1 0 -0.785395307179586
   children [
     GPS {
     }
@@ -185,8 +318,8 @@ Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0 -0.11 -0.025000000000000015
-                                rotation 1 7.853589927914979e-17 -7.853589927914979e-17 1.57
+                                translation 0 -0.11 -0.025
+                                rotation 1 8.099014613162322e-17 -8.589863983657008e-17 1.57
                                 children [
                                   DEF wheel Shape {
                                     appearance PBRAppearance {
@@ -319,8 +452,8 @@ Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0 -0.11 0.024999999999999988
-                                rotation 1 3.92679496395749e-17 1.570717985582996e-16 1.57
+                                translation 0 -0.11 0.02500000000000001
+                                rotation 1 3.681370278710146e-17 1.521633048533527e-16 1.57
                                 children [
                                   DEF wheel Shape {
                                     appearance PBRAppearance {
@@ -1239,4 +1372,22 @@ Robot {
     ]
   }
   controller "my_controller_python"
+}
+Solid {
+  translation -18.52 0 -26.43
+  children [
+    Shape {
+      appearance Appearance {
+        texture ImageTexture {
+          url [
+            "textures/xiaohui.png"
+          ]
+        }
+      }
+      geometry Cylinder {
+        height 0.04
+        radius 2
+      }
+    }
+  ]
 }

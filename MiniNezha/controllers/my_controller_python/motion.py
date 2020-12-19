@@ -357,10 +357,10 @@ class velocity_controller:
 
     def keyboardControl(self,robot,key):
         if key == 87:  # 'w' 前进
-            self.setXVel(0.5)
+            self.setXVel(2)
             print('forward')
         elif key == 83:  # 's' 后退
-            self.setXVel(-0.5)
+            self.setXVel(-2)
             print('backward')
         elif key == 65:  # 'a' 左转
             self.setAVel(key, 0.6)

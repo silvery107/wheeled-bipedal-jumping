@@ -67,7 +67,7 @@ brakes.append(motors[5].getBrake())
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP)
 vel = velocity_controller(motors, panel)
 
-vel.setHeight(0.3)
+vel.setHeight(0.43)
 
 fall_flag = False
 restart_flag = False

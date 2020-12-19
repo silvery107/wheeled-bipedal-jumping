@@ -1,0 +1,596 @@
+#VRML_SIM R2020a utf8
+WorldInfo {
+  info [
+    "This demonstration shows a DJI Mavic 2 PRO flying over a rural area."
+    "After the drone has taken off, you can control it with the keyboard of your computer."
+  ]
+  title "DJI Mavic 2 PRO demo"
+  basicTimeStep 16
+  defaultDamping Damping {
+    linear 0.5
+    angular 0.5
+  }
+}
+Viewpoint {
+  orientation 0.014372589496010117 0.9934336139705908 0.11350367088561635 2.9902242063448807
+  position -10.618273129217252 1.0377397323394004 -0.24283124089006725
+  near 0.2
+  follow "MiniNezha"
+  followType "Mounted Shot"
+  followSmoothness 0.2
+}
+TexturedBackground {
+  luminosity 3
+}
+TexturedBackgroundLight {
+}
+Floor {
+  size 400 400
+  tileSize 6 6
+  appearance SandyGround {
+  }
+}
+Robot {
+  translation 2.93606 0 6.05729
+  rotation 0 1 0 -1.8325953071795862
+  children [
+    SliderJoint {
+      jointParameters JointParameters {
+        position 3.36704
+      }
+      device [
+        PositionSensor {
+        }
+        LinearMotor {
+        }
+      ]
+      endPoint Solid {
+        translation 0 0 3.36704
+        rotation 0 0 1 -1.5708003061004252
+        children [
+          Shape {
+            geometry Cylinder {
+              radius 0.05
+            }
+          }
+        ]
+      }
+    }
+    Shape {
+      appearance PBRAppearance {
+      }
+    }
+  ]
+  controller "linear"
+}
+CrashBarrier {
+  translation -15.2429 -1.18637e-05 2.52816
+  rotation 3.0578999999772855e-06 0.9999999999925719 2.3464099999825706e-06 1.309
+  name "crash barrier(1)"
+  poleAppearance PBRAppearance {
+    roughness 0.7
+    IBLStrength 2
+  }
+  path [
+    0 0 0
+    2.1 0 0
+  ]
+  enableBoundingObject TRUE
+}
+Road {
+  translation -43.8 0.01 -9.2
+  rotation 0 1 0 1.1781
+  width 1
+  numberOfLanes 1
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    0 0 100
+    200 0 200
+  ]
+  splineSubdivision 8
+  appearance NULL
+}
+WoodenBox {
+  translation -23.5212 0.2 -1.30482
+  rotation -4.450439999940937e-06 0.9999999999867288 2.5953599999655566e-06 -1.8325953071795862
+  name "wooden box(1)"
+  size 0.3 0.3 0.3
+}
+Road {
+  translation -43.8 0.012 -9.2
+  rotation 0 1 0 1.1781
+  name "road(1)"
+  width 1.5
+  numberOfLanes 1
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    0 0 100
+    200 0 200
+  ]
+  splineSubdivision 8
+}
+CrashBarrier {
+  translation -4.71204 -2.50961e-05 5.34955
+  rotation 3.0578999999772855e-06 0.9999999999925719 2.3464099999825706e-06 1.309
+  name "crash barrier(2)"
+  poleAppearance PBRAppearance {
+    roughness 0.7
+    IBLStrength 2
+  }
+  path [
+    0 0 0
+    2.1 0 0
+  ]
+  enableBoundingObject TRUE
+}
+WoodenBox {
+  translation -20.1322 0.2 -0.18
+  rotation -0.9351132545462786 -0.25056306820553154 -0.25056206820525934 1.63783
+  name "wooden box(2)"
+  size 0.3 0.3 0.3
+}
+SmallManor {
+  translation -50.35 0 -11.25
+  rotation 0 1 0 4.32
+}
+TeslaModel3Simple {
+  translation -41.5139 0.31 -4.34169
+  rotation 0 -1 0 -1.309
+  color 1 1 1
+}
+Pine {
+  translation -14.0083 0 14.4828
+  rotation 0 1 0 3.14159
+}
+Pine {
+  translation -19.6195 0 24.3783
+  rotation 0 1 0 2.87979
+  name "pine tree(1)"
+}
+Pine {
+  translation -10.6926 0 25.1339
+  name "pine tree(4)"
+}
+Pine {
+  translation -23.6341 0 -9.1421
+  name "pine tree(5)"
+}
+Pine {
+  translation -26.6328 0 7.1707
+  name "pine tree(6)"
+}
+Pine {
+  translation -14.6876 0 -10.9509
+  rotation 0 1 0 -2.618
+  name "pine tree(2)"
+}
+Forest {
+  translation 0 -0.01 0
+  shape [
+    200 200
+    200 0
+    50 0
+    50 50
+    -50 50
+    -50 -50
+    50 -50
+    50 0
+    200 0
+    200 -200
+    -200 -200
+    -200 200
+  ]
+  density 0.01
+  type "cherry tree"
+  randomSeed 1
+  maxHeight 12
+  minHeight 6
+  maxRadius 6
+  minRadius 3
+}
+Robot {
+  translation -11.611473417270105 0.47812273845654785 2.395927610497968
+  rotation -0.0003251048942488356 0.9999967061521197 0.002545975592762409 -0.2522055104942035
+  children [
+    GPS {
+    }
+    Gyro {
+    }
+    InertialUnit {
+      name "inertial_unit"
+    }
+    DEF LEFT_LEG Transform {
+      translation 0 0 -0.125
+      children [
+        HingeJoint {
+          jointParameters HingeJointParameters {
+            position -0.2157022339123816
+            axis 0 0 1
+          }
+          device [
+            PositionSensor {
+              name "left_hip_encoder"
+            }
+            RotationalMotor {
+              name "left_hip_motor"
+              maxVelocity 23.5
+              maxTorque 35
+            }
+          ]
+          endPoint Solid {
+            rotation 0 0 -1 0.21570223391238105
+            children [
+              DEF Hip_Motor_Transform Transform {
+                rotation 1 0 0 1.57
+                children [
+                  DEF Motor_Shape Shape {
+                    appearance DEF Motor_Color PBRAppearance {
+                      baseColor 0.9 0.9 0.9
+                      metalness 0.2
+                    }
+                    geometry Cylinder {
+                      height 0.03
+                      radius 0.02
+                    }
+                  }
+                ]
+              }
+              DEF Hip_link Transform {
+                translation 0 -0.11 0
+                children [
+                  Shape {
+                    appearance PBRAppearance {
+                      baseColor 0.93 0.423 0
+                      metalness 0.4
+                      emissiveColor 0.53 0.023 0
+                    }
+                    geometry Box {
+                      size 0.02 0.22 0.02
+                    }
+                  }
+                ]
+              }
+              Transform {
+                translation 0 -0.22 0
+                children [
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      position 0.42719504472255726
+                      axis 0 0 1
+                    }
+                    device [
+                      PositionSensor {
+                        name "left_keen_encoder"
+                      }
+                      RotationalMotor {
+                        name "left_keen_motor"
+                        maxVelocity 23.5
+                        maxTorque 35
+                      }
+                    ]
+                    endPoint Solid {
+                      rotation 0 0 1 0.427195044722557
+                      children [
+                        Solid {
+                          rotation 1 0 0 0
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                          name "solid(1)"
+                          boundingObject USE Hip_Motor_Transform
+                          physics Physics {
+                            density -1
+                            mass 0.1
+                          }
+                        }
+                        Transform {
+                          translation 0 -0.22 0
+                          rotation 1 0 0 -0.000795307179585869
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                        }
+                        USE Hip_link
+                        Transform {
+                          translation 0 -0.11 0
+                          children [
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                position -1.0237118070049351
+                                axis 0 0 1
+                                anchor 0 -0.11 0
+                              }
+                              device [
+                                Brake {
+                                  name "left_brake"
+                                }
+                                DEF left_wheel_encoder PositionSensor {
+                                  name "left_wheel_encoder"
+                                }
+                                RotationalMotor {
+                                  name "left_wheel_motor"
+                                  maxVelocity 23.5
+                                  maxTorque 35
+                                }
+                              ]
+                              endPoint Solid {
+                                translation 0 -0.11 -0.02499999999999978
+                                rotation 0.7828435216657595 -0.4397997941709013 -0.4401501580519816 1.8124359824022307
+                                children [
+                                  DEF wheel Shape {
+                                    appearance PBRAppearance {
+                                      baseColor 1 0 0
+                                      roughness 0.5
+                                      metalness 0.5
+                                    }
+                                    geometry DEF wheel Cylinder {
+                                      height 0.03
+                                      radius 0.05
+                                    }
+                                  }
+                                ]
+                                boundingObject USE wheel
+                                physics Physics {
+                                  density -1
+                                  mass 1
+                                }
+                                linearVelocity -0.00010336212020152498 1.538020937700945e-07 -2.6706307635988063e-05
+                                angularVelocity -0.0005343741826990331 1.0616328403287085e-06 0.0020697485801691967
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                      boundingObject USE Hip_link
+                      physics Physics {
+                        density -1
+                        mass 0.5
+                        centerOfMass [
+                          0 -0.22 0
+                        ]
+                      }
+                      linearVelocity -0.00010367099524087428 1.0593835434147706e-07 -2.6806658540185935e-05
+                      angularVelocity -3.4185931217203207e-06 1.067823742402863e-06 9.317898836767927e-06
+                    }
+                  }
+                ]
+              }
+            ]
+            boundingObject USE Hip_link
+            physics Physics {
+              density -1
+              mass 0.5
+              centerOfMass [
+                0 0 0
+              ]
+            }
+            linearVelocity -0.00010632956535664329 -3.2483556728974394e-08 -2.7895711211812655e-05
+            angularVelocity -2.2089308431276956e-06 1.0679015682810218e-06 4.616491298800666e-06
+          }
+        }
+      ]
+    }
+    DEF RIGHT_LEG Transform {
+      translation 0 0 0.125
+      children [
+        HingeJoint {
+          jointParameters HingeJointParameters {
+            position -0.21570223391384347
+            axis 0 0 1
+          }
+          device [
+            PositionSensor {
+              name "right_hip_encoder"
+            }
+            RotationalMotor {
+              name "right_hip_motor"
+              maxVelocity 23.5
+              maxTorque 35
+            }
+          ]
+          endPoint DEF hip_link Solid {
+            rotation 0 0 -1 0.21570223391384358
+            children [
+              USE Hip_link
+              USE Hip_Motor_Transform
+              Transform {
+                translation 0 -0.22 0
+                children [
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      position 0.4271936220634461
+                      axis 0 0 1
+                    }
+                    device [
+                      PositionSensor {
+                        name "right_keen_encoder"
+                      }
+                      RotationalMotor {
+                        name "right_keen_motor"
+                        maxVelocity 23.5
+                        maxTorque 35
+                      }
+                    ]
+                    endPoint Solid {
+                      rotation 0 0 0.9999999999999999 0.42719362206344597
+                      children [
+                        Solid {
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                          name "solid(1)"
+                          boundingObject USE Hip_Motor_Transform
+                          physics Physics {
+                            density -1
+                            mass 0.1
+                          }
+                        }
+                        USE Hip_link
+                        Transform {
+                          translation 0 -0.22 0
+                          rotation 1 0 0 -0.000795307179585869
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                        }
+                        Transform {
+                          translation 0 -0.11 0
+                          children [
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                position -2.2499759107432955
+                                axis 0 0 1
+                                anchor 0 -0.11 0
+                              }
+                              device [
+                                Brake {
+                                  name "right_brake"
+                                }
+                                PositionSensor {
+                                  name "right_wheel_encoder"
+                                }
+                                RotationalMotor {
+                                  name "right_wheel_motor"
+                                  maxVelocity 23.5
+                                  maxTorque 35
+                                }
+                              ]
+                              endPoint Solid {
+                                translation 0 -0.11 0.024999999999999696
+                                rotation 0.32002423535828617 -0.6696527899888781 -0.6701862648871995 2.521680309268044
+                                children [
+                                  DEF wheel Shape {
+                                    appearance PBRAppearance {
+                                      baseColor 1 0 0
+                                      roughness 0.5
+                                      metalness 0.5
+                                    }
+                                    geometry DEF wheel Cylinder {
+                                      height 0.03
+                                      radius 0.05
+                                    }
+                                  }
+                                ]
+                                boundingObject USE wheel
+                                physics Physics {
+                                  density -1
+                                  mass 1
+                                }
+                                linearVelocity -0.00010595673789378567 -1.7232890857805892e-07 -2.7334622660793636e-05
+                                angularVelocity -0.0005477022779352192 1.0701273011193742e-06 0.0021214314738338272
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                      boundingObject USE Hip_link
+                      physics Physics {
+                        density -1
+                        mass 0.5
+                        centerOfMass [
+                          0 -0.22 0
+                        ]
+                      }
+                      linearVelocity -0.0001058340758105331 -1.692939351184989e-07 -2.733644144349343e-05
+                      angularVelocity 6.367777789328539e-08 1.0672569258004316e-06 -4.231165640602594e-06
+                    }
+                  }
+                ]
+              }
+              Shape {
+              }
+            ]
+            name "solid(1)"
+            boundingObject USE Hip_link
+            physics Physics {
+              density -1
+              mass 0.5
+              centerOfMass [
+                0 0 0
+              ]
+            }
+            linearVelocity -0.0001060674803614231 2.2209796497880524e-07 -2.781583512731236e-05
+            angularVelocity -2.215203526989842e-06 1.0678975245303785e-06 4.617817885812868e-06
+          }
+        }
+      ]
+    }
+    DEF BODY Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0 0.247 0.263
+          emissiveColor 0 0.047 0.063
+        }
+        texture ImageTexture {
+          url [
+            "sustech1.png"
+          ]
+        }
+        textureTransform TextureTransform {
+        }
+      }
+      geometry Box {
+        size 0.15 0.1 0.23
+      }
+    }
+  ]
+  name "MiniNezha"
+  contactMaterial "body"
+  boundingObject USE BODY
+  physics Physics {
+    density -1
+    mass 5
+    centerOfMass [
+      0 0 0
+    ]
+  }
+  controller "my_controller_python"
+  linearVelocity -0.0001061987721865674 9.466210953230941e-08 -2.785495504723956e-05
+  angularVelocity -2.2117117527683294e-06 1.0683048325751554e-06 4.614061327683638e-06
+}
+Solid {
+  translation -11.1065 0 2.12198
+  rotation 0 1 0 -0.261795307179586
+  scale 1.5 1.5 1.5
+  children [
+    Solid {
+      translation 3.157967714489334e-15 -0.005582452225037227 0
+      rotation -0.0009768675019042113 0.9999994956672814 -0.00023322749951342386 2.2204471690944704e-16
+      children [
+        DEF ramp Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+            name "DefaultMaterial"
+          }
+          geometry IndexedFaceSet {
+            coord Coordinate {
+              point [
+                1.97007 0.217516 0.7, 1.97007 0.217516 0, 2.78185 -2.71051e-17 0, 2.78185 -2.71051e-17 0.7, 0.15 0 0, 0 0 0.7, 0 0 0, 0 0 0.7, 0.965926 0.258819 0.7, 0 0 0, 0.965926 0.258819 0, 0.965926 0.258819 0, 0.15 0 0, 0 0 0, 0.96178 0.217516 0, 0.96178 0.217516 0, 0.15 0 0.7, 0.15 0 0, 1.96593 0.258819 -2.1684e-16, 2.93185 9.75782e-16 -2.1684e-16, 2.78185 -2.71051e-17 0, 1.97007 0.217516 0, 0.15 0 0.7, 0.15 0 0.7, 0.965926 0.258819 0.7, 0 0 0.7, 0.96178 0.217516 0.7, 0.96178 0.217516 0.7, 2.93185 9.75782e-16 0.7, 1.96593 0.258819 0.7, 2.78185 -2.71051e-17 0.7, 1.97007 0.217516 0.7, 1.96593 0.258819 -2.1684e-16, 2.93185 9.75782e-16 0.7, 2.93185 9.75782e-16 -2.1684e-16, 1.96593 0.258819 0.7, 2.93185 9.75782e-16 -2.1684e-16, 2.78185 -2.71051e-17 0.7, 2.78185 -2.71051e-17 0, 2.93185 9.75782e-16 0.7, 1.97007 0.217516 0, 0.96178 0.217516 0.7, 0.96178 0.217516 0, 1.97007 0.217516 0.7, 0.965926 0.258819 0.7, 1.96593 0.258819 0.7, 0.965926 0.258819 0, 1.96593 0.258819 -2.1684e-16
+              ]
+            }
+            normal Normal {
+              vector [
+                -0.258819 -0.965926 0, -0.258819 -0.965926 0, -0.258819 -0.965926 0, -0.258819 -0.965926 0, 0 -1 0, 0 -1 0, 0 -1 0, -0.258819 0.965926 0, -0.258819 0.965926 0, -0.258819 0.965926 0, -0.258819 0.965926 0, 0 0 -1, 0 0 -1, 0 0 -1, 0 0 -1, 0.258819 -0.965926 0, 0.258819 -0.965926 0, 0.258819 -0.965926 0, -1.4456e-15 -5.39506e-15 -1, -1.4456e-15 -5.39506e-15 -1, -1.4456e-15 -5.39506e-15 -1, -1.4456e-15 -5.39506e-15 -1, 0 -1 0, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0.258819 -0.965926 0, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0.258819 0.965926 0, 0.258819 0.965926 0, 0.258819 0.965926 0, 0.258819 0.965926 0, 6.68591e-15 -1 0, 6.68591e-15 -1 0, 6.68591e-15 -1 0, 6.68591e-15 -1 0, 0 -1 0, 0 -1 0, 0 -1 0, 0 -1 0, 0 1 0, 0 1 0, 0 1 0, 0 1 0
+              ]
+            }
+            coordIndex [
+              0, 1, 2, -1, 3, 0, 2, -1, 4, 5, 6, -1, 7, 8, 9, -1, 8, 10, 9, -1, 11, 12, 13, -1, 11, 14, 12, -1, 15, 16, 17, -1, 18, 19, 20, -1, 21, 18, 20, -1, 4, 22, 5, -1, 23, 24, 25, -1, 26, 24, 23, -1, 15, 27, 16, -1, 28, 29, 30, -1, 29, 31, 30, -1, 32, 33, 34, -1, 32, 35, 33, -1, 36, 37, 38, -1, 36, 39, 37, -1, 11, 21, 14, -1, 40, 41, 42, -1, 11, 18, 21, -1, 43, 41, 40, -1, 29, 24, 26, -1, 31, 29, 26, -1, 44, 45, 46, -1, 45, 47, 46, -1
+            ]
+          }
+        }
+      ]
+      name ""
+      boundingObject USE ramp
+      physics Physics {
+      }
+      linearVelocity -4.383851237715173e-14 6.713923679165887e-16 -1.0959628094287933e-14
+      angularVelocity 1.60463888915713e-22 -1.3559026310570578e-15 7.727202875426157e-23
+    }
+  ]
+  name "<STL_BINARY>"
+}
