@@ -15,8 +15,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.2396138366173823 -0.9610275982067817 -0.13788098051001393 5.204163058267736
-  position 2.037616226994521 1.1187920426210836 0.7466149812172396
+  orientation 0.04355756117688419 -0.9884624253813529 -0.14506816492096078 3.8844021566578095
+  position 1.0007833895194025 0.6444132580251063 -0.9099156549813354
   follow "MiniNezha"
   followSmoothness 0
 }
@@ -62,9 +62,8 @@ Robot {
                 children [
                   DEF Motor_Shape Shape {
                     appearance DEF Motor_Color PBRAppearance {
-                      baseColor 0.93 0.423 0
-                      metalness 0.4
-                      emissiveColor 0.53 0.023 0
+                      baseColor 0.9 0.9 0.9
+                      metalness 0.2
                     }
                     geometry Cylinder {
                       height 0.03
@@ -78,8 +77,10 @@ Robot {
                 children [
                   Shape {
                     appearance PBRAppearance {
-                      baseColor 0.9 0.9 0.9
-                      metalness 0.2
+                      baseColor 0 0.247 0.263
+                      roughness 0.5
+                      metalness 0.5
+                      emissiveColor 0 0.047 0.063
                     }
                     geometry Box {
                       size 0.02 0.22 0.02
@@ -152,12 +153,11 @@ Robot {
                                 translation 0 -0.11 -0.025000000000000015
                                 rotation 1 7.853589927914979e-17 -7.853589927914979e-17 1.57
                                 children [
-                                  DEF wheel Shape {
-                                    appearance PBRAppearance {
-                                      baseColor 0 0.247 0.263
-                                      roughness 0.5
-                                      metalness 0.5
-                                      emissiveColor 0 0.047 0.063
+                                  DEF Wheel Shape {
+                                    appearance DEF Wheel PBRAppearance {
+                                      baseColor 0.93 0.423 0
+                                      metalness 0.4
+                                      emissiveColor 0.53 0.023 0
                                     }
                                     geometry DEF wheel Cylinder {
                                       height 0.03
@@ -286,13 +286,8 @@ Robot {
                                 translation 0 -0.11 0.024999999999999988
                                 rotation 1 3.92679496395749e-17 1.570717985582996e-16 1.57
                                 children [
-                                  DEF wheel Shape {
-                                    appearance PBRAppearance {
-                                      baseColor 0 0.247 0.263
-                                      roughness 0.5
-                                      metalness 0.5
-                                      emissiveColor 0 0.047 0.063
-                                    }
+                                  Shape {
+                                    appearance USE Wheel
                                     geometry DEF wheel Cylinder {
                                       height 0.03
                                       radius 0.05

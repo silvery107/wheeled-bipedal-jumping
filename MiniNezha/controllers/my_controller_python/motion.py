@@ -77,6 +77,12 @@ class velocity_controller:
                                                 1 / 2) / 2)
         return theta1, theta2, theta3
 
+    def calc_balance_angle_2(self, h):
+        theta3 = np.arccos((11*(-(11250*h*((4325*h)/52 - (11*((140625*h**2)/676 + 4)**(1/2))/2))/1573)**(1/2))/30)
+        theta2 = np.pi - np.arccos((-(11250*h*((4325*h)/52 - (11*((140625*h**2)/676 + 4)**(1/2))/2))/1573)**(1/2)/2) - theta3
+        theta1 = -np.pi / 2 + np.arccos((-(11250*h*((4325*h)/52 - (11*((140625*h**2)/676 + 4)**(1/2))/2))/1573)**(1/2)/2)
+        return theta1, theta2, theta3
+
     def setHeight(self, h):
         '''
         :h: -1 for extract

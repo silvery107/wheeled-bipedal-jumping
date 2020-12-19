@@ -12,8 +12,8 @@ WorldInfo {
   }
 }
 Viewpoint {
-  orientation 0.5295743264133107 -0.8233991129875771 -0.20387479867595168 5.7708447798874225
-  position -40.621820691333454 0.9554358557017768 -0.15607504187191262
+  orientation 0.36756112372292793 -0.911511200416582 -0.18451599346035075 5.644477977928594
+  position -36.356337661208414 2.5580841079863426 5.610817875024039
   near 0.2
   follow "MiniNezha"
   followSmoothness 0.2
@@ -61,6 +61,344 @@ Robot {
     }
   ]
   controller "linear"
+}
+Robot {
+  translation -41.67 0.49 -1.08
+  rotation 0 0 1 0
+  children [
+    GPS {
+    }
+    Gyro {
+    }
+    InertialUnit {
+      name "inertial_unit"
+    }
+    DEF LEFT_LEG Transform {
+      translation 0 0 -0.125
+      children [
+        HingeJoint {
+          jointParameters HingeJointParameters {
+            axis 0 0 1
+          }
+          device [
+            PositionSensor {
+              name "left_hip_encoder"
+            }
+            RotationalMotor {
+              name "left_hip_motor"
+              maxVelocity 23.5
+              maxTorque 35
+            }
+          ]
+          endPoint Solid {
+            rotation 0 0 1 0
+            children [
+              DEF Hip_Motor_Transform Transform {
+                rotation 1 0 0 1.57
+                children [
+                  DEF Motor_Shape Shape {
+                    appearance DEF Motor_Color PBRAppearance {
+                      baseColor 0.93 0.423 0
+                      metalness 0.4
+                      emissiveColor 0.53 0.023 0
+                    }
+                    geometry Cylinder {
+                      height 0.03
+                      radius 0.02
+                    }
+                  }
+                ]
+              }
+              DEF Hip_link Transform {
+                translation 0 -0.11 0
+                children [
+                  Shape {
+                    appearance PBRAppearance {
+                      baseColor 0.9 0.9 0.9
+                      metalness 0.2
+                    }
+                    geometry Box {
+                      size 0.02 0.22 0.02
+                    }
+                  }
+                ]
+              }
+              Transform {
+                translation 0 -0.22 0
+                children [
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0 0 1
+                    }
+                    device [
+                      PositionSensor {
+                        name "left_keen_encoder"
+                      }
+                      RotationalMotor {
+                        name "left_keen_motor"
+                        maxVelocity 23.5
+                        maxTorque 35
+                      }
+                    ]
+                    endPoint Solid {
+                      rotation 0 0 1 0
+                      children [
+                        Solid {
+                          rotation 1 0 0 0
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                          name "solid(1)"
+                          boundingObject USE Hip_Motor_Transform
+                          physics Physics {
+                            density -1
+                            mass 0.1
+                          }
+                        }
+                        Transform {
+                          translation 0 -0.22 0
+                          rotation 1 0 0 -0.000795307179585869
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                        }
+                        USE Hip_link
+                        Transform {
+                          translation 0 -0.11 0
+                          children [
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                axis 0 0 1
+                                anchor 0 -0.11 0
+                              }
+                              device [
+                                Brake {
+                                  name "left_brake"
+                                }
+                                DEF left_wheel_encoder PositionSensor {
+                                  name "left_wheel_encoder"
+                                }
+                                RotationalMotor {
+                                  name "left_wheel_motor"
+                                  maxVelocity 23.5
+                                  maxTorque 35
+                                }
+                              ]
+                              endPoint Solid {
+                                translation 0 -0.11 -0.025000000000000015
+                                rotation 1 7.853589927914979e-17 -7.853589927914979e-17 1.57
+                                children [
+                                  DEF wheel Shape {
+                                    appearance PBRAppearance {
+                                      baseColor 0 0.247 0.263
+                                      roughness 0.5
+                                      metalness 0.5
+                                      emissiveColor 0 0.047 0.063
+                                    }
+                                    geometry DEF wheel Cylinder {
+                                      height 0.03
+                                      radius 0.05
+                                    }
+                                  }
+                                ]
+                                boundingObject USE wheel
+                                physics Physics {
+                                  density -1
+                                  mass 1
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                      boundingObject USE Hip_link
+                      physics Physics {
+                        density -1
+                        mass 0.5
+                        centerOfMass [
+                          0 -0.22 0
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+            boundingObject USE Hip_link
+            physics Physics {
+              density -1
+              mass 0.5
+              centerOfMass [
+                0 0 0
+              ]
+            }
+          }
+        }
+      ]
+    }
+    DEF RIGHT_LEG Transform {
+      translation 0 0 0.125
+      children [
+        HingeJoint {
+          jointParameters HingeJointParameters {
+            axis 0 0 1
+          }
+          device [
+            PositionSensor {
+              name "right_hip_encoder"
+            }
+            RotationalMotor {
+              name "right_hip_motor"
+              maxVelocity 23.5
+              maxTorque 35
+            }
+          ]
+          endPoint DEF hip_link Solid {
+            rotation 0 0 1 0
+            children [
+              USE Hip_link
+              USE Hip_Motor_Transform
+              Transform {
+                translation 0 -0.22 0
+                children [
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0 0 1
+                    }
+                    device [
+                      PositionSensor {
+                        name "right_keen_encoder"
+                      }
+                      RotationalMotor {
+                        name "right_keen_motor"
+                        maxVelocity 23.5
+                        maxTorque 35
+                      }
+                    ]
+                    endPoint Solid {
+                      rotation 0 0 1 0
+                      children [
+                        Solid {
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                          name "solid(1)"
+                          boundingObject USE Hip_Motor_Transform
+                          physics Physics {
+                            density -1
+                            mass 0.1
+                          }
+                        }
+                        USE Hip_link
+                        Transform {
+                          translation 0 -0.22 0
+                          rotation 1 0 0 -0.000795307179585869
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                        }
+                        Transform {
+                          translation 0 -0.11 0
+                          children [
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                axis 0 0 1
+                                anchor 0 -0.11 0
+                              }
+                              device [
+                                Brake {
+                                  name "right_brake"
+                                }
+                                PositionSensor {
+                                  name "right_wheel_encoder"
+                                }
+                                RotationalMotor {
+                                  name "right_wheel_motor"
+                                  maxVelocity 23.5
+                                  maxTorque 35
+                                }
+                              ]
+                              endPoint Solid {
+                                translation 0 -0.11 0.024999999999999988
+                                rotation 1 3.92679496395749e-17 1.570717985582996e-16 1.57
+                                children [
+                                  DEF wheel Shape {
+                                    appearance PBRAppearance {
+                                      baseColor 0 0.247 0.263
+                                      roughness 0.5
+                                      metalness 0.5
+                                      emissiveColor 0 0.047 0.063
+                                    }
+                                    geometry DEF wheel Cylinder {
+                                      height 0.03
+                                      radius 0.05
+                                    }
+                                  }
+                                ]
+                                boundingObject USE wheel
+                                physics Physics {
+                                  density -1
+                                  mass 1
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                      boundingObject USE Hip_link
+                      physics Physics {
+                        density -1
+                        mass 0.5
+                        centerOfMass [
+                          0 -0.22 0
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+              Shape {
+              }
+            ]
+            name "solid(1)"
+            boundingObject USE Hip_link
+            physics Physics {
+              density -1
+              mass 0.5
+              centerOfMass [
+                0 0 0
+              ]
+            }
+          }
+        }
+      ]
+    }
+    DEF BODY Shape {
+      appearance Appearance {
+        material Material {
+        }
+        texture ImageTexture {
+          url [
+            "sustech1.png"
+          ]
+        }
+      }
+      geometry Box {
+        size 0.15 0.1 0.23
+      }
+    }
+  ]
+  name "MiniNezha(1)"
+  contactMaterial "body"
+  boundingObject USE BODY
+  physics Physics {
+    density -1
+    mass 5
+    centerOfMass [
+      0 0 0
+    ]
+  }
+  controller "my_controller_python"
 }
 CrashBarrier {
   translation -15.2429 -1.18637e-05 2.52816
@@ -508,7 +846,7 @@ Robot {
         }
         texture ImageTexture {
           url [
-            "textures/sustech1.png"
+            "sustech1.png"
           ]
         }
         textureTransform TextureTransform {
@@ -568,4 +906,337 @@ Solid {
     }
   ]
   name "<STL_BINARY>"
+}
+Robot {
+  translation -41.51 0.49 0
+  rotation 0 0 1 0
+  children [
+    GPS {
+    }
+    Gyro {
+    }
+    InertialUnit {
+      name "inertial_unit"
+    }
+    DEF LEFT_LEG Transform {
+      translation 0 0 -0.125
+      children [
+        HingeJoint {
+          jointParameters HingeJointParameters {
+            axis 0 0 1
+          }
+          device [
+            PositionSensor {
+              name "left_hip_encoder"
+            }
+            RotationalMotor {
+              name "left_hip_motor"
+              maxVelocity 23.5
+              maxTorque 35
+            }
+          ]
+          endPoint Solid {
+            rotation 0 0 1 0
+            children [
+              DEF Hip_Motor_Transform Transform {
+                rotation 1 0 0 1.57
+                children [
+                  DEF Motor_Shape Shape {
+                    appearance DEF Motor_Color PBRAppearance {
+                      baseColor 0.9 0.9 0.9
+                      metalness 0.2
+                    }
+                    geometry Cylinder {
+                      height 0.03
+                      radius 0.02
+                    }
+                  }
+                ]
+              }
+              DEF Hip_link Transform {
+                translation 0 -0.11 0
+                children [
+                  Shape {
+                    appearance PBRAppearance {
+                      baseColor 0 0.247 0.263
+                      roughness 0.5
+                      metalness 0.5
+                      emissiveColor 0 0.047 0.063
+                    }
+                    geometry Box {
+                      size 0.02 0.22 0.02
+                    }
+                  }
+                ]
+              }
+              Transform {
+                translation 0 -0.22 0
+                children [
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0 0 1
+                    }
+                    device [
+                      PositionSensor {
+                        name "left_keen_encoder"
+                      }
+                      RotationalMotor {
+                        name "left_keen_motor"
+                        maxVelocity 23.5
+                        maxTorque 35
+                      }
+                    ]
+                    endPoint Solid {
+                      rotation 0 0 1 0
+                      children [
+                        Solid {
+                          rotation 1 0 0 0
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                          name "solid(1)"
+                          boundingObject USE Hip_Motor_Transform
+                          physics Physics {
+                            density -1
+                            mass 0.1
+                          }
+                        }
+                        Transform {
+                          translation 0 -0.22 0
+                          rotation 1 0 0 -0.000795307179585869
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                        }
+                        USE Hip_link
+                        Transform {
+                          translation 0 -0.11 0
+                          children [
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                axis 0 0 1
+                                anchor 0 -0.11 0
+                              }
+                              device [
+                                Brake {
+                                  name "left_brake"
+                                }
+                                DEF left_wheel_encoder PositionSensor {
+                                  name "left_wheel_encoder"
+                                }
+                                RotationalMotor {
+                                  name "left_wheel_motor"
+                                  maxVelocity 23.5
+                                  maxTorque 35
+                                }
+                              ]
+                              endPoint Solid {
+                                translation 0 -0.11 -0.025000000000000015
+                                rotation 1 7.853589927914979e-17 -7.853589927914979e-17 1.57
+                                children [
+                                  DEF Wheel Shape {
+                                    appearance DEF Wheel PBRAppearance {
+                                      baseColor 0.93 0.423 0
+                                      metalness 0.4
+                                      emissiveColor 0.53 0.023 0
+                                    }
+                                    geometry DEF wheel Cylinder {
+                                      height 0.03
+                                      radius 0.05
+                                    }
+                                  }
+                                ]
+                                boundingObject USE wheel
+                                physics Physics {
+                                  density -1
+                                  mass 1
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                      boundingObject USE Hip_link
+                      physics Physics {
+                        density -1
+                        mass 0.5
+                        centerOfMass [
+                          0 -0.22 0
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+            boundingObject USE Hip_link
+            physics Physics {
+              density -1
+              mass 0.5
+              centerOfMass [
+                0 0 0
+              ]
+            }
+          }
+        }
+      ]
+    }
+    DEF RIGHT_LEG Transform {
+      translation 0 0 0.125
+      children [
+        HingeJoint {
+          jointParameters HingeJointParameters {
+            axis 0 0 1
+          }
+          device [
+            PositionSensor {
+              name "right_hip_encoder"
+            }
+            RotationalMotor {
+              name "right_hip_motor"
+              maxVelocity 23.5
+              maxTorque 35
+            }
+          ]
+          endPoint DEF hip_link Solid {
+            rotation 0 0 1 0
+            children [
+              USE Hip_link
+              USE Hip_Motor_Transform
+              Transform {
+                translation 0 -0.22 0
+                children [
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0 0 1
+                    }
+                    device [
+                      PositionSensor {
+                        name "right_keen_encoder"
+                      }
+                      RotationalMotor {
+                        name "right_keen_motor"
+                        maxVelocity 23.5
+                        maxTorque 35
+                      }
+                    ]
+                    endPoint Solid {
+                      rotation 0 0 1 0
+                      children [
+                        Solid {
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                          name "solid(1)"
+                          boundingObject USE Hip_Motor_Transform
+                          physics Physics {
+                            density -1
+                            mass 0.1
+                          }
+                        }
+                        USE Hip_link
+                        Transform {
+                          translation 0 -0.22 0
+                          rotation 1 0 0 -0.000795307179585869
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                        }
+                        Transform {
+                          translation 0 -0.11 0
+                          children [
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                axis 0 0 1
+                                anchor 0 -0.11 0
+                              }
+                              device [
+                                Brake {
+                                  name "right_brake"
+                                }
+                                PositionSensor {
+                                  name "right_wheel_encoder"
+                                }
+                                RotationalMotor {
+                                  name "right_wheel_motor"
+                                  maxVelocity 23.5
+                                  maxTorque 35
+                                }
+                              ]
+                              endPoint Solid {
+                                translation 0 -0.11 0.024999999999999988
+                                rotation 1 3.92679496395749e-17 1.570717985582996e-16 1.57
+                                children [
+                                  Shape {
+                                    appearance USE Wheel
+                                    geometry DEF wheel Cylinder {
+                                      height 0.03
+                                      radius 0.05
+                                    }
+                                  }
+                                ]
+                                boundingObject USE wheel
+                                physics Physics {
+                                  density -1
+                                  mass 1
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                      boundingObject USE Hip_link
+                      physics Physics {
+                        density -1
+                        mass 0.5
+                        centerOfMass [
+                          0 -0.22 0
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+              Shape {
+              }
+            ]
+            name "solid(1)"
+            boundingObject USE Hip_link
+            physics Physics {
+              density -1
+              mass 0.5
+              centerOfMass [
+                0 0 0
+              ]
+            }
+          }
+        }
+      ]
+    }
+    DEF BODY Shape {
+      appearance Appearance {
+        material Material {
+        }
+        texture ImageTexture {
+          url [
+            "sustech1.png"
+          ]
+        }
+      }
+      geometry Box {
+        size 0.15 0.1 0.23
+      }
+    }
+  ]
+  name "MiniNezha(2)"
+  contactMaterial "body"
+  boundingObject USE BODY
+  physics Physics {
+    density -1
+    mass 5
+    centerOfMass [
+      0 0 0
+    ]
+  }
+  controller "my_controller_python"
 }
