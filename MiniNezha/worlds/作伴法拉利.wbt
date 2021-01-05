@@ -1248,7 +1248,7 @@ Solid {
       appearance Appearance {
         texture ImageTexture {
           url [
-            "textures/xiaohui.png"
+            "xiaohui.png"
           ]
         }
       }

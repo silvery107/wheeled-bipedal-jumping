@@ -61,7 +61,10 @@ class velocity_controller:
         self.rotation_Kd = 5.0
 
         self.rotation_pid = PID_Controller(self.rotation_Kp, self.rotation_Kd, self.rotation_Ki)
-        
+
+        self.theta3=0
+        self.theta2=0
+        self.theta1=0
     def calc_balance_angle_1(self, h):
         '''
         legs without mass
@@ -75,6 +78,7 @@ class velocity_controller:
         theta1 = -np.pi / 2 + np.arccos((-(1081600 * h * (
                 (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
                                                 1 / 2) / 2)
+        self.theta3,self.theta2,self.theta1 = theta3,theta2,theta1
         return theta1, theta2, theta3
 
     def calc_balance_angle_2(self, h):
@@ -145,6 +149,13 @@ class velocity_controller:
             self.pitch_exp = -0.007+0.05*(self.panel.bodyVel-Ev)/Ev
         else:
             self.pitch_exp = -0.007-0.05*(self.panel.bodyVel-Ev)/Ev
+        # print("self.theta3",self.theta3)
+        # print("self.pitch_exp",self.pitch_exp)
+        if self.pitch_exp > self.theta3/10:
+            self.pitch_exp = self.theta3/10
+        elif self.pitch_exp < -0.1:
+            self.pitch_exp = -0.1
+        # print("self.pitch_exp2", self.pitch_exp)
         # 直立
         pitch_err = self.pitch_exp - self.panel.pitch
         self.blance_pid.feedback(pitch_err)
@@ -357,10 +368,10 @@ class velocity_controller:
 
     def keyboardControl(self,robot,key):
         if key == 87:  # 'w' 前进
-            self.setXVel(2)
+            self.setXVel(10)
             print('forward')
         elif key == 83:  # 's' 后退
-            self.setXVel(-2)
+            self.setXVel(-10)
             print('backward')
         elif key == 65:  # 'a' 左转
             self.setAVel(key, 0.6)
