@@ -72,7 +72,8 @@ vel.setHeight(0.43)
 fall_flag = False
 restart_flag = False
 while robot.step(TIME_STEP) != -1:
-    vel.showMsg()
+    TIME = robot.getTime()
+    vel.showMsg(TIME)
     vel.sensor_update()
     key = mKeyboard.getKey()  # 从键盘读取输入
 
