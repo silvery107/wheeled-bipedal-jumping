@@ -4,7 +4,7 @@
    
 ================软件架构说明================
     -requriements.txt
-    -parameter.txt：机器人相关参数
+    -model_parameters.txt：机器人相关参数
     -worlds：包含各种wbt文件
     -contrllers：包含控制文件
 	-linear：场景中运动杆的控制器
