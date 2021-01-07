@@ -3,6 +3,8 @@
 轮式双足机器人的建模和控制
    
 ================软件架构说明================
+    -requriements.txt
+    -parameter.txt：机器人相关参数
     -worlds：包含各种wbt文件
     -contrllers：包含控制文件
 	-linear：场景中运动杆的控制器
@@ -12,7 +14,6 @@
 		-motion.py：动作集，实现各种功能
 		-PID_controller.py：PID
 		-parameter.txt：保存运动参数
-		-requriements.txt
 
 ================安装教程================
 
