@@ -158,8 +158,8 @@ class velocity_controller:
             self.pitch_exp = -0.007 - 0.05 * (self.panel.bodyVel - Ev) / Ev
         # print("self.theta3",self.theta3)
         # print("self.pitch_exp",self.pitch_exp)
-        if self.pitch_exp > 0.1:#self.theta3 / 8:
-            self.pitch_exp = 0.1#self.theta3 / 8
+        if self.pitch_exp > self.theta3 / 10:
+            self.pitch_exp = self.theta3 / 10
         elif self.pitch_exp < -0.1:
             self.pitch_exp = -0.1
         # print("self.pitch_exp2", self.pitch_exp)
