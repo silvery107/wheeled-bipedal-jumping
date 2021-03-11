@@ -7,6 +7,7 @@ from controller import InertialUnit
 from controller import Gyro
 from controller import Keyboard
 from controller import Brake
+from controller import TouchSensor
 
 from PID_control import *
 from motion import *
@@ -23,13 +24,21 @@ TIME_STEP = int(robot.getBasicTimeStep())
 # init sensors and drivers
 gyro = robot.getGyro("gyro")
 gyro.enable(TIME_STEP)
+
 imu = robot.getInertialUnit("inertial_unit")
 imu.enable(TIME_STEP)
+
 gps = robot.getGPS("gps")
 gps.enable(TIME_STEP)
+
 mKeyboard = Keyboard()  # 初始化键盘读入类
 mKeyboard.enable(TIME_STEP)  # 以mTimeStep为周期从键盘读取
 
+touch_sensors = []
+touch_sensor_name = ["left_touch_sensor","right_touch_sensor"]
+for idx,name in enumerate(touch_sensor_name):
+    touch_sensors.append(robot.getTouchSensor(name))
+    touch_sensors[idx].enable(TIME_STEP)
 
 encoders = []  # joint motor encoders
 encoder_names = [
@@ -73,9 +82,10 @@ fall_flag = False
 restart_flag = False
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
-    vel.showMsg(TIME)
+    # vel.showMsg(TIME)
     vel.sensor_update()
     key = mKeyboard.getKey()  # 从键盘读取输入
+    print(touch_sensors[0].getValues())
 
     if fall_flag:
         if not restart_flag:
