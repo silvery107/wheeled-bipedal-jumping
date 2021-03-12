@@ -88,7 +88,7 @@ while robot.step(TIME_STEP) != -1:
     # vel.showMsg(TIME)
     vel.sensor_update()
     key = mKeyboard.getKey()  # 从键盘读取输入
-    print("left: ", panel.F[0], "right: ", panel.F[1])
+    # print("left: ", panel.F[0], "right: ", panel.F[1])
 
     # emitter.send(panel.gps_v)
     # if panel.gps_v > 2:
