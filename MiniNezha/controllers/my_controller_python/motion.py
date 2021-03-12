@@ -383,16 +383,16 @@ class velocity_controller:
         self.key = key
         if key == 87:  # 'w' 前进
             self.setXVel(10)
-            print('forward')
+            # print('forward')
         elif key == 83:  # 's' 后退
             self.setXVel(-10)
-            print('backward')
+            # print('backward')
         elif key == 65:  # 'a' 左转
             self.setAVel(key, 0.6)
-            print('left')
+            # print('left')
         elif key == 68:  # 'd' 右转
             self.setAVel(key, -0.6)
-            print('right')
+            # print('right')
         elif key == 70:  # 'f' 停止旋转
             self.setAVel(key, 0.0)
         elif key == 315:  # '↑' 升高
@@ -409,7 +409,7 @@ class velocity_controller:
             #         self.panel.rightWheelVel * 0.05) <= 0.35:  # and abs(self.panel.rightWheelVel * 0.05 - self.panel.pitch) <= 0.14
             if 1:
                 self.jump(robot, self.cur_height)
-                print('jump end')
+                # print('jump end')
             else:
                 self.setXVel(0.0)
         elif key==82: # 'r' 重置
