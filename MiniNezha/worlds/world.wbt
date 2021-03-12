@@ -15,8 +15,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.04355756117688419 -0.9884624253813529 -0.14506816492096078 3.8844021566578095
-  position 2.1545565223989476 1.1330163259683812 -2.138156299745215
+  orientation 0.027382623819408116 -0.9940509306139913 -0.10541792664543713 3.877323151190552
+  position 1.5243179989781306 0.7068751355596194 -1.4646051694435644
   follow "MiniNezha"
   followSmoothness 0
 }
@@ -27,7 +27,7 @@ TexturedBackgroundLight {
 Floor {
 }
 Robot {
-  translation 0.27 0.49 0
+  translation 0.27 0.58 0
   rotation 0 0 1 0
   children [
     GPS {
@@ -153,16 +153,31 @@ Robot {
                                 translation 0 -0.11 -0.025000000000000015
                                 rotation 1 7.853589927914979e-17 -7.853589927914979e-17 1.57
                                 children [
-                                  DEF Wheel Shape {
-                                    appearance DEF Wheel PBRAppearance {
-                                      baseColor 0.93 0.423 0
-                                      metalness 0.4
-                                      emissiveColor 0.53 0.023 0
+                                  TouchSensor {
+                                    children [
+                                      Shape {
+                                        appearance DEF Wheel PBRAppearance {
+                                          baseColor 0.93 0.423 0
+                                          metalness 0.4
+                                          emissiveColor 0.53 0.023 0
+                                        }
+                                        geometry DEF wheel Cylinder {
+                                          height 0.03
+                                          radius 0.05
+                                        }
+                                      }
+                                    ]
+                                    name "left_touch_sensor"
+                                    boundingObject Cylinder {
+                                      height 0.032
+                                      radius 0.052
                                     }
-                                    geometry DEF wheel Cylinder {
-                                      height 0.03
-                                      radius 0.05
+                                    physics Physics {
+                                      density -1
+                                      mass 1
                                     }
+                                    type "force-3d"
+                                    lookupTable []
                                   }
                                 ]
                                 boundingObject USE wheel
@@ -283,15 +298,30 @@ Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0 -0.11 0.024999999999999988
-                                rotation 1 3.92679496395749e-17 1.570717985582996e-16 1.57
+                                translation -5.088427942218804e-07 -0.1099860061753189 0.024999993714566293
+                                rotation -0.9999999600448514 0.00019988604119790872 0.00019988963526137256 4.713186296891846
                                 children [
-                                  Shape {
-                                    appearance USE Wheel
-                                    geometry DEF wheel Cylinder {
-                                      height 0.03
-                                      radius 0.05
+                                  TouchSensor {
+                                    children [
+                                      Shape {
+                                        appearance USE Wheel
+                                        geometry DEF wheel Cylinder {
+                                          height 0.03
+                                          radius 0.05
+                                        }
+                                      }
+                                    ]
+                                    name "right_touch_sensor"
+                                    boundingObject Cylinder {
+                                      height 0.032
+                                      radius 0.052
                                     }
+                                    physics Physics {
+                                      density -1
+                                      mass 1
+                                    }
+                                    type "force-3d"
+                                    lookupTable []
                                   }
                                 ]
                                 boundingObject USE wheel

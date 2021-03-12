@@ -115,4 +115,3 @@ dmypy.json
 .pyre/
 .vscode/settings.json
 MiniNezha/worlds/.world.wbproj
-MiniNezha/worlds/world.wbt

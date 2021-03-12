@@ -163,6 +163,7 @@ class velocity_controller:
         elif self.pitch_exp < -0.1:
             self.pitch_exp = -0.1
         # print("self.pitch_exp2", self.pitch_exp)
+
         # 直立
         pitch_err = self.pitch_exp - self.panel.pitch
         self.blance_pid.feedback(pitch_err)
@@ -223,10 +224,10 @@ class velocity_controller:
         tor0 = self.motors[2].getTorqueFeedback()
         velocity2 = self.motors[2].getVelocity()
         velocity0 = self.motors[0].getVelocity()
-        # print('torque[2]:%3f' % tor2)
-        # print('Velocity[2]:%3f' % velocity2)
-        # print('torque[0]:%3f' % tor0)
-        # print('Velocity[0]:%3f' % velocity0)
+        print('torque[2]:%3f' % tor2)
+        print('Velocity[2]:%3f' % velocity2)
+        print('torque[0]:%3f' % tor0)
+        print('Velocity[0]:%3f' % velocity0)
 
         # GPS版（项目临时）
         while 1:
