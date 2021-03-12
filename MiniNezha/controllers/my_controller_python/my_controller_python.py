@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """my_controller_python controller."""
-
 from controller import Robot
+from controller import Supervisor
 from controller import Motor
 from controller import InertialUnit
 from controller import Gyro
@@ -18,6 +18,7 @@ import math
 
 # init robot
 robot = Robot()
+# robot= Supervisor()
 TIME_STEP = int(robot.getBasicTimeStep())
 
 # init sensors and drivers
@@ -29,7 +30,6 @@ gps = robot.getGPS("gps")
 gps.enable(TIME_STEP)
 mKeyboard = Keyboard()  # 初始化键盘读入类
 mKeyboard.enable(TIME_STEP)  # 以mTimeStep为周期从键盘读取
-
 
 encoders = []  # joint motor encoders
 encoder_names = [
@@ -77,12 +77,15 @@ while robot.step(TIME_STEP) != -1:
     vel.sensor_update()
     key = mKeyboard.getKey()  # 从键盘读取输入
 
+    # emitter.send(panel.gps_v)
+    # if panel.gps_v > 2:
+    #     robot.simulationReset()
     if fall_flag:
         if not restart_flag:
             restart_flag = vel.checkVel(0.005)
         if restart_flag:
             print("restart")
-            vel.restart(brakes,5,0.25)
+            vel.restart(brakes, 5, 0.25)
             if vel.checkPitch(8):
                 while (not vel.checkAcc(0.1) and not vel.checkVel(0.1)):
                     vel.sensor_update()
@@ -93,9 +96,8 @@ while robot.step(TIME_STEP) != -1:
                     robot.step(TIME_STEP)
         else:
             print("shutdown")
-            vel.shutdown(brakes,0.25)
+            vel.shutdown(brakes, 0.25)
             continue
     else:
-        vel.keyboardControl(robot,key)
+        vel.keyboardControl(robot, key)
         fall_flag = not vel.checkPitch(30)
-

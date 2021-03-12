@@ -16,7 +16,6 @@ Viewpoint {
   position -35.42426502548047 1.2969300315666248 4.314946139449194
   near 0.2
   follow "MiniNezha"
-  followType "None"
   followSmoothness 0.8
 }
 TexturedBackground {
