@@ -45,7 +45,7 @@ class panel:
     # 举例，若调用gps，则,panel.updateGPS(),panel.gps_x
     wheelbase = 0.25
 
-    def __init__(self, gps, gyro, imu, motors, encoders, TIME_STEP):
+    def __init__(self, gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors):
         self.x = Point(1.0, 0.0, 0.0)  # 车身参考系在世界坐标系下的初始位置
         self.y = Point(0.0, 1.0, 0.0)
         self.z = Point(0.0, 0.0, 1.0)
@@ -83,6 +83,9 @@ class panel:
 
         self.rotation = 0
 
+        self.touch_sensors = touch_sensors
+        self.F = [[0, 0, 0], [0, 0, 0]]
+
     def updateDirection(self):  # TODO 这里不太确定，先假设水平了——hbx
         self.x = Point.multiple(self.x, Point(math.cos(self.yaw), math.sin(self.yaw), 0))
         self.y = Point.multiple(self.y, Point(-math.sin(self.yaw), math.cos(self.yaw), 0))
@@ -102,7 +105,8 @@ class panel:
     def updateBodyVelocity(self, h):  # TODO 验证这个速度转换公式的合理性；实际中是有偏差的
         self.bodyVel_last = self.bodyVel
         # self.bodyVel = self.rightWheelVel * (0.05) - abs(self.pitch)/self.pitch*self.omega_z * h * math.cos(self.pitch)
-        self.bodyVel = (self.rightWheelVel * (0.05)+self.rightWheelVel * (0.05))/2 - self.omega_z * (h + 0.05) * math.cos(self.pitch)  # 想来想去h都不该+0.05，但是实际加了就是接近gps值
+        self.bodyVel = (self.rightWheelVel * (0.05) + self.rightWheelVel * (0.05)) / 2 - self.omega_z * (
+                h + 0.05) * math.cos(self.pitch)  # 想来想去h都不该+0.05，但是实际加了就是接近gps值
         self.bodyAcce = (self.bodyVel - self.bodyVel_last) / self.TIME_STEP
 
     def updateGPS(self):
@@ -132,6 +136,10 @@ class panel:
 
     def updateGyro(self):
         self.omega_x, self.omega_y, self.omega_z = self.gyro.getValues()
+
+    def updateTouch(self):
+        self.F[0] = self.touch_sensors[0].getValues()
+        self.F[1] = self.touch_sensors[1].getValues()
 
     def getRotation(self):
         return self.rotation

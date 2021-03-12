@@ -427,6 +427,7 @@ class velocity_controller:
         self.panel.updateGPS()
         self.panel.updateIMU()
         self.panel.updateGyro()
+        self.panel.updateTouch()
         self.panel.updateEncoder()
         self.panel.updateDirection()
         self.panel.updateWheelVelocity()

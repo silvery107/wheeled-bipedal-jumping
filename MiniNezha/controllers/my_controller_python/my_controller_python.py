@@ -37,8 +37,9 @@ mKeyboard = Keyboard()  # 初始化键盘读入类
 mKeyboard.enable(TIME_STEP)  # 以mTimeStep为周期从键盘读取
 
 touch_sensors = []
-touch_sensor_name = ["left_touch_sensor","right_touch_sensor"]
-for idx,name in enumerate(touch_sensor_name):
+touch_sensor_name = ["left_touch_sensor", "right_touch_sensor"]
+
+for idx, name in enumerate(touch_sensor_name):
     touch_sensors.append(robot.getTouchSensor(name))
     touch_sensors[idx].enable(TIME_STEP)
 
@@ -75,7 +76,7 @@ brakes.append(motors[4].getBrake())
 brakes.append(motors[5].getBrake())
 
 # main loop
-panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP)
+panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors)
 vel = velocity_controller(motors, panel)
 
 vel.setHeight(0.43)
@@ -87,7 +88,7 @@ while robot.step(TIME_STEP) != -1:
     # vel.showMsg(TIME)
     vel.sensor_update()
     key = mKeyboard.getKey()  # 从键盘读取输入
-    print(touch_sensors[0].getValues())
+    print("left: ", panel.F[0], "right: ", panel.F[1])
 
     # emitter.send(panel.gps_v)
     # if panel.gps_v > 2:
