@@ -1,5 +1,7 @@
 #VRML_SIM R2020a utf8
 WorldInfo {
+  CFM 1e-06
+  ERP 0.6
   basicTimeStep 8
   contactProperties [
     ContactProperties {
@@ -15,8 +17,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.027382623819408116 -0.9940509306139913 -0.10541792664543713 3.877323151190552
-  position 1.5243179989781306 0.7068751355596194 -1.4646051694435644
+  orientation 0.02188496937622776 -0.9669123006824435 -0.25416854822024165 3.4000748895774002
+  position 1.2189765422537149 1.7620148403233822 -3.5218708158225094
   follow "MiniNezha"
   followSmoothness 0
 }
@@ -27,7 +29,7 @@ TexturedBackgroundLight {
 Floor {
 }
 Robot {
-  translation 0.27 0.58 0
+  translation 0.27 0.69 0
   rotation 0 0 1 0
   children [
     GPS {
@@ -383,4 +385,35 @@ Robot {
     ]
   }
   controller "my_controller_python"
+}
+Robot {
+  translation 0 0.02 0
+  children [
+    DEF ground_touch Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 5 0.04 2
+      }
+    }
+    TouchSensor {
+      translation 0 0.02 0
+      name "ground_touch_sensor"
+      boundingObject Box {
+        size 5 0.005 2
+      }
+      physics Physics {
+        density -1
+        mass 1
+      }
+      type "force-3d"
+      lookupTable []
+    }
+  ]
+  boundingObject USE ground_touch
+  physics Physics {
+    density -1
+    mass 1
+  }
+  controller "ground"
 }
