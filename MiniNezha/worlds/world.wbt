@@ -383,4 +383,5 @@ Robot {
     ]
   }
   controller "my_controller_python"
+  supervisor TRUE
 }
