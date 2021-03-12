@@ -10,7 +10,7 @@ import math
 
 class velocity_controller:
 
-    def __init__(self, motors, panel):
+    def __init__(self, motors, panel,robot):
         self.Ev = 0.0
         self.panel = panel
         self.motors = motors
@@ -66,6 +66,8 @@ class velocity_controller:
         self.theta2 = 0
         self.theta1 = 0
         self.key = 0
+
+        self.robot = robot
 
     def calc_balance_angle_1(self, h):
         '''
@@ -351,31 +353,31 @@ class velocity_controller:
         file_handle = open('parameter.txt', mode='a')
         file_handle.writelines([str(self.key),',',str(TIME),',',str(self.panel.pitch),',',str(self.panel.bodyVel), ',', str(self.panel.gps_v), '\n'])
         file_handle.close()
-        print('-----------------')
-        print("b_u: %.5f" % self.blance_u)
-        print("t_u: %.5f" % (self.translation_Kp1 * self.translation_u))
+        #print('-----------------')
+        #print("b_u: %.5f" % self.blance_u)
+        #print("t_u: %.5f" % (self.translation_Kp1 * self.translation_u))
         # print("w_u: %.5f" % (self.wheel_Kp1 * self.wheel_u))
         # print("pitch_err: %.3f" % pitch_err)
-        print("pitch: %.5f" % self.panel.pitch)
+        #print("pitch: %.5f" % self.panel.pitch)
         # print("omgz_u: %.3f" % (0.01 * self.omgz_u))
         # print("EV: %.3f" % (Ev))
-        # print("GPS_V: %.3f" % self.panel.gps_v)
+        #print("GPS_V: %.3f" % self.panel.gps_v)
         # print("GPS_height: %.3f" % self.panel.gps_y)
         # print("wheel_V: %.3f" % (self.panel.rightWheelVel * 0.05))
-        print("body_V: %.5f" % self.panel.bodyVel)
+        #print("body_V: %.5f" % self.panel.bodyVel)
         # print("omega_y: %.5f" % self.panel.omega_y)
         # print("omega_x: %.5f" % self.panel.omega_x)
-        print("omega_z: %.5f" % self.panel.omega_z)
+        #print("omega_z: %.5f" % self.panel.omega_z)
         # print("期望速度： %.5f" % self.Ev)
         # print("与期望速度差： %.5f" % (Ev - self.panel.rightWheelVel * 0.05))
         # print("预期倾角：%.5f" % self.pitch_exp)
         # print("Displacement: %.2f" % (self.panel.gps_dd))
         # print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
         # print("rWheelVelSP: %.3f" % (self.panel.samplingPeriod))
-        print('Angle1: %3f' % self.panel.encoder[0])
-        print('Angle2: %3f' % self.panel.encoder[2])
-        print('Angle3: %3f' % self.panel.encoder[4])
-        print('-----------------')
+        #print('Angle1: %3f' % self.panel.encoder[0])
+        #print('Angle2: %3f' % self.panel.encoder[2])
+        #print('Angle3: %3f' % self.panel.encoder[4])
+        #print('-----------------')
 
     def keyboardControl(self, robot, key):
         self.key = key
@@ -410,6 +412,8 @@ class velocity_controller:
                 print('jump end')
             else:
                 self.setXVel(0.0)
+        elif key==82: # 'r' 重置
+            self.robot.worldReload()
         else:
             self.setXVel(0.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
 

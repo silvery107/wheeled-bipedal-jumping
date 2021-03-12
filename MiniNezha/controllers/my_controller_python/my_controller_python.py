@@ -19,8 +19,8 @@ import time
 import math
 
 # init robot
-robot = Robot()
-# robot= Supervisor()
+#robot = Robot()
+robot= Supervisor()
 TIME_STEP = int(robot.getBasicTimeStep())
 
 # init sensors and drivers
@@ -77,7 +77,7 @@ brakes.append(motors[5].getBrake())
 
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors)
-vel = velocity_controller(motors, panel)
+vel = velocity_controller(motors, panel,robot)
 
 vel.setHeight(0.43)
 
@@ -85,13 +85,13 @@ fall_flag = False
 restart_flag = False
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
-    # vel.showMsg(TIME)
+    vel.showMsg(TIME)
     vel.sensor_update()
     key = mKeyboard.getKey()  # 从键盘读取输入
-    print("left: ", panel.F[0], "right: ", panel.F[1])
+    #print("left: ", panel.F[0], "right: ", panel.F[1])
 
     # emitter.send(panel.gps_v)
-    # if panel.gps_v > 2:
+    # if panel.gps_v > 3:
     #     robot.simulationReset()
     if fall_flag:
         if not restart_flag:
@@ -103,7 +103,7 @@ while robot.step(TIME_STEP) != -1:
                 while (not vel.checkAcc(0.1) and not vel.checkVel(0.1)):
                     vel.sensor_update()
                     vel.setXVel(0)
-                    print("try balance")
+                    #print("try balance")
                     restart_flag = False
                     fall_flag = False
                     robot.step(TIME_STEP)
