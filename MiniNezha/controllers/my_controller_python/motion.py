@@ -177,21 +177,21 @@ class velocity_controller:
         while 1:
             TIME_STEP = int(robot.getBasicTimeStep())
             robot.step(TIME_STEP)
-            self.panel.updateGPS()
+            self.sensor_update()
             print("jump phase 1")
             if self.panel.gps_y > 0.48:  # 直立时gps0.488
                 while 1:
                     print("jump phase 2")
                     TIME_STEP = int(robot.getBasicTimeStep())
                     robot.step(TIME_STEP)
-                    self.panel.updateGPS()
+                    self.sensor_update()
                     self.setHeight(h)
                     if self.panel.gps_y <= h + 0.06:
                         while 1:  # 为了保留结构暂时这么写，不要奇怪这个while break
                             print("jump phase 3")
                             TIME_STEP = int(robot.getBasicTimeStep())
                             robot.step(TIME_STEP)
-                            self.panel.updateGPS()
+                            self.sensor_update()
                             self.motors[4].setPosition(float('+inf'))
                             self.motors[5].setPosition(float('+inf'))
                             self.motors[4].setVelocity(pre_velocity)
