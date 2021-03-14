@@ -41,20 +41,8 @@ class velocity_controller:
         self.translation_u = 0.0
         self.translation_pid = PID_Controller(self.translation_Kp, 100000, self.translation_Ki)
 
-        # # 轮子速度
-        # self.wheel_Kp = 50
-        # self.wheel_Kp1 = 0.0015
-        # self.wheel_Ki = 10
-        #
-        #
-        # self.wheel_u = 0.0
-        # self.wheel_pid = PID_Controller(self.wheel_Kp, 20, self.wheel_Ki)
-
         # 转弯控制
         self.rotation_u = 0.0
-        # self.rotation_Kp = 10.0
-        # self.rotation_Ki = 5.0
-        # self.rotation_Kd = 0.0
 
         self.rotation_Kp = 50.0
         self.rotation_Ki = 2.5
@@ -116,42 +104,7 @@ class velocity_controller:
             self.cur_height = h
 
     def setXVel(self, Ev):  # 注意：pitch方向和车方向相反，前倾为负
-        # 对比和上次的位置，用count记录累加位移的量。
-        # if self.panel.gps_v < Ev:  # 之前只能做到世界坐标系下x方向的位置平衡
-        #     self.count = self.count + 1
-        # elif self.panel.gps_x > Ev:
-        #     self.count = self.count - 1
-        # # print('count:%.3f' % self.count)
-        #
-        # if self.count > 100:  # 抗漂移的部分
-        #     self.motors[4].setTorque(0.05 * self.factor1)
-        #     self.motors[5].setTorque(0.05 * self.factor1)
-        #     self.factor1 = self.factor1 + 0.1  # 使力矩递增的参数（因为在高速漂起来时，小恒力拉不回来。而大恒力在接近静止时会造成不稳定，故写成线性递增式力矩）
-        #     self.count = self.count - 2  # 可以理解为纠正频率，减的数越小，纠正频率越高
-        # elif self.count < -100:  # 抗漂移的部分
-        #     self.motors[4].setTorque(-0.05 * self.factor2)
-        #     self.motors[5].setTorque(-0.05 * self.factor2)
-        #     self.factor2 = self.factor2 + 0.1  # 使力矩递增的参数（因为在高速漂起来时，小恒力拉不回来。而大恒力在接近静止时会造成不稳定，故写成线性递增式力矩）
-        #     self.count = self.count + 2  # 可以理解为纠正频率，加的数越小，纠正频率越高
-        #     # print('i2%.2f' % i_2)
-        # else:
-        # 参数过大后降参数，减小平衡后的晃动。可以理解为抗漂移给出的力矩波形，为周期性三角锯齿波（开始瞎编）
-        # if self.factor1 >= 4:
-        #     factor1 = 1
-        # if self.factor2 >= 4:
-        #     factor2 = 1
 
-        # PID部分
-        # if Ev > 0 and self.panel.bodyVel < Ev:
-        #     v = self.panel.bodyVel*0.7
-        #     self.Ev = self.panel.bodyVel_last*0.3+v
-        # elif Ev < 0 and self.panel.bodyVel > Ev:
-        #     v = self.panel.bodyVel * 0.7
-        #     self.Ev = self.panel.bodyVel_last * 0.3 + v
-        # if 0 < Ev < self.Ev:
-        #     self.Ev = Ev
-        # elif 0 > Ev > self.Ev:
-        #     self.Ev = Ev
         if Ev == 0.0:
             self.pitch_exp = -0.007 + 0.07 * self.panel.bodyVel - 0.048 * (0.3 - self.cur_height)
         elif Ev > 0:
@@ -181,17 +134,6 @@ class velocity_controller:
         translation_err = self.Ev
         self.translation_pid.feedback(translation_err)
         self.translation_u = self.translation_pid.get_u()
-
-        # wheel_err = self.Ev - self.panel.rightWheelVel*0.05  #
-        # self.wheel_pid.feedback(wheel_err)
-        # self.wheel_u = self.wheel_pid.get_u()
-
-        #         if abs(self.rotation_u) > 8.3:
-        # if self.rotation_u > 0:
-        #         self.rotation_u = 8.3
-        #     else:
-        #         self.rotation_u = -8.3
-        # print(self.panel.omega_y)
 
         self.motors[4].setTorque(
             -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u + 0.028 * self.rotation_u)
