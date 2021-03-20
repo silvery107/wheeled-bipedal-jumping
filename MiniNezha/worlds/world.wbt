@@ -1,8 +1,9 @@
-#VRML_SIM R2020a utf8
+#VRML_SIM R2021a utf8
 WorldInfo {
   CFM 1e-06
   ERP 0.6
   basicTimeStep 8
+  coordinateSystem "NUE"
   contactProperties [
     ContactProperties {
       bounce 0
@@ -17,8 +18,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.02188496937622776 -0.9669123006824435 -0.25416854822024165 3.4000748895774002
-  position 1.2189765422537149 1.7620148403233822 -3.5218708158225094
+  orientation 0.9939787941962045 -0.0856924692034948 -0.06828585073108208 5.4988332536223545
+  position 0.5941822673022676 1.1917530732165673 -0.5333244348909639
   follow "MiniNezha"
   followSmoothness 0
 }
@@ -29,8 +30,8 @@ TexturedBackgroundLight {
 Floor {
 }
 Robot {
-  translation 0.27 0.69 0
-  rotation 0 0 1 0
+  translation 0.395 0.443497 -1.51
+  rotation 0 0 1 0.523598
   children [
     GPS {
     }
