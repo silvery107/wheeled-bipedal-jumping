@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 """linear controller."""
 
 # You may need to import some classes of the controller module. Ex:

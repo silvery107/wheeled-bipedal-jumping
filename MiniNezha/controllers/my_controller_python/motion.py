@@ -1,4 +1,5 @@
-from controller import Motor
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-from controller import Motor
 from controller import InertialUnit
 from controller import Gyro
 from controller import Brake

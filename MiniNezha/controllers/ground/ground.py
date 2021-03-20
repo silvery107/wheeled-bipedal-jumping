@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 """ground controller."""
 from controller import Robot
 from controller import TouchSensor

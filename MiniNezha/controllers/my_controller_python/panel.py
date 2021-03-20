@@ -1,5 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 import math
-
 
 class Point(object):
     def __init__(self, xParam=0.0, yParam=0.0, zParam=0.0):
