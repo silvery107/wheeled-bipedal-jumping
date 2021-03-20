@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 """my_controller_python controller."""
 
 from controller import Robot
