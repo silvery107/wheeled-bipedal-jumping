@@ -3,7 +3,7 @@
 from controller import InertialUnit
 from controller import Gyro
 from controller import Brake
-import numpy as np
+import math
 from PID_control import *
 
 import math
@@ -62,26 +62,26 @@ class velocity_controller:
         '''
         legs without mass
         '''
-        theta3 = np.arccos((51 * (-(1081600 * h * (
+        theta3 = math.acos((51 * (-(1081600 * h * (
                 (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
                                     1 / 2)) / 104)
-        theta2 = np.pi - np.arccos((-(1081600 * h * (
+        theta2 = math.pi - math.acos((-(1081600 * h * (
                 (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
                                            1 / 2) / 2) - theta3
-        theta1 = -np.pi / 2 + np.arccos((-(1081600 * h * (
+        theta1 = -math.pi / 2 + math.acos((-(1081600 * h * (
                 (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
                                                 1 / 2) / 2)
         self.theta3, self.theta2, self.theta1 = theta3, theta2, theta1
         return theta1, theta2, theta3
 
     def calc_balance_angle_2(self, h):
-        theta3 = np.arccos((21 * (-(31250 * h * (
+        theta3 = math.acos((21 * (-(31250 * h * (
                     (13325 * h) / 92 - (11 * ((172265625 * h ** 2) / 256036 + 4) ** (1 / 2)) / 2)) / 2783) ** (
                                         1 / 2)) / 50)
-        theta2 = np.pi - np.arccos(
+        theta2 = math.pi - math.acos(
             (-(31250 * h * ((13325 * h) / 92 - (11 * ((172265625 * h ** 2) / 256036 + 4) ** (1 / 2)) / 2)) / 2783) ** (
                         1 / 2) / 2) - theta3
-        theta1 = -np.pi / 2 + np.arccos(
+        theta1 = -math.pi / 2 + math.acos(
             (-(31250 * h * ((13325 * h) / 92 - (11 * ((172265625 * h ** 2) / 256036 + 4) ** (1 / 2)) / 2)) / 2783) ** (
                         1 / 2) / 2)
         return theta1, theta2, theta3
@@ -255,7 +255,7 @@ class velocity_controller:
         #     break
 
     def checkPitch(self, angle_thr=30):  # check body pitch
-        if abs(self.panel.pitch) <= angle_thr / 180 * np.pi:
+        if abs(self.panel.pitch) <= angle_thr / 180 * math.pi:
             return True
         return False
 
