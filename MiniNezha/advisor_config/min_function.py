@@ -4,14 +4,14 @@ import argparse
 import os
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-x", type=float, default=0.0)
+parser.add_argument("-a", type=float, default=0.0)
 args = parser.parse_args()
 
 
 def main():
   # Read parameters
-  x = args.x
-  param_dic = {"restart_torque":x}
+  restart_torque = args.a
+  param_dic = {"restart_torque":restart_torque}
 
   ## Compute or learning
 

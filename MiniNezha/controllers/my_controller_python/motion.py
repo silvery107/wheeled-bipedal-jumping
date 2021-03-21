@@ -55,6 +55,7 @@ class velocity_controller:
         self.theta1 = 0
         self.key = 0
 
+        self.TIME_STEP = int(robot.getBasicTimeStep())
         self.robot = robot
 
     def calc_balance_angle_1(self, h):
@@ -71,18 +72,6 @@ class velocity_controller:
                 (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
                                                 1 / 2) / 2)
         self.theta3, self.theta2, self.theta1 = theta3, theta2, theta1
-        return theta1, theta2, theta3
-
-    def calc_balance_angle_2(self, h):
-        theta3 = math.acos((21 * (-(31250 * h * (
-                    (13325 * h) / 92 - (11 * ((172265625 * h ** 2) / 256036 + 4) ** (1 / 2)) / 2)) / 2783) ** (
-                                        1 / 2)) / 50)
-        theta2 = math.pi - math.acos(
-            (-(31250 * h * ((13325 * h) / 92 - (11 * ((172265625 * h ** 2) / 256036 + 4) ** (1 / 2)) / 2)) / 2783) ** (
-                        1 / 2) / 2) - theta3
-        theta1 = -math.pi / 2 + math.acos(
-            (-(31250 * h * ((13325 * h) / 92 - (11 * ((172265625 * h ** 2) / 256036 + 4) ** (1 / 2)) / 2)) / 2783) ** (
-                        1 / 2) / 2)
         return theta1, theta2, theta3
 
     def setHeight(self, h):
@@ -253,43 +242,55 @@ class velocity_controller:
         #             break
         #     break
 
-    def checkPitch(self, angle_thr=30):  # check body pitch
+    def checkPitch(self, angle_thr=30):  
+        '''check body pitch'''
         if abs(self.panel.pitch) <= angle_thr / 180 * math.pi:
             return True
         return False
 
-    def checkAcc(self, acc_thr=0.1):  # check body acceleration
+    def checkAcc(self, acc_thr=0.1):
+        '''check body acceleration'''
         if abs(self.panel.bodyAcce) < acc_thr:
             return True
         return False
 
-    def checkVel(self, vel_thr=0.05):  # check body velocity
+    def checkVel(self, vel_thr=0.05):
+        '''check body velocity'''
         if abs(self.panel.bodyVel) < vel_thr:
             return True
         return False
 
     def shutdown(self, brakes, height=0.25):
-        # for i in range(4):
-        #     self.motors[i].setTorque(0.2)
         self.setHeight(height)
-        # self.motors[4].setPosition(0)
-        # self.motors[5].setPosition(0)
         brakes[0].setDampingConstant(10000)
         brakes[1].setDampingConstant(10000)
 
-    def restart(self, brakes, torque=3.5, height=0.25):
+    def restart(self, brakes, torque=13.5, height=0.25):
+        '''full edition'''
         brakes[0].setDampingConstant(0)
         brakes[1].setDampingConstant(0)
         if self.panel.pitch >= 0:
             self.motors[4].setTorque(torque)
             self.motors[5].setTorque(torque)
         else:
-            self.shutdown(brakes, 0.15)
-            print("restart failed")  # 这里偷懒了,前倾站不起来
-            # self.motors[4].setTorque(-torque)
-            # self.motors[5].setTorque(-torque)
+            self.motors[4].setTorque(-torque)
+            self.motors[5].setTorque(-torque)
 
         self.setHeight(height)
+
+    def fall_recovery(self,restart_torque,brakes):
+            # print("restart")
+            self.restart(brakes, restart_torque, 0.25)
+            if self.checkPitch(8):
+                while (not self.checkAcc(0.1) and not self.checkVel(0.1)):
+                    # print("try balance")
+                    self.sensor_update()
+                    self.setXVel(0)
+                    self.robot.step(self.TIME_STEP)
+                return True
+            else:
+                return False
+
 
     def showMsg(self,TIME):
         # file_handle = open('parameter.txt', mode='a')

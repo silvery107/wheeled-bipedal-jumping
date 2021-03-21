@@ -1,15 +1,15 @@
 {
-  "name": "optimal_restart3",
+  "name": "optimal_restart6",
   "algorithm": "BayesianOptimization",
   "trialNumber": 10,
   "path": "./advisor_config/",
   "command": "./min_function.py",
   "search_space": {
       "goal": "MINIMIZE",
-      "randomInitTrials": 3,
+      "randomInitTrials": 5,
       "params": [
           {
-              "parameterName": "x",
+              "parameterName": "a",
               "type": "DOUBLE",
               "minValue": 1.0,
               "maxValue": 20.0

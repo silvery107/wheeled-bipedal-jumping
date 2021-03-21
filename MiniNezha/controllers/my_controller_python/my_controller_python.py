@@ -20,7 +20,6 @@ import time
 import math
 
 # init robot
-# robot = Robot()
 robot= Supervisor()
 TIME_STEP = int(robot.getBasicTimeStep())
 
@@ -109,19 +108,12 @@ while robot.step(TIME_STEP) != -1:
             restart_flag = vel.checkVel(0.005)
         if restart_flag:
             restart_time0 = robot.getTime()
-            print("restart")
-            vel.restart(brakes, restart_torque, 0.25)
-            if vel.checkPitch(8):
-                while (not vel.checkAcc(0.1) and not vel.checkVel(0.1)):
-                    vel.sensor_update()
-                    vel.setXVel(0)
-                    print("try balance")
-                    restart_flag = False
-                    fall_flag = False
-                    robot.step(TIME_STEP)
+            if vel.fall_recovery(restart_torque,brakes):
+                restart_flag = False
+                fall_flag = False
                 restart_metrics = robot.getTime()-restart_time0
         else:
-            print("shutdown")
+            # print("shutdown")
             vel.shutdown(brakes, 0.25)
             continue
     else:
