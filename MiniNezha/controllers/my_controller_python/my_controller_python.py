@@ -79,7 +79,7 @@ brakes.append(motors[5].getBrake())
 restart_torque = 0
 metrics_dic = dict()
 with open("./args.txt",'r') as args:
-    param_dic = eval(args.read(()))
+    param_dic = eval(args.read())
     restart_torque = param_dic["restart_torque"]
 
 # main loop
@@ -91,7 +91,7 @@ vel.setHeight(0.4)
 fall_flag = False
 restart_flag = False
 restart_time0 = 0
-restart_metrics = math.inf
+restart_metrics = 99999
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)

@@ -1,5 +1,5 @@
 {
-  "name": "optimal_restart",
+  "name": "optimal_restart3",
   "algorithm": "BayesianOptimization",
   "trialNumber": 10,
   "path": "./advisor_config/",
