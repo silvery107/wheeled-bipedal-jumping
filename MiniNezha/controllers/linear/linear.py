@@ -9,7 +9,6 @@ import math
 
 robot = Robot()
 TIME_STEP = int(robot.getBasicTimeStep())
-timestep = int(robot.getBasicTimeStep())
 motors = []  # joint motors
 encoders = []
 motors.append(robot.getMotor("linear motor"))
@@ -20,7 +19,7 @@ encoders[0].enable(TIME_STEP)
 ##TODO 你只用改下面的
 pos = 0
 add = 0.3
-while robot.step(timestep) != -1:
+while robot.step(TIME_STEP) != -1:
     
     #执行位置
     motors[0].setPosition(pos)

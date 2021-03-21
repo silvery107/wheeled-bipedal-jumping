@@ -97,9 +97,6 @@ while robot.step(TIME_STEP) != -1:
     vel.sensor_update()
     key = mKeyboard.getKey()
 
-    # emitter.send(panel.gps_v)
-    # if panel.gps_v > 3:
-    #     robot.simulationReset()
     if TIME>5:
         break
         
