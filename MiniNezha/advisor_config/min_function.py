@@ -11,19 +11,21 @@ args = parser.parse_args()
 def main():
   # Read parameters
   x = args.x
+  param_dic = {"restart_torque":x}
 
   ## Compute or learning
 
   # write args to txt
   with open("../controllers/my_controller_python/args.txt",'w') as f1:
-    f1.write(str(x))
+    f1.write(str(param_dic))
 
   # run webots
   os.system('webots --mode=fast --no-rendering')
 
   # read metrics from txt
   with open("../controllers/my_controller_python/metrics.txt",'r') as f2:
-    y = f2.read()
+    metrics_dic = eval(f2.read())
+    y = metrics_dic["restart_metrics"]
 
   # Output the metrics
   print(y)

@@ -20,7 +20,7 @@ import time
 import math
 
 # init robot
-#robot = Robot()
+# robot = Robot()
 robot= Supervisor()
 TIME_STEP = int(robot.getBasicTimeStep())
 
@@ -59,7 +59,7 @@ motor_names = [
     "left_hip_motor",
     "right_hip_motor",
     "left_keen_motor",
-    "right_keen_motor",  # 3
+    "right_keen_motor",
     "left_wheel_motor",
     "right_wheel_motor"
 ]
@@ -77,19 +77,21 @@ brakes.append(motors[4].getBrake())
 brakes.append(motors[5].getBrake())
 
 restart_torque = 0
+metrics_dic = dict()
 with open("./args.txt",'r') as args:
-    restart_torque = float(args.read())
+    param_dic = eval(args.read(()))
+    restart_torque = param_dic["restart_torque"]
 
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors)
-vel = velocity_controller(motors, panel,robot)
+vel = velocity_controller(motors, panel, robot)
 
 vel.setHeight(0.4)
 
 fall_flag = False
 restart_flag = False
 restart_time0 = 0
-restart_metrics = 0
+restart_metrics = math.inf
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)
@@ -125,8 +127,9 @@ while robot.step(TIME_STEP) != -1:
     else:
         vel.keyboardControl(robot, key)
         fall_flag = not vel.checkPitch(30)
-
+       
+metrics_dic["restart_metrics"] = restart_metrics
 with open("./metrics.txt",'w') as metrics:
-    metrics.write(str(restart_metrics))
+    metrics.write(str(metrics_dic))
 
 robot.simulationQuit(0)
