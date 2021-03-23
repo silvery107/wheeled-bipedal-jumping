@@ -20,7 +20,6 @@ import time
 import math
 
 # init robot
-# robot = Robot()
 robot = Supervisor()
 TIME_STEP = int(robot.getBasicTimeStep())
 
@@ -76,9 +75,11 @@ motors[5].enableTorqueFeedback(TIME_STEP)
 brakes.append(motors[4].getBrake())
 brakes.append(motors[5].getBrake())
 
-restart_torque = 13.5
-# with open("./args.txt", 'r') as args:
-#     restart_torque = float(args.read())
+restart_torque = 0
+metrics_dic = dict()
+with open("./args.txt",'r') as args:
+    param_dic = eval(args.read())
+    restart_torque = param_dic["restart_torque"]
 
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors)
@@ -89,45 +90,35 @@ vel.setHeight(0.4)
 fall_flag = False
 restart_flag = False
 restart_time0 = 0
-restart_metrics = 0
+restart_metrics = 99999
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)
     vel.sensor_update()
     key = mKeyboard.getKey()
 
-    # emitter.send(panel.gps_v)
-    # if panel.gps_v > 3:
-    #     robot.simulationReset()
-
-    # if TIME > 5:
-    #     break
-
+    if TIME>5:
+        break
+        
     if fall_flag:
         if not restart_flag:
             restart_flag = vel.checkVel(0.005)
         if restart_flag:
             restart_time0 = robot.getTime()
-            print("restart")
-            vel.restart(brakes, restart_torque, 0.25)
-            if vel.checkPitch(8):
-                while (not vel.checkAcc(0.1) and not vel.checkVel(0.1)):
-                    vel.sensor_update()
-                    vel.setXVel(0)
-                    print("try balance")
-                    restart_flag = False
-                    fall_flag = False
-                    robot.step(TIME_STEP)
-                restart_metrics = robot.getTime() - restart_time0
+            if vel.fall_recovery(restart_torque,brakes):
+                restart_flag = False
+                fall_flag = False
+                restart_metrics = robot.getTime()-restart_time0
         else:
-            print("shutdown")
+            # print("shutdown")
             vel.shutdown(brakes, 0.25)
             continue
     else:
         vel.keyboardControl(robot, key)
         fall_flag = not vel.checkPitch(30)
 
-# with open("./metrics.txt", 'w') as metrics:
-#     metrics.write(str(restart_metrics))
+metrics_dic["restart_metrics"] = restart_metrics
+with open("./metrics.txt",'w') as metrics:
+    metrics.write(str(metrics_dic))
 
-# robot.simulationQuit(0)
+robot.simulationQuit(0)
