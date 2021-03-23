@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 import math
 
+
 class Point(object):
     def __init__(self, xParam=0.0, yParam=0.0, zParam=0.0):
         self.x = xParam
@@ -87,6 +88,10 @@ class panel:
         self.touch_sensors = touch_sensors
         self.F = [[0, 0, 0], [0, 0, 0]]
 
+        self.mb = 5
+        self.r = 0.05
+        self.g = 9.8
+        # self.L0=
     def updateDirection(self):  # TODO 这里不太确定，先假设水平了——hbx
         self.x = Point.multiple(self.x, Point(math.cos(self.yaw), math.sin(self.yaw), 0))
         self.y = Point.multiple(self.y, Point(-math.sin(self.yaw), math.cos(self.yaw), 0))

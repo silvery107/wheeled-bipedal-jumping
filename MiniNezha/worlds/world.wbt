@@ -177,7 +177,7 @@ Robot {
                                     }
                                     physics Physics {
                                       density -1
-                                      mass 1
+                                      mass 0.1
                                     }
                                     type "force-3d"
                                     lookupTable []
@@ -196,7 +196,7 @@ Robot {
                       boundingObject USE Hip_link
                       physics Physics {
                         density -1
-                        mass 0.5
+                        mass 0.1
                         centerOfMass [
                           0 -0.22 0
                         ]
@@ -209,7 +209,7 @@ Robot {
             boundingObject USE Hip_link
             physics Physics {
               density -1
-              mass 0.5
+              mass 0.1
               centerOfMass [
                 0 0 0
               ]
@@ -321,7 +321,7 @@ Robot {
                                     }
                                     physics Physics {
                                       density -1
-                                      mass 1
+                                      mass 0.1
                                     }
                                     type "force-3d"
                                     lookupTable []
@@ -340,7 +340,7 @@ Robot {
                       boundingObject USE Hip_link
                       physics Physics {
                         density -1
-                        mass 0.5
+                        mass 0.1
                         centerOfMass [
                           0 -0.22 0
                         ]
@@ -356,7 +356,7 @@ Robot {
             boundingObject USE Hip_link
             physics Physics {
               density -1
-              mass 0.5
+              mass 0.1
               centerOfMass [
                 0 0 0
               ]

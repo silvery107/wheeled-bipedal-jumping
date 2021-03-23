@@ -20,8 +20,8 @@ import time
 import math
 
 # init robot
-#robot = Robot()
-robot= Supervisor()
+# robot = Robot()
+robot = Supervisor()
 TIME_STEP = int(robot.getBasicTimeStep())
 
 # init sensors and drivers
@@ -76,13 +76,13 @@ motors[5].enableTorqueFeedback(TIME_STEP)
 brakes.append(motors[4].getBrake())
 brakes.append(motors[5].getBrake())
 
-restart_torque = 0
-with open("./args.txt",'r') as args:
-    restart_torque = float(args.read())
+restart_torque = 13.5
+# with open("./args.txt", 'r') as args:
+#     restart_torque = float(args.read())
 
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors)
-vel = velocity_controller(motors, panel,robot)
+vel = velocity_controller(motors, panel, robot)
 
 vel.setHeight(0.4)
 
@@ -99,9 +99,10 @@ while robot.step(TIME_STEP) != -1:
     # emitter.send(panel.gps_v)
     # if panel.gps_v > 3:
     #     robot.simulationReset()
-    if TIME>5:
-        break
-        
+
+    # if TIME > 5:
+    #     break
+
     if fall_flag:
         if not restart_flag:
             restart_flag = vel.checkVel(0.005)
@@ -117,7 +118,7 @@ while robot.step(TIME_STEP) != -1:
                     restart_flag = False
                     fall_flag = False
                     robot.step(TIME_STEP)
-                restart_metrics = robot.getTime()-restart_time0
+                restart_metrics = robot.getTime() - restart_time0
         else:
             print("shutdown")
             vel.shutdown(brakes, 0.25)
@@ -126,7 +127,7 @@ while robot.step(TIME_STEP) != -1:
         vel.keyboardControl(robot, key)
         fall_flag = not vel.checkPitch(30)
 
-with open("./metrics.txt",'w') as metrics:
-    metrics.write(str(restart_metrics))
+# with open("./metrics.txt", 'w') as metrics:
+#     metrics.write(str(restart_metrics))
 
-robot.simulationQuit(0)
+# robot.simulationQuit(0)

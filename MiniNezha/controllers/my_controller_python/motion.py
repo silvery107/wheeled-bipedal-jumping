@@ -8,9 +8,10 @@ from PID_control import *
 
 import math
 
+
 class velocity_controller:
 
-    def __init__(self, motors, panel,robot):
+    def __init__(self, motors, panel, robot):
         self.Ev = 0.0
         self.panel = panel
         self.motors = motors
@@ -66,23 +67,23 @@ class velocity_controller:
                                     1 / 2)) / 104)
         theta2 = math.pi - math.acos((-(1081600 * h * (
                 (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
-                                           1 / 2) / 2) - theta3
+                                             1 / 2) / 2) - theta3
         theta1 = -math.pi / 2 + math.acos((-(1081600 * h * (
                 (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
-                                                1 / 2) / 2)
+                                                  1 / 2) / 2)
         self.theta3, self.theta2, self.theta1 = theta3, theta2, theta1
         return theta1, theta2, theta3
 
     def calc_balance_angle_2(self, h):
         theta3 = math.acos((21 * (-(31250 * h * (
-                    (13325 * h) / 92 - (11 * ((172265625 * h ** 2) / 256036 + 4) ** (1 / 2)) / 2)) / 2783) ** (
-                                        1 / 2)) / 50)
+                (13325 * h) / 92 - (11 * ((172265625 * h ** 2) / 256036 + 4) ** (1 / 2)) / 2)) / 2783) ** (
+                                    1 / 2)) / 50)
         theta2 = math.pi - math.acos(
             (-(31250 * h * ((13325 * h) / 92 - (11 * ((172265625 * h ** 2) / 256036 + 4) ** (1 / 2)) / 2)) / 2783) ** (
-                        1 / 2) / 2) - theta3
+                    1 / 2) / 2) - theta3
         theta1 = -math.pi / 2 + math.acos(
             (-(31250 * h * ((13325 * h) / 92 - (11 * ((172265625 * h ** 2) / 256036 + 4) ** (1 / 2)) / 2)) / 2783) ** (
-                        1 / 2) / 2)
+                    1 / 2) / 2)
         return theta1, theta2, theta3
 
     def setHeight(self, h):
@@ -153,105 +154,164 @@ class velocity_controller:
             self.rotation_u = 0.0
             self.panel.rotation = 0
 
-    def jump(self, robot, h=0.27):
-        pre_velocity = self.panel.rightWheelVel
-        # samplingPeriod = self.motors[2].getTorqueFeedbackSamplingPeriod() / 1000
-        # print('sam:%3f' % samplingPeriod)
-        # self.motors[2].enableTorqueFeedback(samplingPeriod)
+    # def jump(self, robot, h=0.27):
+    #     pre_velocity = self.panel.rightWheelVel
+    #     # samplingPeriod = self.motors[2].getTorqueFeedbackSamplingPeriod() / 1000
+    #     # print('sam:%3f' % samplingPeriod)
+    #     # self.motors[2].enableTorqueFeedback(samplingPeriod)
+    #     self.motors[2].enableTorqueFeedback(1)
+    #     self.motors[0].enableTorqueFeedback(1)
+    #     self.motors[2].setPosition(0)
+    #     self.motors[3].setPosition(0)
+    #     self.motors[0].setPosition(0)
+    #     self.motors[1].setPosition(0)
+    #     tor2 = self.motors[2].getTorqueFeedback()
+    #     tor0 = self.motors[2].getTorqueFeedback()
+    #     velocity2 = self.motors[2].getVelocity()
+    #     velocity0 = self.motors[0].getVelocity()
+    #     print('torque[2]:%3f' % tor2)
+    #     print('Velocity[2]:%3f' % velocity2)
+    #     print('torque[0]:%3f' % tor0)
+    #     print('Velocity[0]:%3f' % velocity0)
+    #
+    #     # GPS版（项目临时）
+    #     while 1:
+    #         TIME_STEP = int(robot.getBasicTimeStep())
+    #         robot.step(TIME_STEP)
+    #         self.sensor_update()
+    #         print("jump phase 1")
+    #         if self.panel.gps_y > 0.48:  # 直立时gps0.488
+    #             while 1:
+    #                 print("jump phase 2")
+    #                 TIME_STEP = int(robot.getBasicTimeStep())
+    #                 robot.step(TIME_STEP)
+    #                 self.sensor_update()
+    #                 self.setHeight(h)
+    #                 if self.panel.gps_y <= h + 0.06:
+    #                     while 1:  # 为了保留结构暂时这么写，不要奇怪这个while break
+    #                         print("jump phase 3")
+    #                         TIME_STEP = int(robot.getBasicTimeStep())
+    #                         robot.step(TIME_STEP)
+    #                         self.sensor_update()
+    #                         self.motors[4].setPosition(float('+inf'))
+    #                         self.motors[5].setPosition(float('+inf'))
+    #                         self.motors[4].setVelocity(pre_velocity)
+    #                         self.motors[5].setVelocity(pre_velocity)
+    #                         break
+    #                         # if self.panel.gps_y > 0.49:
+    #                         #     while 1:
+    #                         #         print("jump phase 4")
+    #                         #         TIME_STEP = int(robot.getBasicTimeStep() / 16)
+    #                         #         robot.step(TIME_STEP)
+    #                         #         self.panel.updateGPS()
+    #                         #         if self.panel.gps_y <= 0.49:
+    #                         #             # h = 0.44
+    #                         #             # self.motors[4].setPosition(float('+inf'))
+    #                         #             # self.motors[5].setPosition(float('+inf'))
+    #                         #             # self.motors[4].setVelocity(0)
+    #                         #             # self.motors[5].setVelocity(0)
+    #                         #             # while 1:
+    #                         #             #     print("jump phase 5")
+    #                         #             #     TIME_STEP = int(robot.getBasicTimeStep() / 16)
+    #                         #             #     robot.step(TIME_STEP)
+    #                         #             #     self.panel.updateGPS()
+    #                         #             #     if self.panel.gps_y <= h + 0.05:
+    #                         #             #         h -= 0.01
+    #                         #             #         self.setHeight(h)
+    #                         #             #     if h <= 0.3:
+    #                         #             #         break
+    #                         #             break
+    #                         #     break
+    #                     break
+    #             # self.setHeight(0.43)
+    #             break
+    #
+    #     # TODO 下面为轮子空转版本 可以不使用GPS 但未完全成熟
+    #     # last_v = 0
+    #     # count = 0
+    #     # while 1:
+    #     #     # 在空中不采取行动
+    #     #     TIME_STEP = int(robot.getBasicTimeStep())
+    #     #     robot.step(TIME_STEP)
+    #     #     panel.updateEncoder()
+    #     #     panel.updateWheelVelocity()
+    #     #     print('jumping rightWheelVel:', panel.rightWheelVel)
+    #     #     # 轮子腾空后空转，转速先增后降，通过转速降来判断腾空后的落地过程（用GPS效果更好但是是流氓办法）
+    #     #     if abs(last_v) > abs(panel.rightWheelVel):
+    #     #         count += 1
+    #     #         if count >= 5:
+    #     #             break  # 若轮子速度连续下降，即进入平衡车状态
+    #     #     last_v = panel.rightWheelVel
+    #
+    #     # if abs(panel.rightWheelVel) >= 5:
+    #     #     while 1:
+    #     #         TIME_STEP = int(robot.getBasicTimeStep())
+    #     #         robot.step(TIME_STEP)
+    #     #         panel.updateEncoder()
+    #     #         panel.updateWheelVelocity()
+    #     #         print('2::', panel.rightWheelVel)
+    #     #         if abs(panel.rightWheelVel) < 5:
+    #     #             break
+    #     #     break
+
+    def jump(self, robot, desire_h=0.1):  # desire_h
+        self.sensor_update()
+        t0 = 0.3  # desire time
+        m = 7.8  # body mass
+        mb = 5  # total mass
+        l0 = 0.23  # leg length
+        g = 9.81
+
+        # pre_velocity = self.panel.rightWheelVel
         self.motors[2].enableTorqueFeedback(1)
         self.motors[0].enableTorqueFeedback(1)
-        self.motors[2].setPosition(0)
-        self.motors[3].setPosition(0)
-        self.motors[0].setPosition(0)
-        self.motors[1].setPosition(0)
-        tor2 = self.motors[2].getTorqueFeedback()
-        tor0 = self.motors[2].getTorqueFeedback()
-        velocity2 = self.motors[2].getVelocity()
-        velocity0 = self.motors[0].getVelocity()
-        print('torque[2]:%3f' % tor2)
-        print('Velocity[2]:%3f' % velocity2)
-        print('torque[0]:%3f' % tor0)
-        print('Velocity[0]:%3f' % velocity0)
+        self.motors[0].setTorque(0)  # make base floating
+        self.motors[1].setTorque(0)
+        # self.motors[2].setPosition(0)
+        # self.motors[3].setPosition(0)
+        # tor2 = self.motors[2].getTorqueFeedback()
+        # tor0 = self.motors[2].getTorqueFeedback()
+        # velocity2 = self.motors[2].getVelocity()
+        # velocity0 = self.motors[0].getVelocity()
+        # print('torque[2]:%3f' % tor2)
+        # print('Velocity[2]:%3f' % velocity2)
+        # print('torque[0]:%3f' % tor0)
+        # print('Velocity[0]:%3f' % velocity0)
 
-        # GPS版（项目临时）
+        count = 0
+        TIME_STEP = int(robot.getBasicTimeStep())
         while 1:
-            TIME_STEP = int(robot.getBasicTimeStep())
+            count += 1
+            if count * TIME_STEP * 0.001 >= t0:  # counts discrete steps, to calculate integral
+                break
             robot.step(TIME_STEP)
             self.sensor_update()
-            print("jump phase 1")
-            if self.panel.gps_y > 0.48:  # 直立时gps0.488
-                while 1:
-                    print("jump phase 2")
-                    TIME_STEP = int(robot.getBasicTimeStep())
-                    robot.step(TIME_STEP)
-                    self.sensor_update()
-                    self.setHeight(h)
-                    if self.panel.gps_y <= h + 0.06:
-                        while 1:  # 为了保留结构暂时这么写，不要奇怪这个while break
-                            print("jump phase 3")
-                            TIME_STEP = int(robot.getBasicTimeStep())
-                            robot.step(TIME_STEP)
-                            self.sensor_update()
-                            self.motors[4].setPosition(float('+inf'))
-                            self.motors[5].setPosition(float('+inf'))
-                            self.motors[4].setVelocity(pre_velocity)
-                            self.motors[5].setVelocity(pre_velocity)
-                            break
-                            # if self.panel.gps_y > 0.49:
-                            #     while 1:
-                            #         print("jump phase 4")
-                            #         TIME_STEP = int(robot.getBasicTimeStep() / 16)
-                            #         robot.step(TIME_STEP)
-                            #         self.panel.updateGPS()
-                            #         if self.panel.gps_y <= 0.49:
-                            #             # h = 0.44
-                            #             # self.motors[4].setPosition(float('+inf'))
-                            #             # self.motors[5].setPosition(float('+inf'))
-                            #             # self.motors[4].setVelocity(0)
-                            #             # self.motors[5].setVelocity(0)
-                            #             # while 1:
-                            #             #     print("jump phase 5")
-                            #             #     TIME_STEP = int(robot.getBasicTimeStep() / 16)
-                            #             #     robot.step(TIME_STEP)
-                            #             #     self.panel.updateGPS()
-                            #             #     if self.panel.gps_y <= h + 0.05:
-                            #             #         h -= 0.01
-                            #             #         self.setHeight(h)
-                            #             #     if h <= 0.3:
-                            #             #         break
-                            #             break
-                            #     break
-                        break
-                # self.setHeight(0.43)
+            theta = math.pi - self.panel.encoder[2]  # angle between wo legs
+            torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # calculate torque based on model
+            self.motors[2].setTorque(torque)
+            self.motors[3].setTorque(torque)
+            # self.printInfo()
+        # self.motors[2].setTorque(0)
+        # self.motors[3].setTorque(0)
+        self.sensor_update()
+
+        h_ref = self.panel.gps_y # height, when jump starts
+        print('h_ref :%3f' % h_ref)
+        h_max = 0 # height of the top point
+        while 1:
+            robot.step(TIME_STEP)
+            self.sensor_update()
+            self.motors[2].setPosition(self.panel.encoder[2]) # lock keen motors, avoid passing min-angle
+            self.motors[3].setPosition(self.panel.encoder[3])
+            if h_max <= self.panel.gps_y:
+                h_max = self.panel.gps_y
+            else:
+                print('break')
                 break
+        delta_h = h_max - h_ref # max delta_height, should be compared with desire_h
+        print('Actual height: %3f' % delta_h)
 
-        # TODO 下面为轮子空转版本 可以不使用GPS 但未完全成熟
-        # last_v = 0
-        # count = 0
-        # while 1:
-        #     # 在空中不采取行动
-        #     TIME_STEP = int(robot.getBasicTimeStep())
-        #     robot.step(TIME_STEP)
-        #     panel.updateEncoder()
-        #     panel.updateWheelVelocity()
-        #     print('jumping rightWheelVel:', panel.rightWheelVel)
-        #     # 轮子腾空后空转，转速先增后降，通过转速降来判断腾空后的落地过程（用GPS效果更好但是是流氓办法）
-        #     if abs(last_v) > abs(panel.rightWheelVel):
-        #         count += 1
-        #         if count >= 5:
-        #             break  # 若轮子速度连续下降，即进入平衡车状态
-        #     last_v = panel.rightWheelVel
 
-        # if abs(panel.rightWheelVel) >= 5:
-        #     while 1:
-        #         TIME_STEP = int(robot.getBasicTimeStep())
-        #         robot.step(TIME_STEP)
-        #         panel.updateEncoder()
-        #         panel.updateWheelVelocity()
-        #         print('2::', panel.rightWheelVel)
-        #         if abs(panel.rightWheelVel) < 5:
-        #             break
-        #     break
 
     def checkPitch(self, angle_thr=30):  # check body pitch
         if abs(self.panel.pitch) <= angle_thr / 180 * math.pi:
@@ -291,7 +351,7 @@ class velocity_controller:
 
         self.setHeight(height)
 
-    def showMsg(self,TIME):
+    def showMsg(self, TIME):
         # file_handle = open('parameter.txt', mode='a')
         # file_handle.writelines([str(self.key),',',str(TIME),',',str(self.panel.pitch),',',str(self.panel.bodyVel), ',', str(self.panel.gps_v), '\n'])
         # file_handle.close()
@@ -300,10 +360,10 @@ class velocity_controller:
         print("b_u: %.5f" % self.blance_u)
         print("t_u: %.5f" % (self.translation_Kp1 * self.translation_u))
         print("w_u: %.5f" % (self.wheel_Kp1 * self.wheel_u))
-        print("pitch_err: %.3f" % pitch_err)
+        print("pitch_err: %.3f" % self.pitch_err)
         print("pitch: %.5f" % self.panel.pitch)
         print("omgz_u: %.3f" % (0.01 * self.omgz_u))
-        print("EV: %.3f" % (Ev))
+        print("EV: %.3f" % (self.Ev))
         print("GPS_V: %.3f" % self.panel.gps_v)
         print("GPS_height: %.3f" % self.panel.gps_y)
         print("wheel_V: %.3f" % (self.panel.rightWheelVel * 0.05))
@@ -312,7 +372,7 @@ class velocity_controller:
         print("omega_x: %.5f" % self.panel.omega_x)
         print("omega_z: %.5f" % self.panel.omega_z)
         print("期望速度： %.5f" % self.Ev)
-        print("与期望速度差： %.5f" % (Ev - self.panel.rightWheelVel * 0.05))
+        print("与期望速度差： %.5f" % (self.Ev - self.panel.rightWheelVel * 0.05))
         print("预期倾角：%.5f" % self.pitch_exp)
         print("Displacement: %.2f" % (self.panel.gps_dd))
         print("rWheelVel: %.5f" % (self.panel.rightWheelVel))
@@ -347,17 +407,11 @@ class velocity_controller:
                 self.cur_height -= 0.01
             self.setHeight(self.cur_height)
         elif key == 32:  # '空格' 跳跃  # 原key ==19
-            # 限定能起跳的初始条件（pitch和轮子速度），能显著提高落地后成功率
-            # if abs(self.panel.pitch) < 0.025 and abs(
-            #         self.panel.rightWheelVel * 0.05) <= 0.35:  # and abs(self.panel.rightWheelVel * 0.05 - self.panel.pitch) <= 0.14
-            if 1:
-                self.jump(robot, self.cur_height)
-                # print('jump end')
-            else:
-                self.setXVel(0.0)
-        elif key==82: # 'r' 重置
+            self.jump(robot)
+        elif key == 82:  # 'r' 重置
             self.robot.worldReload()
         else:
+            # self.printInfo()
             self.setXVel(0.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
 
         rotation = self.panel.getRotation()
@@ -368,6 +422,12 @@ class velocity_controller:
         elif rotation == 0:
             self.setAVel(70, 0.0)
         # change robot position.
+        # self.printInfo()
+
+    def printInfo(self):
+        print("GPS_height: %.3f" % self.panel.gps_y)
+        print('Angle2: %3f' % self.panel.encoder[2])
+        print('Torque: %3f' % self.motors[2].getTorqueFeedback())
 
     def sensor_update(self):
         # get sensors data
