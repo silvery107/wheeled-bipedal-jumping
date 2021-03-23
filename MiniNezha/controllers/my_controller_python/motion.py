@@ -248,7 +248,7 @@ class velocity_controller:
         t0 = 0.3  # desire time
         m = 7.8  # body mass
         mb = 5  # total mass
-        l0 = 0.23  # leg length
+        l0 = 0.22  # leg length
         g = 9.81
 
         # pre_velocity = self.panel.rightWheelVel
