@@ -18,8 +18,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.9970180734520087 0.07034924172450906 -0.031716642300714346 5.790394242033978
-  position 0.5160417473888858 0.8114488132823684 -0.17999881185411068
+  orientation 0.743963882240224 0.666825578499601 0.04314382668153467 5.876796507324662
+  position 0.2208144076662102 0.7514727154065457 0.11119027953367344
   follow "MiniNezha"
   followSmoothness 0
 }
@@ -30,8 +30,8 @@ TexturedBackgroundLight {
 Floor {
 }
 Robot {
-  translation 0.32429 0.372787 -1.51
-  rotation 0 0 1 -0.785395307179586
+  translation 0.7170638075753082 0.25109975383726457 -2.071759212733614
+  rotation -0.011566921657571139 0.9997602268176294 -0.01859288027524351 1.1091262567360771
   children [
     GPS {
     }
@@ -45,6 +45,7 @@ Robot {
       children [
         HingeJoint {
           jointParameters HingeJointParameters {
+            position -1.1178607156545577
             axis 0 0 1
           }
           device [
@@ -58,7 +59,7 @@ Robot {
             }
           ]
           endPoint Solid {
-            rotation 0 0 1 0
+            rotation 0 0 -1 1.1178607156545575
             children [
               DEF Hip_Motor_Transform Transform {
                 rotation 1 0 0 1.57
@@ -96,6 +97,7 @@ Robot {
                 children [
                   HingeJoint {
                     jointParameters HingeJointParameters {
+                      position 2.1976848747215745
                       axis 0 0 1
                     }
                     device [
@@ -104,12 +106,12 @@ Robot {
                       }
                       RotationalMotor {
                         name "left_keen_motor"
-                        maxVelocity 23.5
+                        maxVelocity 0.1
                         maxTorque 35
                       }
                     ]
                     endPoint Solid {
-                      rotation 0 0 1 0
+                      rotation 0 0 1 2.1976848747215745
                       children [
                         Solid {
                           rotation 1 0 0 0
@@ -136,6 +138,7 @@ Robot {
                           children [
                             HingeJoint {
                               jointParameters HingeJointParameters {
+                                position -64.73010004995514
                                 axis 0 0 1
                                 anchor 0 -0.11 0
                               }
@@ -153,10 +156,12 @@ Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0 -0.11 -0.025000000000000015
-                                rotation 1 7.853589927914979e-17 -7.853589927914979e-17 1.57
+                                translation 0 -0.11 -0.025000000000000196
+                                rotation 0.4517726617929399 -0.6305821375773241 -0.6310844870735889 2.292340749724264
                                 children [
                                   TouchSensor {
+                                    translation 4.6157738364804857e-07 -2.7935668223122434e-09 -6.344855305595587e-07
+                                    rotation -0.8912880561393797 0.01299822505839031 -0.45325119649992873 1.1664622157070426e-08
                                     children [
                                       Shape {
                                         appearance DEF Wheel PBRAppearance {
@@ -223,6 +228,7 @@ Robot {
       children [
         HingeJoint {
           jointParameters HingeJointParameters {
+            position -1.1178607154997169
             axis 0 0 1
           }
           device [
@@ -231,12 +237,12 @@ Robot {
             }
             RotationalMotor {
               name "right_hip_motor"
-              maxVelocity 23.5
+              maxVelocity 5
               maxTorque 35
             }
           ]
           endPoint DEF hip_link Solid {
-            rotation 0 0 1 0
+            rotation 0 0 -1 1.117860715499717
             children [
               USE Hip_link
               USE Hip_Motor_Transform
@@ -245,6 +251,7 @@ Robot {
                 children [
                   HingeJoint {
                     jointParameters HingeJointParameters {
+                      position 2.1976848743100588
                       axis 0 0 1
                     }
                     device [
@@ -253,12 +260,12 @@ Robot {
                       }
                       RotationalMotor {
                         name "right_keen_motor"
-                        maxVelocity 23.5
+                        maxVelocity 0.1
                         maxTorque 35
                       }
                     ]
                     endPoint Solid {
-                      rotation 0 0 1 0
+                      rotation 0 0 1 2.1976848743100588
                       children [
                         Solid {
                           children [
@@ -284,6 +291,7 @@ Robot {
                           children [
                             HingeJoint {
                               jointParameters HingeJointParameters {
+                                position 8.216207801125462
                                 axis 0 0 1
                                 anchor 0 -0.11 0
                               }
@@ -301,10 +309,12 @@ Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation -5.088427942218804e-07 -0.1099860061753189 0.024999993714566293
-                                rotation -0.9999999600448514 0.00019988604119790872 0.00019988963526137256 4.713186296891846
+                                translation -1.2905457455677885e-05 -0.11000543463136325 0.02499999371456619
+                                rotation 0.43873439274614107 0.6351646128511794 0.6356713358358123 2.314113837502549
                                 children [
                                   TouchSensor {
+                                    translation -8.18359100485111e-08 3.2746300115960025e-09 2.852681235676613e-08
+                                    rotation 0.22107962279219054 -0.012707357496546062 0.9751729710423263 -1.2328405935198611e-08
                                     children [
                                       Shape {
                                         appearance USE Wheel
@@ -389,7 +399,8 @@ Robot {
   supervisor TRUE
 }
 Robot {
-  translation 0 0.02 0
+  translation 5.2457109212332404e-12 0.019803799999999993 2.799683154675238e-11
+  rotation 7.01597270167658e-09 1 -2.4360825331959666e-09 1.8235658607600302e-10
   children [
     DEF ground_touch Shape {
       appearance PBRAppearance {
@@ -399,7 +410,8 @@ Robot {
       }
     }
     TouchSensor {
-      translation 0 0.02 0
+      translation 9.851375359859907e-21 0.019999346000000005 -2.2970385557942766e-20
+      rotation -3.650633707839255e-08 0.9999999999999992 1.4958549768207886e-08 9.117829303535634e-10
       name "ground_touch_sensor"
       boundingObject Box {
         size 5 0.005 2

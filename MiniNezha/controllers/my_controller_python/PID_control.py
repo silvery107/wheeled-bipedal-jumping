@@ -1,7 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
-import numpy as np
-
 
 class PID_Controller:
     err_D = 0

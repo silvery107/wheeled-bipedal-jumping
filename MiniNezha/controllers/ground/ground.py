@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 """ground controller."""
 from controller import Robot
@@ -13,10 +13,10 @@ touch_sensors = []
 touch_sensor_name = ["ground_touch_sensor"]
 
 for idx, name in enumerate(touch_sensor_name):
-    touch_sensors.append(robot.getTouchSensor(name))
+    touch_sensors.append(robot.getDevice(name))
     touch_sensors[idx].enable(TIME_STEP)
 
 
 while robot.step(TIME_STEP) != -1:
     temp = touch_sensors[0].getValues()
-    print("gound force: ",("%.3f, %.3f, %.3f") % (temp[0],temp[1],temp[2]))
+    # print("gound force: ",("%.3f, %.3f, %.3f") % (temp[0],temp[1],temp[2]))
