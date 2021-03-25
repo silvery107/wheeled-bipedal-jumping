@@ -96,9 +96,9 @@ while robot.step(TIME_STEP) != -1:
     # vel.showMsg(TIME)
     vel.sensor_update()
     key = mKeyboard.getKey()
-
-    if TIME>5:
-        break
+    #
+    # if TIME>5:
+    #     break
         
     if fall_flag:
         if not restart_flag:

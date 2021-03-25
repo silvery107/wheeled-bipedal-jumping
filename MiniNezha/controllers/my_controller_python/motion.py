@@ -300,7 +300,7 @@ class velocity_controller:
     #     delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
     #     print('Actual height: %3f' % delta_h)
 
-    def jump(self, robot, desire_h=0.3, a, b):  # desire_h
+    def jump(self, robot, desire_h=0.3):  # desire_h
         self.sensor_update()
         t0 = 0.7  # desire time
         m = 7.8  # body mass
@@ -338,9 +338,9 @@ class velocity_controller:
             theta = math.pi - self.panel.encoder[2]  # angle between wo legs
 
             # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
-            # torque = -35 # constant
+            torque = -5 # constant
             # torque = a * t + b * t ^ 2 + c * t ^ 3 # poly function
-            torque = a * desire_h / (1 + math.exp(-b * t))  # sigmoid function, a > 0, b > 0
+            # torque = a * desire_h / (1 + math.exp(-b * t))  # sigmoid function, a > 0, b > 0
 
             energy = energy + torque * math.fabs(theta - last_theta)
             last_theta = theta
