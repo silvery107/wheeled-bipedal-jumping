@@ -78,9 +78,10 @@ brakes.append(motors[5].getBrake())
 metrics_dic = dict()
 with open("./args.txt",'r') as args:
     param_dic = eval(args.read())
-    restart_torque = param_dic["restart_torque"]
-    param_a = param_dic["jump_a"]
-    param_b = param_dic["jump_b"]
+    # restart_torque = param_dic["restart_torque"]
+    jump_a = param_dic["jump_a"]
+    jump_b = param_dic["jump_b"]
+    jump_c = param_dic["jump_c"]
 
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors)
@@ -97,8 +98,7 @@ while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)
     vel.sensor_update()
-    key = mKeyboard.getKey()
-    if TIME>5:
+    if TIME>7:
         break    
     # if fall_flag:
     #     if not restart_flag:
@@ -114,10 +114,15 @@ while robot.step(TIME_STEP) != -1:
     #         vel.shutdown(brakes, 0.25)
     #         continue
     # else:
-    #     vel.keyboardControl(robot, key)
+        # key = mKeyboard.getKey()
+        # vel.keyboardControl(robot, key)
     #     fall_flag = not vel.checkPitch(30)
-    vel.setHeight(0.2)
-    jump_metrics = vel.jump(robot,jump_a,jump_b)
+    vel.setXVel(0.0)
+    if TIME>1 and TIME<2:
+        vel.setHeight(0.2)
+    elif TIME>=2 and jump_metrics==99999:
+        jump_metrics = vel.jump(robot,jump_a,jump_b,jump_c)
+        break
 
 metrics_dic["restart_metrics"] = restart_metrics
 metrics_dic["jump_metrics"] = jump_metrics

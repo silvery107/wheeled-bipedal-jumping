@@ -4,9 +4,10 @@ import argparse
 import os
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-a", type=float, default=0.0)
-parser.add_argument("-b", type=float, default=0.0)
-parser.add_argument("-c", type=float, default=0.0)
+# parser.add_argument("-a", type=float, default=0.0)
+parser.add_argument("-jump_a", type=float, default=0.0)
+parser.add_argument("-jump_b", type=float, default=0.0)
+parser.add_argument("-jump_c", type=float, default=0.0)
 args = parser.parse_args()
 
 
@@ -15,9 +16,11 @@ def main():
   # a = args.a
   # b = args.b#
   # c = args.c  #
-  param_dic = {"restart_torque":args.a,
-               "jump_a",args.b,
-               "jump_b",args.c}#
+  param_dic = {
+    # "restart_torque":args.a,
+               "jump_a":args.jump_a,
+               "jump_b":args.jump_b,
+               "jump_c":args.jump_c}
 
   ## Compute or learning
 
