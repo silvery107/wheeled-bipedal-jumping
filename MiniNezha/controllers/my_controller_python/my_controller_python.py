@@ -77,9 +77,9 @@ brakes.append(motors[5].getBrake())
 
 restart_torque = 0
 metrics_dic = dict()
-with open("./args.txt",'r') as args:
-    param_dic = eval(args.read())
-    restart_torque = param_dic["restart_torque"]
+# with open("./args.txt",'r') as args:
+#     param_dic = eval(args.read())
+#     restart_torque = param_dic["restart_torque"]
 
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors)
@@ -97,8 +97,8 @@ while robot.step(TIME_STEP) != -1:
     vel.sensor_update()
     key = mKeyboard.getKey()
 
-    if TIME>5:
-        break
+    # if TIME>5:
+    #     break
         
     if fall_flag:
         if not restart_flag:
@@ -117,8 +117,9 @@ while robot.step(TIME_STEP) != -1:
         vel.keyboardControl(robot, key)
         fall_flag = not vel.checkPitch(30)
 
-metrics_dic["restart_metrics"] = restart_metrics
-with open("./metrics.txt",'w') as metrics:
-    metrics.write(str(metrics_dic))
-
-robot.simulationQuit(0)
+# metrics_dic["restart_metrics"] = restart_metrics
+#
+# with open("./metrics.txt",'w') as metrics:
+#     metrics.write(str(metrics_dic))
+#
+# robot.simulationQuit(0)
