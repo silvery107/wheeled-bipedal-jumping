@@ -15,9 +15,9 @@ def main():
   # a = args.a
   # b = args.b#
   # c = args.c  #
-  param_dic = {"a":args.a,
-               "b",args.b,
-               "c",args.c}#
+  param_dic = {"restart_torque":args.a,
+               "jump_a",args.b,
+               "jump_b",args.c}#
 
   ## Compute or learning
 
@@ -32,7 +32,7 @@ def main():
   with open("../controllers/my_controller_python/metrics.txt",'r') as f2:
     metrics_dic = eval(f2.read())
     # y = metrics_dic["restart_metrics"]
-    y = metrics_dic["param_metrics"]
+    y = metrics_dic["jump_metrics"]
 
 
   # Output the metrics

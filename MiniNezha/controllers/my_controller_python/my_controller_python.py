@@ -75,11 +75,12 @@ motors[5].enableTorqueFeedback(TIME_STEP)
 brakes.append(motors[4].getBrake())
 brakes.append(motors[5].getBrake())
 
-restart_torque = 0
 metrics_dic = dict()
 with open("./args.txt",'r') as args:
     param_dic = eval(args.read())
     restart_torque = param_dic["restart_torque"]
+    param_a = param_dic["jump_a"]
+    param_b = param_dic["jump_b"]
 
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors)
@@ -91,33 +92,36 @@ fall_flag = False
 restart_flag = False
 restart_time0 = 0
 restart_metrics = 99999
+jump_metrics = 99999
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)
     vel.sensor_update()
     key = mKeyboard.getKey()
-
     if TIME>5:
-        break
-        
-    if fall_flag:
-        if not restart_flag:
-            restart_flag = vel.checkVel(0.005)
-        if restart_flag:
-            restart_time0 = robot.getTime()
-            if vel.fall_recovery(restart_torque,brakes):
-                restart_flag = False
-                fall_flag = False
-                restart_metrics = robot.getTime()-restart_time0
-        else:
-            # print("shutdown")
-            vel.shutdown(brakes, 0.25)
-            continue
-    else:
-        vel.keyboardControl(robot, key)
-        fall_flag = not vel.checkPitch(30)
+        break    
+    # if fall_flag:
+    #     if not restart_flag:
+    #         restart_flag = vel.checkVel(0.005)
+    #     if restart_flag:
+    #         restart_time0 = robot.getTime()
+    #         if vel.fall_recovery(restart_torque,brakes):
+    #             restart_flag = False
+    #             fall_flag = False
+    #             restart_metrics = robot.getTime()-restart_time0
+    #     else:
+    #         # print("shutdown")
+    #         vel.shutdown(brakes, 0.25)
+    #         continue
+    # else:
+    #     vel.keyboardControl(robot, key)
+    #     fall_flag = not vel.checkPitch(30)
+    vel.setHeight(0.2)
+    jump_metrics = vel.jump(robot,jump_a,jump_b)
 
 metrics_dic["restart_metrics"] = restart_metrics
+metrics_dic["jump_metrics"] = jump_metrics
+
 
 with open("./metrics.txt",'w') as metrics:
     metrics.write(str(metrics_dic))

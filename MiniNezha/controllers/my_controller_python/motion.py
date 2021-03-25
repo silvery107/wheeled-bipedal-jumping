@@ -300,7 +300,7 @@ class velocity_controller:
     #     delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
     #     print('Actual height: %3f' % delta_h)
 
-    def jump(self, robot, desire_h=0.3, a, b):  # desire_h
+    def jump(self, robot, a, b, desire_h=0.2):  # desire_h
         self.sensor_update()
         t0 = 0.7  # desire time
         m = 7.8  # body mass
@@ -373,6 +373,7 @@ class velocity_controller:
                 break
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
         print('Actual height: %3f' % delta_h)
+        return loss
 
     def checkPitch(self, angle_thr=30):
         '''check body pitch'''
@@ -479,7 +480,7 @@ class velocity_controller:
                 self.cur_height -= 0.01
             self.setHeight(self.cur_height)
         elif key == 32:  # '空格' 跳跃  # 原key ==19
-            self.jump(robot)
+            # self.jump(robot)
         elif key == 82:  # 'r' 重置
             self.robot.worldReload()
         else:
