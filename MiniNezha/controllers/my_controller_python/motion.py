@@ -300,7 +300,7 @@ class velocity_controller:
     #     delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
     #     print('Actual height: %3f' % delta_h)
 
-    def jump(self, robot, desire_h=0.3):  # desire_h
+    def jump(self, robot, desire_h=0.3, a, b):  # desire_h
         self.sensor_update()
         t0 = 0.7  # desire time
         m = 7.8  # body mass
@@ -325,23 +325,34 @@ class velocity_controller:
         # print('Velocity[0]:%3f' % velocity0)
 
         count = 0
+        energy = 0
+        last_theta = math.pi - self.panel.encoder[2]
         TIME_STEP = int(robot.getBasicTimeStep())
         while 1:
-            # count += 1
+            count += 1
+            t = count * TIME_STEP * 0.001
             # if count * TIME_STEP * 0.001 >= t0:  # counts discrete steps, to calculate integral
             #     break
             robot.step(TIME_STEP)
             self.sensor_update()
             theta = math.pi - self.panel.encoder[2]  # angle between wo legs
-            # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(
-            #     theta / 2)  # calculate torque based on model
-            torque=-35
+
+            # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
+            # torque = -35 # constant
+            # torque = a * t + b * t ^ 2 + c * t ^ 3 # poly function
+            torque = a * desire_h / (1 + math.exp(-b * t))  # sigmoid function, a > 0, b > 0
+
+            energy = energy + torque * math.fabs(theta - last_theta)
+            last_theta = theta
+
             self.motors[2].setTorque(torque)
             self.motors[3].setTorque(torque)
-            if self.panel.gps_v >= math.sqrt(desire_h * 2 * 9.81) * 7.8 / 5.6:
+            if self.panel.gps_v >= math.sqrt(desire_h * 2 * g) * 7.8 / 5.6:
                 print(self.panel.gps_v)
-                print(math.sqrt(desire_h * 2 * 9.81) * 7.8 / 5.6)
+                print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
                 break
+        loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
+        loss = loss_v * 0.9 + energy * 0.1  #权重可修改
 
         # self.printInfo()
         # self.motors[2].setTorque(0)
