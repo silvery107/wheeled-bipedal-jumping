@@ -300,7 +300,7 @@ class velocity_controller:
     #     delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
     #     print('Actual height: %3f' % delta_h)
 
-    def jump(self, robot, desire_h=0.3):  # desire_h
+    def jump(self, robot, a=0, b=0,c=0, desire_h=0.2):  # desire_h
         self.sensor_update()
         t0 = 0.7  # desire time
         m = 7.8  # body mass
@@ -329,6 +329,8 @@ class velocity_controller:
         last_theta = math.pi - self.panel.encoder[2]
         TIME_STEP = int(robot.getBasicTimeStep())
         while 1:
+            if robot.getTime()>6:
+                break
             count += 1
             t = count * TIME_STEP * 0.001
             # if count * TIME_STEP * 0.001 >= t0:  # counts discrete steps, to calculate integral
@@ -336,11 +338,14 @@ class velocity_controller:
             robot.step(TIME_STEP)
             self.sensor_update()
             theta = math.pi - self.panel.encoder[2]  # angle between wo legs
+            if last_theta>theta:
+                energy=99999
+                break
 
             # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
-            torque = -5 # constant
+            # torque = -35 # constant
             # torque = a * t + b * t ^ 2 + c * t ^ 3 # poly function
-            # torque = a * desire_h / (1 + math.exp(-b * t))  # sigmoid function, a > 0, b > 0
+            torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
 
             energy = energy + torque * math.fabs(theta - last_theta)
             last_theta = theta
@@ -360,12 +365,15 @@ class velocity_controller:
         self.sensor_update()
         h_ref = self.panel.gps_y  # height, when jump starts
         print('h_ref :%3f' % h_ref)
-        h_max = 0  # height of the top point
+        h_max = -1  # height of the top point
         while 1:
             robot.step(TIME_STEP)
+            if robot.getTime()>6:
+                break
             self.sensor_update()
-            self.motors[2].setPosition(self.panel.encoder[2])  # lock keen motors, avoid passing min-angle
-            self.motors[3].setPosition(self.panel.encoder[3])
+            lock_val = (self.panel.encoder[2] if self.panel.encoder[2]<3.14 else 3)
+            self.motors[2].setPosition(lock_val)  # lock keen motors, avoid passing min-angle
+            self.motors[3].setPosition(lock_val)
             if h_max <= self.panel.gps_y:
                 h_max = self.panel.gps_y
             else:
@@ -373,6 +381,7 @@ class velocity_controller:
                 break
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
         print('Actual height: %3f' % delta_h)
+        return loss
 
     def checkPitch(self, angle_thr=30):
         '''check body pitch'''
