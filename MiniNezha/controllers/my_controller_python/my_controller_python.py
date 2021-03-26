@@ -76,7 +76,7 @@ brakes.append(motors[4].getBrake())
 brakes.append(motors[5].getBrake())
 
 metrics_dic = dict()
-with open("./args.txt",'r') as args:
+with open("./args.txt", 'r') as args:
     param_dic = eval(args.read())
     # restart_torque = param_dic["restart_torque"]
     jump_a = param_dic["jump_a"]
@@ -98,7 +98,7 @@ while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)
     vel.sensor_update()
-    if TIME>7:
+    if TIME > 7:
         break
     # if fall_flag:
     #     if not restart_flag:
@@ -118,10 +118,10 @@ while robot.step(TIME_STEP) != -1:
         # vel.keyboardControl(robot, key)
     #     fall_flag = not vel.checkPitch(30)
     vel.setXVel(0.0)
-    if TIME>1 and TIME<2:
+    if TIME > 1 and TIME < 2:
         vel.setHeight(0.2)
-    elif TIME>=2 and jump_metrics==99999:
-        jump_metrics = vel.jump(robot,jump_a,jump_b,jump_c)
+    elif TIME >= 2 and jump_metrics == 99999:
+        jump_metrics = vel.jump(robot, jump_a, jump_b, jump_c)
         break
 
 metrics_dic["restart_metrics"] = restart_metrics
@@ -131,4 +131,4 @@ metrics_dic["jump_metrics"] = jump_metrics
 with open("./metrics.txt",'w') as metrics:
     metrics.write(str(metrics_dic))
 
-robot.simulationQuit(0)
+# robot.simulationQuit(0)
