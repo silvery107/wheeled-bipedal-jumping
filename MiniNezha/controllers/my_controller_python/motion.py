@@ -62,6 +62,8 @@ class velocity_controller:
         self.imageCount = 0
         self.screenShotCount = 0
 
+        self.isScreenShot = False
+
     def calc_balance_angle_1(self, h):
         '''
         legs without mass
@@ -217,34 +219,6 @@ class velocity_controller:
     #                     break
     #             # self.setHeight(0.43)
     #             break
-    #
-    #     # TODO 下面为轮子空转版本 可以不使用GPS 但未完全成熟
-    #     # last_v = 0
-    #     # count = 0
-    #     # while 1:
-    #     #     # 在空中不采取行动
-    #     #     TIME_STEP = int(robot.getBasicTimeStep())
-    #     #     robot.step(TIME_STEP)
-    #     #     panel.updateEncoder()
-    #     #     panel.updateWheelVelocity()
-    #     #     print('jumping rightWheelVel:', panel.rightWheelVel)
-    #     #     # 轮子腾空后空转，转速先增后降，通过转速降来判断腾空后的落地过程（用GPS效果更好但是是流氓办法）
-    #     #     if abs(last_v) > abs(panel.rightWheelVel):
-    #     #         count += 1
-    #     #         if count >= 5:
-    #     #             break  # 若轮子速度连续下降，即进入平衡车状态
-    #     #     last_v = panel.rightWheelVel
-    #
-    #     # if abs(panel.rightWheelVel) >= 5:
-    #     #     while 1:
-    #     #         TIME_STEP = int(robot.getBasicTimeStep())
-    #     #         robot.step(TIME_STEP)
-    #     #         panel.updateEncoder()
-    #     #         panel.updateWheelVelocity()
-    #     #         print('2::', panel.rightWheelVel)
-    #     #         if abs(panel.rightWheelVel) < 5:
-    #     #             break
-    #     #     break
 
     # def jump(self, robot, desire_h=0.06):  # desire_h
     #     self.sensor_update()
@@ -304,12 +278,13 @@ class velocity_controller:
     #     print('Actual height: %3f' % delta_h)
 
     def screenShot(self, filetype, quality=100):
-        if self.screenShotCount % 4 == 0:
-            print('into screenshot')
-            file_str = "./image/"+filetype + str(self.imageCount) + ".jpg"
-            self.robot.exportImage(file_str, quality)
-            self.imageCount += 1
-        self.screenShotCount += 1
+        if self.isScreenShot:
+            if self.screenShotCount % 4 == 0:
+                print('into screenshot')
+                file_str = "../../screenshot/"+filetype + str(self.imageCount) + ".jpg"
+                self.robot.exportImage(file_str, quality)
+                self.imageCount += 1
+            self.screenShotCount += 1
 
     def jump(self, params, desire_h=0.3):  # desire_h
         a = params["jump_a"]
@@ -335,15 +310,10 @@ class velocity_controller:
         # tor0 = self.motors[2].getTorqueFeedback()
         # velocity2 = self.motors[2].getVelocity()
         # velocity0 = self.motors[0].getVelocity()
-        # print('torque[2]:%3f' % tor2)
-        # print('Velocity[2]:%3f' % velocity2)
-        # print('torque[0]:%3f' % tor0)
-        # print('Velocity[0]:%3f' % velocity0)
 
         count = 0
         energy = 0
         last_theta = math.pi - self.panel.encoder[2]
-        # TIME_STEP = int(robot.getBasicTimeStep())
         while 1:
             if self.robot.getTime() > 6:
                 break
@@ -355,9 +325,6 @@ class velocity_controller:
             self.sensor_update()
             self.screenShot("Jump")
             theta = math.pi - self.panel.encoder[2]  # angle between wo legs
-            # if last_theta>theta:
-            #     energy=99999
-            #     break
 
             # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
             # torque = -35 # constant
@@ -385,7 +352,6 @@ class velocity_controller:
         # self.printInfo()
         # self.motors[2].setTorque(0)
         # self.motors[3].setTorque(0)
-        # self.sensor_update()
         h_ref = self.panel.gps_y  # height, when jump starts
         print('h_ref :%3f' % h_ref)
         h_max = -1  # height of the top point
@@ -461,9 +427,9 @@ class velocity_controller:
 
         self.setHeight(height)
 
-    def fall_recovery(self, restart_torque, brakes):
+    def fall_recovery(self, brakes):
         # print("restart")
-        self.restart(brakes, restart_torque, 0.25)
+        self.restart(brakes)
         if self.checkPitch(8):
             while (not self.checkAcc(0.1) and not self.checkVel(0.1)):
                 # print("try balance")
@@ -506,7 +472,7 @@ class velocity_controller:
         print('Angle3: %3f' % self.panel.encoder[4])
         print('-----------------')
 
-    def keyboardControl(self, key):
+    def keyboardControl(self, key, param_dic):
         self.key = key
         if key == 87:  # 'w' 前进
             self.setXVel(10)
@@ -531,7 +497,7 @@ class velocity_controller:
                 self.cur_height -= 0.01
             self.setHeight(self.cur_height)
         elif key == 32:  # '空格' 跳跃  # 原key ==19
-            self.jump(self.robot)
+            self.jump(param_dic)
         elif key == 82:  # 'r' 重置
             self.robot.worldReload()
         else:
