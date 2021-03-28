@@ -21,6 +21,7 @@ Viewpoint {
   orientation 0 1 0 3.1415926
   position 0.3 0.3 -4
   follow "MiniNezha"
+  followType "None"
   followSmoothness 0
 }
 TexturedBackground {
@@ -388,6 +389,21 @@ Robot {
   }
   controller "my_controller_python"
   supervisor TRUE
+}
+Solid {
+  translation 1.54 0.05 -1.6
+  children [
+    DEF block Shape {
+      appearance Appearance {
+      }
+      geometry Box {
+        size 1.1 0.1 1
+      }
+    }
+  ]
+  boundingObject USE block
+  physics Physics {
+  }
 }
 Robot {
   translation 0 0.02 0

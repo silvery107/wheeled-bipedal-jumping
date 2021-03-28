@@ -97,13 +97,13 @@ class velocity_controller:
             self.cur_height = h
 
     def setXVel(self, Ev):  # 注意：pitch方向和车方向相反，前倾为负
-
+        orig_angle = -0.02
         if Ev == 0.0:
-            self.pitch_exp = -0.007 + 0.07 * self.panel.bodyVel - 0.048 * (0.3 - self.cur_height)
+            self.pitch_exp = orig_angle + 0.07 * self.panel.bodyVel - 0.048 * (0.3 - self.cur_height)
         elif Ev > 0:
-            self.pitch_exp = -0.007 + 0.05 * (self.panel.bodyVel - Ev) / Ev
+            self.pitch_exp = orig_angle + 0.05 * (self.panel.bodyVel - Ev) / Ev
         else:
-            self.pitch_exp = -0.007 - 0.05 * (self.panel.bodyVel - Ev) / Ev
+            self.pitch_exp = orig_angle - 0.05 * (self.panel.bodyVel - Ev) / Ev
         # print("self.theta3",self.theta3)
         # print("self.pitch_exp",self.pitch_exp)
         if self.pitch_exp > self.theta3 / 10:

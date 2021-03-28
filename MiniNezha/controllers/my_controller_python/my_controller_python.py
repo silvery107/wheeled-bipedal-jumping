@@ -114,9 +114,9 @@ while robot.step(TIME_STEP) != -1:
         # key = mKeyboard.getKey()
         # vel.keyboardControl(robot, key)
     #     fall_flag = not vel.checkPitch(30)
-    vel.setXVel(3)
+    vel.setHeight(0.2)
     if TIME>1 and TIME<2:
-        vel.setHeight(0.2)
+        vel.setXVel(3)
     elif TIME>=2 and jump_metrics==99999:
         jump_metrics = vel.jump(param_dic)
         # break
@@ -124,6 +124,8 @@ while robot.step(TIME_STEP) != -1:
         # vel.screenShot("Touch")
         key = mKeyboard.getKey()
         vel.keyboardControl(key)
+    # key = mKeyboard.getKey()
+    # vel.keyboardControl(key)
 
 # metrics_dic["restart_metrics"] = restart_metrics
 metrics_dic["jump_metrics"] = jump_metrics
