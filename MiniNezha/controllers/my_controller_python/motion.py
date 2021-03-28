@@ -68,10 +68,10 @@ class velocity_controller:
                                     1 / 2)) / 104)
         theta2 = math.pi - math.acos((-(1081600 * h * (
                 (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
-                                           1 / 2) / 2) - theta3
+                                             1 / 2) / 2) - theta3
         theta1 = -math.pi / 2 + math.acos((-(1081600 * h * (
                 (132625 * h) / 103 - (11 * ((70331040000 * h ** 2) / 1283689 + 4) ** (1 / 2)) / 2)) / 12463) ** (
-                                                1 / 2) / 2)
+                                                  1 / 2) / 2)
         self.theta3, self.theta2, self.theta1 = theta3, theta2, theta1
         return theta1, theta2, theta3
 
@@ -243,9 +243,71 @@ class velocity_controller:
     #     #             break
     #     #     break
 
-    def jump(self, robot, desire_h=0.1):  # desire_h
+    # def jump(self, robot, desire_h=0.06):  # desire_h
+    #     self.sensor_update()
+    #     t0 = 0.2  # desire time
+    #     m = 7.8  # body mass
+    #     mb = 5  # total mass
+    #     l0 = 0.23  # leg length
+    #     g = 9.81
+    #
+    #     # pre_velocity = self.panel.rightWheelVel
+    #     self.motors[2].enableTorqueFeedback(1)
+    #     self.motors[0].enableTorqueFeedback(1)
+    #     self.motors[0].setTorque(0)  # make base floating
+    #     self.motors[1].setTorque(0)
+    #     # self.motors[2].setPosition(0)
+    #     # self.motors[3].setPosition(0)
+    #     # tor2 = self.motors[2].getTorqueFeedback()
+    #     # tor0 = self.motors[2].getTorqueFeedback()
+    #     # velocity2 = self.motors[2].getVelocity()
+    #     # velocity0 = self.motors[0].getVelocity()
+    #     # print('torque[2]:%3f' % tor2)
+    #     # print('Velocity[2]:%3f' % velocity2)
+    #     # print('torque[0]:%3f' % tor0)
+    #     # print('Velocity[0]:%3f' % velocity0)
+    #
+    #     count = 0
+    #     TIME_STEP = int(robot.getBasicTimeStep())
+    #     while 1:
+    #         count += 1
+    #         if count * TIME_STEP * 0.001 >= t0:  # counts discrete steps, to calculate integral
+    #             break
+    #         robot.step(TIME_STEP)
+    #         self.sensor_update()
+    #         theta = math.pi - self.panel.encoder[2]  # angle between wo legs
+    #         torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # calculate torque based on model
+    #         self.motors[2].setTorque(torque)
+    #         self.motors[3].setTorque(torque)
+    #         # self.printInfo()
+    #     # self.motors[2].setTorque(0)
+    #     # self.motors[3].setTorque(0)
+    #     self.sensor_update()
+    #
+    #     h_ref = self.panel.gps_y  # height, when jump starts
+    #     print('h_ref :%3f' % h_ref)
+    #     h_max = 0  # height of the top point
+    #     while 1:
+    #         robot.step(TIME_STEP)
+    #         self.sensor_update()
+    #         self.motors[2].setPosition(self.panel.encoder[2])  # lock keen motors, avoid passing min-angle
+    #         self.motors[3].setPosition(self.panel.encoder[3])
+    #         if h_max <= self.panel.gps_y:
+    #             h_max = self.panel.gps_y
+    #         else:
+    #             print('break')
+    #             break
+    #     delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
+    #     print('Actual height: %3f' % delta_h)
+
+    def jump(self, robot, params, desire_h=0.3):  # desire_h
+        a= params["jump_a"]
+        b= params["jump_b"]
+        c= params["jump_c"]
+        d= params["jump_d"]
+        opt_vel = params["opt_vel"]
         self.sensor_update()
-        t0 = 0.3  # desire time
+        t0 = 0.7  # desire time
         m = 7.8  # body mass
         mb = 5  # total mass
         l0 = 0.22  # leg length
@@ -268,39 +330,86 @@ class velocity_controller:
         # print('Velocity[0]:%3f' % velocity0)
 
         count = 0
+        energy = 0
+        last_theta = math.pi - self.panel.encoder[2]
         TIME_STEP = int(robot.getBasicTimeStep())
         while 1:
-            count += 1
-            if count * TIME_STEP * 0.001 >= t0:  # counts discrete steps, to calculate integral
+            if robot.getTime()>6:
                 break
+            count += 1
+            t = count * TIME_STEP * 0.001
+            # if count * TIME_STEP * 0.001 >= t0:  # counts discrete steps, to calculate integral
+            #     break
             robot.step(TIME_STEP)
             self.sensor_update()
             theta = math.pi - self.panel.encoder[2]  # angle between wo legs
-            torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # calculate torque based on model
+            # if last_theta>theta:
+            #     energy=99999
+            #     break
+            
+            # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
+            # torque = -35 # constant
+            torque = -(a * t + b * t ** 2 + c * t ** 3 +d) # poly function
+            # torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
+
+            energy = energy + math.fabs(torque) * math.fabs(theta - last_theta)
+            last_theta = theta
+
             self.motors[2].setTorque(torque)
             self.motors[3].setTorque(torque)
-            # self.printInfo()
+
+            # if self.panel.gps_v >= math.sqrt(desire_h * 2 * g) * 7.8 / 5.6:
+            #     print(self.panel.gps_v)
+            #     print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
+            #     print("t:",t)
+            #     break
+
+            if self.panel.gps_v >= opt_vel:
+                print(self.panel.gps_v)
+                print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
+                print("t:",t)
+                break
+        
+
+        # self.printInfo()
         # self.motors[2].setTorque(0)
         # self.motors[3].setTorque(0)
         self.sensor_update()
-
-        h_ref = self.panel.gps_y # height, when jump starts
+        h_ref = self.panel.gps_y  # height, when jump starts
         print('h_ref :%3f' % h_ref)
-        h_max = 0 # height of the top point
+        h_max = -1  # height of the top point
         while 1:
             robot.step(TIME_STEP)
+            if robot.getTime()>6:
+                break
             self.sensor_update()
-            self.motors[2].setPosition(self.panel.encoder[2]) # lock keen motors, avoid passing min-angle
-            self.motors[3].setPosition(self.panel.encoder[3])
+            lock_val = (self.panel.encoder[2] if self.panel.encoder[2]<3.14 else 3) 
+            # self.motors[2].setPosition(lock_val)  # lock keen motors, avoid passing min-angle
+            # self.motors[3].setPosition(lock_val)
+            self.motors[2].setPosition(3/4*math.pi)
+            self.motors[3].setPosition(3/4*math.pi)
             if h_max <= self.panel.gps_y:
                 h_max = self.panel.gps_y
             else:
-                print('break')
                 break
-        delta_h = h_max - h_ref # max delta_height, should be compared with desire_h
+        delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
         print('Actual height: %3f' % delta_h)
+        loss_height=math.fabs(delta_h-desire_h)
+        # loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
+        loss = loss_height*1000 + energy  #权重可修改
+        print("loss_height:",loss_height,",energy:",energy,",loss:",loss)
 
-
+        while 1:
+            robot.step(TIME_STEP)
+            self.sensor_update()
+            # self.motors[2].setPosition(0.7*math.pi)
+            # self.motors[3].setPosition(0.7*math.pi)
+            self.setHeight(0.3)
+            touch_F= math.sqrt(self.panel.F[0][0]**2+self.panel.F[0][1]**2+self.panel.F[0][2]**2)
+            if touch_F > 1:
+                print('touch_F %3f'%touch_F)
+                break
+        return loss
 
     def checkPitch(self, angle_thr=30):
         '''check body pitch'''
@@ -338,19 +447,18 @@ class velocity_controller:
 
         self.setHeight(height)
 
-    def fall_recovery(self,restart_torque,brakes):
-            # print("restart")
-            self.restart(brakes, restart_torque, 0.25)
-            if self.checkPitch(8):
-                while (not self.checkAcc(0.1) and not self.checkVel(0.1)):
-                    # print("try balance")
-                    self.sensor_update()
-                    self.setXVel(0)
-                    self.robot.step(self.TIME_STEP)
-                return True
-            else:
-                return False
-
+    def fall_recovery(self, restart_torque, brakes):
+        # print("restart")
+        self.restart(brakes, restart_torque, 0.25)
+        if self.checkPitch(8):
+            while (not self.checkAcc(0.1) and not self.checkVel(0.1)):
+                # print("try balance")
+                self.sensor_update()
+                self.setXVel(0)
+                self.robot.step(self.TIME_STEP)
+            return True
+        else:
+            return False
 
     def showMsg(self, TIME):
         # file_handle = open('parameter.txt', mode='a')

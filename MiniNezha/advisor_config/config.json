@@ -1,7 +1,7 @@
 {
-  "name": "optimal_restart6",
+  "name": "optimal_jump7",
   "algorithm": "BayesianOptimization",
-  "trialNumber": 10,
+  "trialNumber": 50,
   "path": "./advisor_config/",
   "command": "./min_function.py",
   "search_space": {
@@ -9,10 +9,34 @@
       "randomInitTrials": 5,
       "params": [
           {
-              "parameterName": "a",
-              "type": "DOUBLE",
-              "minValue": 1.0,
-              "maxValue": 20.0
+            "parameterName": "jump_a",
+            "type": "DOUBLE",
+            "minValue": 1.0,
+            "maxValue": 20.0
+          },
+          {
+            "parameterName": "jump_b",
+            "type": "DOUBLE",
+            "minValue": 1.0,
+            "maxValue": 20.0
+          },
+          {
+            "parameterName": "jump_c",
+            "type": "DOUBLE",
+            "minValue": 1.0,
+            "maxValue": 20.0
+          },
+          {
+            "parameterName": "jump_d",
+            "type": "DOUBLE",
+            "minValue": 1.0,
+            "maxValue": 20.0
+          },
+          {
+            "parameterName": "opt_vel",
+            "type": "DOUBLE",
+            "minValue": 3.0,
+            "maxValue": 5.0
           }
       ]
   }
