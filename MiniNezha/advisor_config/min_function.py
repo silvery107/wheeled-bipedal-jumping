@@ -33,7 +33,7 @@ def main():
     f1.write(str(param_dic))
 
   # run webots
-  os.system('webots --mode=fast --no-rendering')
+  os.system('webots --mode=fast --no-rendering --stdout --stderr --minimize')
 
   # read metrics from txt
   with open("../controllers/my_controller_python/metrics.txt",'r') as f2:
