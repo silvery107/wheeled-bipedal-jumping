@@ -94,8 +94,8 @@ while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)
     vel.sensor_update()
-    # if TIME>6:
-    #     break    
+    if TIME>6:
+        break    
 
     # if fall_flag:
     #     if not restart_flag:
