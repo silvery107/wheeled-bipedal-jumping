@@ -1,1 +1,1 @@
-{'restart_metrics': 99999, 'jump_metrics': 10.479549196728382}
+{'jump_metrics': 96.20489807317321}

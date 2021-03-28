@@ -76,18 +76,14 @@ brakes.append(motors[4].getBrake())
 brakes.append(motors[5].getBrake())
 
 metrics_dic = dict()
-with open("./args.txt", 'r') as args:
+with open("./args.txt",'r') as args:
     param_dic = eval(args.read())
-    # restart_torque = param_dic["restart_torque"]
-    jump_a = param_dic["jump_a"]
-    jump_b = param_dic["jump_b"]
-    jump_c = param_dic["jump_c"]
 
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors)
 vel = velocity_controller(motors, panel, robot)
 
-vel.setHeight(0.4)
+vel.setHeight(0.3)
 
 fall_flag = False
 restart_flag = False
@@ -98,8 +94,9 @@ while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)
     vel.sensor_update()
-    if TIME > 7:
-        break
+    # if TIME>7:
+    #     break    
+
     # if fall_flag:
     #     if not restart_flag:
     #         restart_flag = vel.checkVel(0.005)
@@ -114,22 +111,24 @@ while robot.step(TIME_STEP) != -1:
     #         vel.shutdown(brakes, 0.25)
     #         continue
     # else:
-    # key = mKeyboard.getKey()
-    # vel.keyboardControl(robot, key)
+        # key = mKeyboard.getKey()
+        # vel.keyboardControl(robot, key)
     #     fall_flag = not vel.checkPitch(30)
-    vel.setXVel(0.0)
-    if 1 <= TIME < 1.5:
-        vel.setHeight(0.28)
-    if 1.5 <= TIME < 2:
+    vel.setXVel(3)
+    if TIME>1 and TIME<2:
         vel.setHeight(0.2)
-    elif TIME >= 2 and jump_metrics == 99999:
-        jump_metrics = vel.jump(robot, jump_a, jump_b, jump_c)
-        break
+    elif TIME>=2 and jump_metrics==99999:
+        jump_metrics = vel.jump(robot,param_dic)
+        # break
+    else:
+        key = mKeyboard.getKey()
+        vel.keyboardControl(robot, key)
 
-metrics_dic["restart_metrics"] = restart_metrics
+# metrics_dic["restart_metrics"] = restart_metrics
 metrics_dic["jump_metrics"] = jump_metrics
 
-with open("./metrics.txt", 'w') as metrics:
+
+with open("./metrics.txt",'w') as metrics:
     metrics.write(str(metrics_dic))
 
 # robot.simulationQuit(0)
