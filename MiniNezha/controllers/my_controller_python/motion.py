@@ -300,9 +300,9 @@ class velocity_controller:
     #     delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
     #     print('Actual height: %3f' % delta_h)
 
-    def jump(self, robot, a=0, b=0, c=0, desire_h=0.2):  # desire_h
+    def jump(self, robot, a=0, b=0, c=0, desire_h=0.1):  # desire_h
         self.sensor_update()
-        t0 = 0.7  # desire time
+        t0 = 0.2  # desire time
         m = 7.8  # body mass
         mb = 5  # total mass
         l0 = 0.22  # leg length
@@ -337,15 +337,16 @@ class velocity_controller:
             #     break
             robot.step(TIME_STEP)
             self.sensor_update()
-            theta = math.pi - self.panel.encoder[2]  # angle between wo legs
+            theta = math.pi - self.panel.encoder[2]  # angle between two legs
             # if last_theta>theta:
             #     energy=99999
             #     break
-            
-            # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
+
+            torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.fabs(math.cos(
+                theta / 2))  # torque based on model
             # torque = -35 # constant
             # torque = a * t + b * t ^ 2 + c * t ^ 3 # poly function
-            torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
+            # torque = -a * desire_h / (1 + math.exp(-b * t)) - c  # sigmoid function, a > 0, b > 0
 
             energy = energy + math.fabs(torque) * math.fabs(theta - last_theta)
             last_theta = theta
@@ -357,7 +358,10 @@ class velocity_controller:
                 print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
                 break
         loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
-        loss = loss_v * 0.8 + energy * 0.2  #权重可修改
+        loss = loss_v * 5000 + energy  # 权重可修改
+        print('loss_v %3f' % loss_v)
+        print('energy %3f' % energy)
+        print('loss %3f' % loss)
 
         # self.printInfo()
         # self.motors[2].setTorque(0)
