@@ -472,7 +472,7 @@ class velocity_controller:
         print('Angle3: %3f' % self.panel.encoder[4])
         print('-----------------')
 
-    def keyboardControl(self, key):
+    def keyboardControl(self, key, param_dic):
         self.key = key
         if key == 87:  # 'w' 前进
             self.setXVel(10)
@@ -497,7 +497,7 @@ class velocity_controller:
                 self.cur_height -= 0.01
             self.setHeight(self.cur_height)
         elif key == 32:  # '空格' 跳跃  # 原key ==19
-            self.jump(self.robot)
+            self.jump(param_dic)
         elif key == 82:  # 'r' 重置
             self.robot.worldReload()
         else:
