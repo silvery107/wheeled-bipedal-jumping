@@ -118,11 +118,12 @@ while robot.step(TIME_STEP) != -1:
     if TIME>1 and TIME<2:
         vel.setHeight(0.2)
     elif TIME>=2 and jump_metrics==99999:
-        jump_metrics = vel.jump(robot,param_dic)
+        jump_metrics = vel.jump(param_dic)
         # break
     else:
+        # vel.screenShot("Touch")
         key = mKeyboard.getKey()
-        vel.keyboardControl(robot, key)
+        vel.keyboardControl(key)
 
 # metrics_dic["restart_metrics"] = restart_metrics
 metrics_dic["jump_metrics"] = jump_metrics
