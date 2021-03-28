@@ -19,7 +19,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0 1 0 3.1415926
-  position 0.3 0.3 -4
+  position 0.30000006882418007 0.3 -5.284277769901093
   follow "MiniNezha"
   followType "None"
   followSmoothness 0
@@ -391,7 +391,7 @@ Robot {
   supervisor TRUE
 }
 Solid {
-  translation 1.54 0.05 -1.6
+  translation 1.78 0.05 -1.6
   children [
     DEF block Shape {
       appearance Appearance {

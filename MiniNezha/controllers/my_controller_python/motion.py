@@ -19,7 +19,7 @@ class velocity_controller:
         self.factor2 = 1
         # 平衡小车之家说还要乘0.6,我没乘
         # 角度
-        self.pitch_Kp = 10.0  # 2.8  # 4 的时候平衡车，kp越大越稳
+        self.pitch_Kp = 10.0  # 2.8  # 4 的时候平衡车，kp越大越稳 10
         self.pitch_Kd = 0.0  # 再大就会抖
         self.count = 0
         self.pitch_exp = 0
@@ -35,7 +35,7 @@ class velocity_controller:
         self.omgz_pid = PID_Controller(self.omgz_Kp, self.omgz_Kd, 0.0)
 
         # body速度
-        self.translation_Kp = 10000.0  # 8000  #
+        self.translation_Kp = 20000.0  # 8000  #10000
         self.translation_Kp1 = 0.00001  # 0.00008  # 这一项确定数量级
         self.translation_Ki = 0.0  #
 
@@ -99,7 +99,7 @@ class velocity_controller:
             self.cur_height = h
 
     def setXVel(self, Ev):  # 注意：pitch方向和车方向相反，前倾为负
-        orig_angle = -0.02
+        orig_angle = -0.013
         if Ev == 0.0:
             self.pitch_exp = orig_angle + 0.07 * self.panel.bodyVel - 0.048 * (0.3 - self.cur_height)
         elif Ev > 0:
