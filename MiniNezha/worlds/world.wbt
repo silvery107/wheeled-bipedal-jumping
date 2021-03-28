@@ -2,7 +2,7 @@
 WorldInfo {
   CFM 1e-06
   ERP 0.6
-  basicTimeStep 8
+  basicTimeStep 1
   coordinateSystem "NUE"
   contactProperties [
     ContactProperties {
@@ -19,7 +19,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0.9970180734520087 0.07034924172450906 -0.031716642300714346 5.790394242033978
-  position 0.5160417473888858 0.8114488132823684 -0.17999881185411068
+  position 0.4684953767013206 1.4165122800420002 0.9509537908715867
   follow "MiniNezha"
   followSmoothness 0
 }
@@ -30,8 +30,8 @@ TexturedBackgroundLight {
 Floor {
 }
 Robot {
-  translation 0.32429 0.372787 -1.51
-  rotation 0 0 1 -0.785395307179586
+  translation 0.32429 0.492787 -1.51
+  rotation 0 0 1 2.85387e-06
   children [
     GPS {
     }
