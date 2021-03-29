@@ -245,8 +245,8 @@ class velocity_controller:
         l0 = 0.22  # leg length
         g = 9.81
 
-        self.motors[0].setTorque(0)  # make base floating
-        self.motors[1].setTorque(0)
+        self.motors[0].setTorque(0.05)  # make base floating and no over rotating
+        self.motors[1].setTorque(0.05)
         offSpeed = 0
         count = 0
         energy = 0
@@ -333,27 +333,28 @@ class velocity_controller:
             penalties[4] = square_penalize(energy-energy_baseline)
 
         loss_height = math.fabs(delta_h - desire_h)
-        loss = loss_height * 1000
+        loss = (loss_height * 1000)
         for penalty in penalties:
             loss += penalty
-        print("loss_height:", loss_height * 1000, ",energy:", energy, ",penalty:", penalties,",loss:",loss)
-        if self.checkPitch(): # check flight away
-            return loss
+        print("loss_height:", (loss_height * 1000), ",energy:", energy, ",penalty:", penalties,",loss:",loss)
 
         # landing phase
+        self.setHeight(0.3)
         while 1:
             if self.robot.getTime() > 5:
                 break
+            if not self.checkPitch(70): # check if flight away
+                print("flight away")
+                return loss
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
             self.screenShot("Touch")
             # print('shot')
             # self.motors[2].setPosition(0.7*math.pi)
             # self.motors[3].setPosition(0.7*math.pi)
-            self.setHeight(0.3)
-            touch_F = math.sqrt(self.panel.F[0][0] ** 2 + self.panel.F[0][1] ** 2 + self.panel.F[0][2] ** 2)
+            touch_F = self.panel.F[0][1]
             if touch_F > 1:
-                # print('touch_F %3f' % touch_F)
+                print('touch_F %3f' % touch_F)
                 break
 
         return loss
