@@ -39,13 +39,11 @@ def main():
   # read metrics from txt
   with open("../controllers/my_controller_python/metrics.txt",'r') as f2:
     metrics_dic = eval(f2.read())
-    # y = metrics_dic["restart_metrics"]
-    y = metrics_dic["jump_metrics"]
-
+    # metrics = metrics_dic["restart_metrics"]
+    metrics = metrics_dic["jump_metrics"]
 
   # Output the metrics
-  print(y)
-
+  print(metrics)
 
 if __name__ == "__main__":
   main()

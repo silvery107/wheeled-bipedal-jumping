@@ -6,8 +6,6 @@ from controller import Brake
 import math
 from PID_control import *
 
-import math
-
 
 class velocity_controller:
 
@@ -211,63 +209,6 @@ class velocity_controller:
     #                     break
     #             # self.setHeight(0.43)
     #             break
-
-    # def jump(self, robot, desire_h=0.06):  # desire_h
-    #     self.sensor_update()
-    #     t0 = 0.2  # desire time
-    #     m = 7.8  # body mass
-    #     mb = 5  # total mass
-    #     l0 = 0.23  # leg length
-    #     g = 9.81
-    #
-    #     # pre_velocity = self.panel.rightWheelVel
-    #     self.motors[2].enableTorqueFeedback(1)
-    #     self.motors[0].enableTorqueFeedback(1)
-    #     self.motors[0].setTorque(0)  # make base floating
-    #     self.motors[1].setTorque(0)
-    #     # self.motors[2].setPosition(0)
-    #     # self.motors[3].setPosition(0)
-    #     # tor2 = self.motors[2].getTorqueFeedback()
-    #     # tor0 = self.motors[2].getTorqueFeedback()
-    #     # velocity2 = self.motors[2].getVelocity()
-    #     # velocity0 = self.motors[0].getVelocity()
-    #     # print('torque[2]:%3f' % tor2)
-    #     # print('Velocity[2]:%3f' % velocity2)
-    #     # print('torque[0]:%3f' % tor0)
-    #     # print('Velocity[0]:%3f' % velocity0)
-    #
-    #     count = 0
-    #     TIME_STEP = int(robot.getBasicTimeStep())
-    #     while 1:
-    #         count += 1
-    #         if count * TIME_STEP * 0.001 >= t0:  # counts discrete steps, to calculate integral
-    #             break
-    #         robot.step(TIME_STEP)
-    #         self.sensor_update()
-    #         theta = math.pi - self.panel.encoder[2]  # angle between wo legs
-    #         torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # calculate torque based on model
-    #         self.motors[2].setTorque(torque)
-    #         self.motors[3].setTorque(torque)
-    #         # self.printInfo()
-    #     # self.motors[2].setTorque(0)
-    #     # self.motors[3].setTorque(0)
-    #     self.sensor_update()
-    #
-    #     h_ref = self.panel.gps_y  # height, when jump starts
-    #     print('h_ref :%3f' % h_ref)
-    #     h_max = 0  # height of the top point
-    #     while 1:
-    #         robot.step(TIME_STEP)
-    #         self.sensor_update()
-    #         self.motors[2].setPosition(self.panel.encoder[2])  # lock keen motors, avoid passing min-angle
-    #         self.motors[3].setPosition(self.panel.encoder[3])
-    #         if h_max <= self.panel.gps_y:
-    #             h_max = self.panel.gps_y
-    #         else:
-    #             print('break')
-    #             break
-    #     delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
-    #     print('Actual height: %3f' % delta_h)
 
     def screenShot(self, filetype, quality=100):
         if self.isScreenShot:
