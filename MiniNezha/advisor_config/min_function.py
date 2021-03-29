@@ -4,7 +4,6 @@ import argparse
 import os
 
 parser = argparse.ArgumentParser()
-# parser.add_argument("-a", type=float, default=0.0)
 parser.add_argument("-jump_a", type=float, default=0.0)
 parser.add_argument("-jump_b", type=float, default=0.0)
 parser.add_argument("-jump_c", type=float, default=0.0)
@@ -15,9 +14,6 @@ args = parser.parse_args()
 
 def main():
   # Read parameters
-  # a = args.a
-  # b = args.b#
-  # c = args.c  #
   param_dic = {
     # "restart_torque":args.a,
                "jump_a":args.jump_a,
