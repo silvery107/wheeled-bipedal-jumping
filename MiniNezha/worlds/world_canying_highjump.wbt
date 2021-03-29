@@ -391,13 +391,13 @@ DEF NeZha Robot {
   supervisor TRUE
 }
 Solid {
-  translation 1.39 0.15 -1.6
+  translation 1.7 0.1 -1.6
   children [
     DEF block Shape {
       appearance Appearance {
       }
       geometry Box {
-        size 0.1 0.3 1
+        size 0.1 0.2 1
       }
     }
   ]
