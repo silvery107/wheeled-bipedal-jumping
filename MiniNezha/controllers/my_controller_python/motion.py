@@ -164,14 +164,6 @@ class velocity_controller:
     #     velocity2 = self.motors[2].getVelocity()
     #     velocity0 = self.motors[0].getVelocity()
     #     print('torque[2]:%3f' % tor2)
-    #     print('Velocity[2]:%3f' % velocity2)
-    #     print('torque[0]:%3f' % tor0)
-    #     print('Velocity[0]:%3f' % velocity0)
-    #
-    #     # GPS版（项目临时）
-    #     while 1:
-    #         TIME_STEP = int(robot.getBasicTimeStep())
-    #         robot.step(TIME_STEP)
     #         self.sensor_update()
     #         print("jump phase 1")
     #         if self.panel.gps_y > 0.48:  # 直立时gps0.488
@@ -331,6 +323,9 @@ class velocity_controller:
             torque = -(a * t + b * t ** 2 + c * t ** 3 + d)  # poly function
             # torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
 
+            if torque > 0:
+                energy = 99999
+                break
             energy = energy + math.fabs(torque) * math.fabs(theta - last_theta)
             last_theta = theta
 
@@ -472,7 +467,7 @@ class velocity_controller:
         print('Angle3: %3f' % self.panel.encoder[4])
         print('-----------------')
 
-    def keyboardControl(self, key):
+    def keyboardControl(self, key, param_dic):
         self.key = key
         if key == 87:  # 'w' 前进
             self.setXVel(10)
@@ -497,7 +492,7 @@ class velocity_controller:
                 self.cur_height -= 0.01
             self.setHeight(self.cur_height)
         elif key == 32:  # '空格' 跳跃  # 原key ==19
-            self.jump(self.robot)
+            self.jump(param_dic)
         elif key == 82:  # 'r' 重置
             self.robot.worldReload()
         else:

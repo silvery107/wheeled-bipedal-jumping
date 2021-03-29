@@ -110,19 +110,20 @@ while robot.step(TIME_STEP) != -1:
     #         vel.shutdown(brakes, 0.25)
     #         continue
     # else:
-        # key = mKeyboard.getKey()
-        # vel.keyboardControl(robot, key)
-        # fall_flag = not vel.checkPitch(30)
-    vel.setXVel(3)
-    if TIME>1 and TIME<2:
-        vel.setHeight(0.2)
-    elif TIME>=2 and jump_metrics==99999:
-        jump_metrics = vel.jump(param_dic)
-        # break
-    # else:
-    #     vel.isScreenShot = False
     #     key = mKeyboard.getKey()
     #     vel.keyboardControl(key,param_dic)
+    #     fall_flag = not vel.checkPitch(30)
+
+    vel.setHeight(0.2)
+    if TIME>1 and TIME<2:
+        vel.setXVel(3)
+    elif TIME>=2 and jump_metrics==99999:
+        jump_metrics = vel.jump(param_dic,0.5)
+        # break
+    else:
+        vel.isScreenShot = False
+        key = mKeyboard.getKey()
+        vel.keyboardControl(key,param_dic)
 
 # metrics_dic["restart_metrics"] = restart_metrics
 metrics_dic["jump_metrics"] = jump_metrics

@@ -1,35 +1,35 @@
 {
   "name": "optimal_jump1",
   "algorithm": "BayesianOptimization",
-  "trialNumber": 10,
+  "trialNumber": 500,
   "path": "./advisor_config/",
   "command": "./min_function.py",
   "search_space": {
       "goal": "MINIMIZE",
-      "randomInitTrials": 5,
+      "randomInitTrials": 10,
       "params": [
           {
             "parameterName": "jump_a",
             "type": "DOUBLE",
-            "minValue": 1.0,
+            "minValue": -20.0,
             "maxValue": 20.0
           },
           {
             "parameterName": "jump_b",
             "type": "DOUBLE",
-            "minValue": 1.0,
+            "minValue": -20.0,
             "maxValue": 20.0
           },
           {
             "parameterName": "jump_c",
             "type": "DOUBLE",
-            "minValue": 1.0,
+            "minValue": -20.0,
             "maxValue": 20.0
           },
           {
             "parameterName": "jump_d",
             "type": "DOUBLE",
-            "minValue": 1.0,
+            "minValue": 0,
             "maxValue": 20.0
           },
           {
