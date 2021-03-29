@@ -250,10 +250,10 @@ class velocity_controller:
         # pre_velocity = self.panel.rightWheelVel
         self.motors[2].enableTorqueFeedback(1)
         self.motors[0].enableTorqueFeedback(1)
-        self.motors[0].setTorque(0)  # make base floating
-        self.motors[1].setTorque(0)
-        # self.motors[2].setPosition(0)
-        # self.motors[3].setPosition(0)
+        # self.motors[0].setTorque(0)  # make base floating
+        # self.motors[1].setTorque(0)
+        self.motors[2].setPosition(0)
+        self.motors[3].setPosition(0)
         # tor2 = self.motors[2].getTorqueFeedback()
         # tor0 = self.motors[2].getTorqueFeedback()
         # velocity2 = self.motors[2].getVelocity()
@@ -276,7 +276,7 @@ class velocity_controller:
 
             # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
             # torque = -35 # constant
-            torque = -(10 * a * t + 100 * b * t ** 2 + 1000 * c * t ** 3 + d)  # poly function
+            torque = -(a * t + 10 * b * t ** 2 + 100 * c * t ** 3 + d)  # poly function
             # torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
 
             if torque > 0 or torque < -35:
