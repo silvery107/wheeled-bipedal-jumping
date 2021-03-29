@@ -63,6 +63,8 @@ class velocity_controller:
         self.screenShotCount = 0
 
         self.isScreenShot = False
+        self.isPointPos = False
+
 
     def calc_balance_angle_1(self, h):
         '''
@@ -277,14 +279,28 @@ class velocity_controller:
     #     delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
     #     print('Actual height: %3f' % delta_h)
 
+    def savePointPos(self):
+        # WEBOTS_HOME/projects/robots/neuronics/ipr/worlds/ipr_cube.wbt
+        # \Webots\projects\samples\howto\worlds\supervisor_trail.wbt
+        TIME = self.robot.getTime()
+        wheel = self.robot.getFromDef("LEFTWHEEL")
+        print("wheel: ", wheel.getBaseTypeName())
+        if self.isPointPos:
+            self.WheelPos = wheel.getPosition()
+            print(self.WheelPos)
+            # file_handle = open('WheelPos.txt', mode='a')
+            # file_handle.writelines([str(TIME),',',str(self.WheelPos),',',str(self.panel.bodyVel), ',', str(self.panel.gps_v), '\n'])
+            # file_handle.close()
+
     def screenShot(self, filetype, quality=100):
         if self.isScreenShot:
             if self.screenShotCount % 4 == 0:
                 print('into screenshot')
-                file_str = "../../screenshot/"+filetype + str(self.imageCount) + ".jpg"
+                file_str = "./screenshot/"+filetype + str(self.imageCount) + ".jpg"
                 self.robot.exportImage(file_str, quality)
                 self.imageCount += 1
             self.screenShotCount += 1
+        self.savePointPos()
 
     def jump(self, params, desire_h=0.3):  # desire_h
         a = params["jump_a"]
