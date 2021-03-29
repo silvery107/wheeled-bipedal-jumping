@@ -217,8 +217,6 @@ class velocity_controller:
         if self.isPointPos:
             TIME = self.robot.getTime()
             wheel = self.robot.getFromDef("LEFTWHEEL")
-            TIME = self.robot.getTime()
-            wheel = self.robot.getFromDef("LEFTWHEEL")
             print("wheel: ", wheel.getBaseTypeName())
             self.WheelPos = wheel.getPosition()
             self.printX(self.WheelPos)
