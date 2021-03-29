@@ -307,7 +307,7 @@ class velocity_controller:
         energy = 0
         last_theta = math.pi - self.panel.encoder[2]
         while 1:
-            if self.robot.getTime() > 6:
+            if self.robot.getTime() > 4:
                 break
             count += 1
             t = count * self.TIME_STEP * 0.001
@@ -320,12 +320,14 @@ class velocity_controller:
 
             # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
             # torque = -35 # constant
-            torque = -(a * t + b * t ** 2 + c * t ** 3 + d)  # poly function
+            torque = -(10*a * t + 100*b * t ** 2 + 1000*c * t ** 3 + 10*d)  # poly function
             # torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
 
-            if torque > 0:
-                energy = 99999
-                break
+            if torque > 0 or torque < -35:
+                energy += 100
+            if theta > math.pi*0.9:
+                energy += 500
+
             energy = energy + math.fabs(torque) * math.fabs(theta - last_theta)
             last_theta = theta
 
@@ -339,14 +341,11 @@ class velocity_controller:
             #     break
 
             if self.panel.gps_v >= opt_vel:
-                print(self.panel.gps_v)
-                print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
-                print("t:", t)
+                # print(self.panel.gps_v)
+                # print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
+                # print("t:", t)
                 break
 
-        # self.printInfo()
-        # self.motors[2].setTorque(0)
-        # self.motors[3].setTorque(0)
         h_ref = self.panel.gps_y  # height, when jump starts
         print('h_ref :%3f' % h_ref)
         h_max = -1  # height of the top point
@@ -356,7 +355,7 @@ class velocity_controller:
                 break
             self.sensor_update()
             self.screenShot("Jump")
-            lock_val = (self.panel.encoder[2] if self.panel.encoder[2] < 3.14 else 3)
+            # lock_val = (self.panel.encoder[2] if self.panel.encoder[2] < 3.14 else 3)
             # self.motors[2].setPosition(lock_val)  # lock keen motors, avoid passing min-angle
             # self.motors[3].setPosition(lock_val)
             self.motors[2].setPosition(3 / 4 * math.pi)
@@ -376,12 +375,11 @@ class velocity_controller:
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
             self.screenShot("Touch")
-            print('shot')
             # self.motors[2].setPosition(0.7*math.pi)
             # self.motors[3].setPosition(0.7*math.pi)
             self.setHeight(0.3)
             touch_F = math.sqrt(self.panel.F[0][0] ** 2 + self.panel.F[0][1] ** 2 + self.panel.F[0][2] ** 2)
-            if touch_F > 2:
+            if touch_F > 1:
                 print('touch_F %3f' % touch_F)
                 break
         return loss

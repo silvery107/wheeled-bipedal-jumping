@@ -89,7 +89,7 @@ vel.setHeight(0.3)
 # restart_flag = False
 # restart_time0 = 0
 # restart_metrics = 99999
-jump_metrics = 99999
+jump_metrics = 9999
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)
@@ -113,12 +113,12 @@ while robot.step(TIME_STEP) != -1:
     #     key = mKeyboard.getKey()
     #     vel.keyboardControl(key,param_dic)
     #     fall_flag = not vel.checkPitch(30)
-
-    vel.setHeight(0.2)
-    if TIME>1 and TIME<2:
+    if TIME>0 and TIME<1:
+        vel.setHeight(0.2)
+    if TIME>=1 and TIME<2:
         vel.setXVel(3)
-    elif TIME>=2 and jump_metrics==99999:
-        jump_metrics = vel.jump(param_dic,0.5)
+    elif TIME>=2 and jump_metrics==9999:
+        jump_metrics = vel.jump(param_dic,0.3)
         # break
     else:
         vel.isScreenShot = False
@@ -127,6 +127,7 @@ while robot.step(TIME_STEP) != -1:
 
 # metrics_dic["restart_metrics"] = restart_metrics
 metrics_dic["jump_metrics"] = jump_metrics
+
 
 with open("./metrics.txt",'w') as metrics:
     metrics.write(str(metrics_dic))
