@@ -89,7 +89,7 @@ vel.setHeight(0.3)
 # restart_flag = False
 # restart_time0 = 0
 # restart_metrics = 99999
-jump_metrics = 99999
+jump_metrics = 9999
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)
@@ -120,7 +120,7 @@ while robot.step(TIME_STEP) != -1:
         vel.setXVel(5)
     elif 1.5 <= TIME < 1.6:
         vel.setXVel(0)
-    elif TIME >= 1.6 and jump_metrics == 99999:
+    elif TIME >= 1.6 and jump_metrics == 9999:
         jump_metrics = vel.jump(param_dic, 0.5)
         # break
     else:
