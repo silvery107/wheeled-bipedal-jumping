@@ -60,7 +60,7 @@ class velocity_controller:
 
         self.isScreenShot = False
         self.isPointPos = False
-
+        self.isPrint = False
 
     def calc_balance_angle_1(self, h):
         '''
@@ -217,9 +217,11 @@ class velocity_controller:
         if self.isPointPos:
             TIME = self.robot.getTime()
             wheel = self.robot.getFromDef("LEFTWHEEL")
+            TIME = self.robot.getTime()
+            wheel = self.robot.getFromDef("LEFTWHEEL")
             print("wheel: ", wheel.getBaseTypeName())
             self.WheelPos = wheel.getPosition()
-            print(self.WheelPos)
+            self.printX(self.WheelPos)
             # file_handle = open('WheelPos.txt', mode='a')
             # file_handle.writelines([str(TIME),',',str(self.WheelPos),',',str(self.panel.bodyVel), ',', str(self.panel.gps_v), '\n'])
             # file_handle.close()
@@ -227,8 +229,7 @@ class velocity_controller:
     def screenShot(self, filetype, quality=100):
         if self.isScreenShot:
             if self.screenShotCount % 4 == 0:
-                print('into screenshot')
-                file_str = "../../screenshot/"+filetype + str(self.imageCount) + ".jpg"
+                file_str = "../../screenshot/" + filetype + str(self.imageCount) + ".jpg"
                 self.robot.exportImage(file_str, quality)
                 self.imageCount += 1
             self.screenShotCount += 1
@@ -281,8 +282,8 @@ class velocity_controller:
             theta = math.pi - self.panel.encoder[2]  # angle between wo legs
 
             # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
-            torque = -10 # constant
-            # torque = -(10*a * t + 100*b * t**2 + 1000*c * t**3 + 10*d)  # poly function
+            # torque = -10 # constant
+            torque = -(10*a * t + 100*b * t**2 + 1000*c * t**3 + 10*d)  # poly function
             # torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
 
             if torque > 0:
@@ -322,7 +323,7 @@ class velocity_controller:
                 break
 
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
-        delta_w_h = (mb*offSpeed*5/7.8*offSpeed/9.81-5*delta_h)/2
+        delta_w_h = (mb * offSpeed * 5 / 7.8 * offSpeed / 9.81 - 5 * delta_h) / 2
         print('Actual height: %3f' % delta_h)
         print('Actual wheel height: %3f' % delta_w_h)
         loss_height = math.fabs(delta_h - desire_h)
@@ -487,3 +488,7 @@ class velocity_controller:
         self.panel.updateBodyHeight()
         self.panel.updateWheelVelocity()
         self.panel.updateBodyVelocity(self.cur_height)
+
+    def printX(self, string):
+        if self.isPrint:
+            print(string)

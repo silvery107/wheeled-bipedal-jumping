@@ -75,7 +75,7 @@ with open("./args.txt", 'r') as args:
     param_dic = eval(args.read())
 
 # main loop
-panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors)
+panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors, robot)
 vel = velocity_controller(motors, panel, robot)
 
 vel.setHeight(0.3)
@@ -110,6 +110,9 @@ while robot.step(TIME_STEP) != -1:
     #     vel.keyboardControl(key,param_dic)
     #     fall_flag = not vel.checkPitch(30)
     # vel.savePointPos()
+    vel.isPrint = False
+    vel.isPointPos = True
+    vel.isScreenShot = False
     vel.setHeight(0.2)
     if 0.5 < TIME < 1.5:
         vel.setXVel(5)
@@ -119,8 +122,6 @@ while robot.step(TIME_STEP) != -1:
         jump_metrics = vel.jump(param_dic, 0.3)
         # break
     else:
-        vel.isPointPos = False
-        vel.isScreenShot = False
         key = mKeyboard.getKey()
         vel.keyboardControl(key, param_dic)
     # vel.isPointPos = True
