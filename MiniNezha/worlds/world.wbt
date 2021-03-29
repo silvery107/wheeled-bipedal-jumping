@@ -129,7 +129,7 @@ Robot {
                           ]
                         }
                         USE Hip_link
-                        Transform {
+                        DEF LEFTWHEEL Transform {
                           translation 0 -0.11 0
                           children [
                             HingeJoint {

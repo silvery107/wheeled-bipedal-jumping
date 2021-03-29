@@ -466,7 +466,6 @@ class velocity_controller:
             self.setAVel(68, -0.6)
         elif rotation == 0:
             self.setAVel(70, 0.0)
-        # change robot position.
         # self.printInfo()
 
     def printInfo(self):
@@ -475,7 +474,7 @@ class velocity_controller:
         print('Torque: %3f' % self.motors[2].getTorqueFeedback())
 
     def sensor_update(self):
-        # get sensors data
+        '''update sensors data'''
         self.panel.updateGPS()
         self.panel.updateIMU()
         self.panel.updateGyro()

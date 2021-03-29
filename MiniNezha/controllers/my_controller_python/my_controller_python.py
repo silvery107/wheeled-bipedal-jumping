@@ -4,12 +4,7 @@
 
 from controller import Robot
 from controller import Supervisor
-from controller import Motor
-from controller import InertialUnit
-from controller import Gyro
 from controller import Keyboard
-from controller import Brake
-from controller import TouchSensor
 
 from PID_control import *
 from motion import *
