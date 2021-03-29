@@ -1,7 +1,7 @@
 {
   "name": "optimal_jump1",
   "algorithm": "BayesianOptimization",
-  "trialNumber": 200,
+  "trialNumber": 100,
   "path": "./advisor_config/",
   "command": "./min_function.py",
   "search_space": {
