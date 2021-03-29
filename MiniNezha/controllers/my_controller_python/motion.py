@@ -251,7 +251,7 @@ class velocity_controller:
         count = 0
         energy = 0
         last_theta = math.pi - self.panel.encoder[2]
-        penalties = [0,0,0]
+        penalties = [0,0,0,0,0]
         # take off phase
         while 1:
             if self.robot.getTime() > 3:
@@ -280,20 +280,22 @@ class velocity_controller:
             theta = math.pi - self.panel.encoder[2]  # angle between wo legs
 
             # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
-            # torque = -10 # constant
+            # torque = -35 # constant
             torque = -(10*a * t + 100*b * t**2 + 1000*c * t**3 + 10*d)  # poly function
             # torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
 
             if torque > 0:
-                penalties[0] += square_penalize(-torque)
+                penalties[0] += 0.01*square_penalize(torque)
             if torque < -35:
-                penalties[1] += square_penalize(torque+35)
+                penalties[1] += 0.01*square_penalize(-torque-35)
             if theta > math.pi*0.7:
                 penalties[2] += 100*square_penalize(theta-math.pi*0.7)
-            if theta > math.pi:
+            if theta < math.pi*0.1:
+                penalties[3] += 1000*square_penalize(-theta+0.1*math.pi)
+            if theta > math.pi or theta <= 0:
                 break
-
-            energy = energy + math.fabs(torque) * math.fabs(theta - last_theta)
+            energy += math.fabs(torque)*math.fabs(theta - last_theta)
+            # energy_baseline += 35*math.fabs(theta-last_theta)
             last_theta = theta
 
             self.motors[2].setTorque(torque)
@@ -324,10 +326,19 @@ class velocity_controller:
         delta_w_h = (mb * offSpeed * 5 / 7.8 * offSpeed / 9.81 - 5 * delta_h) / 2
         # print('Actual height: %3f' % delta_h)
         # print('Actual wheel height: %3f' % delta_w_h)
-        loss_height = math.fabs(delta_h - desire_h)
         # loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
-        loss = loss_height * 1000 + energy  # 权重可修改
-        print("loss_height:", loss_height, ",energy:", energy, ",penalty:", penalties)
+
+        energy_baseline = m*g*delta_h
+        if energy>energy_baseline:
+            penalties[4] = square_penalize(energy-energy_baseline)
+
+        loss_height = math.fabs(delta_h - desire_h)
+        loss = loss_height * 1000
+        for penalty in penalties:
+            loss += penalty
+        print("loss_height:", loss_height * 1000, ",energy:", energy, ",penalty:", penalties,",loss:",loss)
+        if self.checkPitch(): # check flight away
+            return loss
 
         # landing phase
         while 1:

@@ -1,5 +1,5 @@
 {
-  "name": "optimal_jump1",
+  "name": "optimal_jump5",
   "algorithm": "BayesianOptimization",
   "trialNumber": 100,
   "path": "./advisor_config/",
