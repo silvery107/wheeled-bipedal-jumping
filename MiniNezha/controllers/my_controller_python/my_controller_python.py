@@ -79,7 +79,7 @@ panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors, robot)
 vel = velocity_controller(motors, panel, robot)
 
 vel.setHeight(0.3)
-
+vel.setXVel(0.0)
 # fall_flag = False
 # restart_flag = False
 # restart_time0 = 0
@@ -109,13 +109,13 @@ while robot.step(TIME_STEP) != -1:
     #     key = mKeyboard.getKey()
     #     vel.keyboardControl(key,param_dic)
     #     fall_flag = not vel.checkPitch(30)
-    # vel.savePointPos()
     vel.isPrint = False
-    vel.isPointPos = True
+    vel.isPointPos = False
     vel.isScreenShot = False
-    vel.setHeight(0.2)
-    if 0.5 < TIME < 1.5:
-        vel.setXVel(5)
+    if 0<TIME<0.5:
+        vel.setHeight(0.2)
+    if 0.5 <= TIME < 1.5:
+        vel.setXVel(3)
     elif 1.5 <= TIME < 1.6:
         vel.setXVel(0)
     elif TIME >= 1.6 and jump_metrics == 9999:
@@ -124,10 +124,6 @@ while robot.step(TIME_STEP) != -1:
     else:
         key = mKeyboard.getKey()
         vel.keyboardControl(key, param_dic)
-    # vel.isPointPos = True
-    # key = mKeyboard.getKey()
-    # vel.keyboardControl(key,param_dic)
-    # vel.savePointPos()
 
 # metrics_dic["restart_metrics"] = restart_metrics
 metrics_dic["jump_metrics"] = jump_metrics

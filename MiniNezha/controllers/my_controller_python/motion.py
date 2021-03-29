@@ -3,6 +3,7 @@
 from utilities import *
 from PID_control import *
 import math
+import sys
 
 
 class velocity_controller:
@@ -246,15 +247,14 @@ class velocity_controller:
         l0 = 0.22  # leg length
         g = 9.81
 
-
-        self.motors[0].setTorque(0)  # make base floating
-        self.motors[1].setTorque(0)
+        self.motors[0].setTorque(0.05)  # make base floating and no over rotating
+        self.motors[1].setTorque(0.05)
         self.motors[2].enableTorqueFeedback(1)
         offSpeed = 0
         count = 0
         energy = 0
         last_theta = math.pi - self.panel.encoder[2]
-        penalties = [0,0,0,0,0]
+        penalties = [0,0,0,0,0,0] # torque <=0, torque >=-35, theta <=0.7pi, theta >=0.1pi, energy <=mgh, pitch <=0.15pi
         # take off phase
         while 1:
             if self.robot.getTime() > 3:
@@ -280,11 +280,11 @@ class velocity_controller:
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
             self.screenShot("Jump")
-            theta = math.pi - self.panel.encoder[2]  # angle between wo legs
+            theta = math.pi - self.panel.encoder[2]  # angle between two legs
 
             # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
             # torque = -35 # constant
-            torque = -(a * t + 10 * b * t ** 2 + 100 * c * t ** 3 + d)  # poly function
+            torque = -(10*a * t + 100*b * t**2 + 1000*c * t**3 + 10*d)  # poly function
             # torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
 
             if torque > 0:
@@ -298,16 +298,14 @@ class velocity_controller:
             if theta > math.pi or theta <= 0:
                 break
             energy += math.fabs(torque)*math.fabs(theta - last_theta)
-            # energy_baseline += 35*math.fabs(theta-last_theta)
             last_theta = theta
 
             self.motors[2].setTorque(torque)
             self.motors[3].setTorque(torque)
 
-
         h_ref = self.panel.gps_y  # height, when jump starts
         h_max = -1  # height of the top point
-        # print('h_ref :%3f' % h_ref)
+
         # flight phase
         while 1:
             if self.robot.getTime() > 4:
@@ -327,37 +325,39 @@ class velocity_controller:
 
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
         delta_w_h = (mb * offSpeed * 5 / 7.8 * offSpeed / 9.81 - 5 * delta_h) / 2
+        # print('h_ref :%3f' % h_ref)
         # print('Actual height: %3f' % delta_h)
         # print('Actual wheel height: %3f' % delta_w_h)
-        # loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
-
         energy_baseline = m*g*delta_h
-        if energy>energy_baseline:
+        if energy > energy_baseline:
             penalties[4] = square_penalize(energy-energy_baseline)
 
+        # loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
         loss_height = math.fabs(delta_h - desire_h)
-        loss = loss_height * 1000
-        for penalty in penalties:
-            loss += penalty
-        print("loss_height:", loss_height * 1000, ",energy:", energy, ",penalty:", penalties,",loss:",loss)
-        if self.checkPitch(): # check flight away
-            return loss
+        loss = (loss_height * 1000)
 
         # landing phase
+        self.setHeight(0.3)
         while 1:
-            if self.robot.getTime() > 5:
-                break
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
             self.screenShot("Touch")
-            # print('shot')
-            # self.motors[2].setPosition(0.7*math.pi)
-            # self.motors[3].setPosition(0.7*math.pi)
-            self.setHeight(0.3)
-            touch_F = math.sqrt(self.panel.F[0][0] ** 2 + self.panel.F[0][1] ** 2 + self.panel.F[0][2] ** 2)
-            if touch_F > 1:
-                # print('touch_F %3f' % touch_F)
+            if self.robot.getTime() > 5:
                 break
+            if self.panel.pitch > 0.15*math.pi:
+                penalties[5] += 10*square_penalize(self.panel.pitch-0.15*math.pi)
+            if self.panel.pitch > 0.25*math.pi:
+                break
+
+            touch_F = self.panel.F[0][1]
+            if touch_F > 1:
+                print('touch_F %3f' % touch_F)
+                break
+
+        for penalty in penalties:
+            loss += penalty
+        print("loss_height: %.3f"%(loss_height * 1000),file=sys.stdout)
+        print("penalty:", penalties,",loss:",loss,file=sys.stdout)
 
         return loss
 
