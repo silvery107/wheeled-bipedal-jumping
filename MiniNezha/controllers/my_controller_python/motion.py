@@ -166,14 +166,6 @@ class velocity_controller:
     #     velocity2 = self.motors[2].getVelocity()
     #     velocity0 = self.motors[0].getVelocity()
     #     print('torque[2]:%3f' % tor2)
-    #     print('Velocity[2]:%3f' % velocity2)
-    #     print('torque[0]:%3f' % tor0)
-    #     print('Velocity[0]:%3f' % velocity0)
-    #
-    #     # GPS版（项目临时）
-    #     while 1:
-    #         TIME_STEP = int(robot.getBasicTimeStep())
-    #         robot.step(TIME_STEP)
     #         self.sensor_update()
     #         print("jump phase 1")
     #         if self.panel.gps_y > 0.48:  # 直立时gps0.488
@@ -347,6 +339,9 @@ class velocity_controller:
             torque = -(a * t + b * t ** 2 + c * t ** 3 + d)  # poly function
             # torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
 
+            if torque > 0:
+                energy = 99999
+                break
             energy = energy + math.fabs(torque) * math.fabs(theta - last_theta)
             last_theta = theta
 
