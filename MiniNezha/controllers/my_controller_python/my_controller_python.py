@@ -4,12 +4,7 @@
 
 from controller import Robot
 from controller import Supervisor
-from controller import Motor
-from controller import InertialUnit
-from controller import Gyro
 from controller import Keyboard
-from controller import Brake
-from controller import TouchSensor
 
 from PID_control import *
 from motion import *
@@ -80,7 +75,7 @@ with open("./args.txt", 'r') as args:
     param_dic = eval(args.read())
 
 # main loop
-panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors)
+panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors, robot)
 vel = velocity_controller(motors, panel, robot)
 
 vel.setHeight(0.3)
@@ -89,7 +84,7 @@ vel.setHeight(0.3)
 # restart_flag = False
 # restart_time0 = 0
 # restart_metrics = 99999
-jump_metrics = 99999
+jump_metrics = 9999
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)
@@ -107,25 +102,32 @@ while robot.step(TIME_STEP) != -1:
     #             fall_flag = False
     #             restart_metrics = robot.getTime()-restart_time0
     #     else:
+    #         # print("shutdown")
     #         vel.shutdown(brakes, 0.25)
     #         continue
     # else:
     #     key = mKeyboard.getKey()
     #     vel.keyboardControl(key,param_dic)
     #     fall_flag = not vel.checkPitch(30)
-
+    # vel.savePointPos()
+    vel.isPrint = False
+    vel.isPointPos = True
+    vel.isScreenShot = False
     vel.setHeight(0.2)
     if 0.5 < TIME < 1.5:
         vel.setXVel(5)
     elif 1.5 <= TIME < 1.6:
         vel.setXVel(0)
-    elif TIME >= 1.6 and jump_metrics == 99999:
+    elif TIME >= 1.6 and jump_metrics == 9999:
         jump_metrics = vel.jump(param_dic, 0.5)
         # break
     else:
-        vel.isScreenShot = False
         key = mKeyboard.getKey()
         vel.keyboardControl(key, param_dic)
+    # vel.isPointPos = True
+    # key = mKeyboard.getKey()
+    # vel.keyboardControl(key,param_dic)
+    # vel.savePointPos()
 
 # metrics_dic["restart_metrics"] = restart_metrics
 metrics_dic["jump_metrics"] = jump_metrics
@@ -133,4 +135,4 @@ metrics_dic["jump_metrics"] = jump_metrics
 with open("./metrics.txt", 'w') as metrics:
     metrics.write(str(metrics_dic))
 
-# robot.simulationQuit(0)
+robot.simulationQuit(0)

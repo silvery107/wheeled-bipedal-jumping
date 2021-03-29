@@ -1,6 +1,8 @@
 #VRML_SIM R2021a utf8
 WorldInfo {
-  basicTimeStep 4
+  CFM 1e-06
+  ERP 0.6
+  basicTimeStep 1
   coordinateSystem "NUE"
   contactProperties [
     ContactProperties {
@@ -16,9 +18,10 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.0189821775378564 -0.9933577131574143 -0.11349066325735178 3.6818701112651997
-  position 1.3590079134462614 0.7757640307101027 -3.6399936324423017
+  orientation 0 1 0 3.1415926
+  position 1.4 0.3 -6.83204
   follow "MiniNezha"
+  followType "None"
   followSmoothness 0
 }
 TexturedBackground {
@@ -26,8 +29,9 @@ TexturedBackground {
 TexturedBackgroundLight {
 }
 Floor {
+  size 100 100
 }
-Robot {
+DEF NeZha Robot {
   translation 0.32429 0.492787 -1.51
   rotation 0 0 1 2.85387e-06
   children [
@@ -385,6 +389,21 @@ Robot {
   }
   controller "my_controller_python"
   supervisor TRUE
+}
+Solid {
+  translation 1.7 0.1 -1.6
+  children [
+    DEF block Shape {
+      appearance Appearance {
+      }
+      geometry Box {
+        size 0.1 0.2 1
+      }
+    }
+  ]
+  boundingObject USE block
+  physics Physics {
+  }
 }
 Robot {
   translation 0 0.02 0
