@@ -124,7 +124,7 @@ while robot.step(TIME_STEP) != -1:
         jump_metrics = vel.jump(param_dic, 0.5)
         # break
     else:
-        vel.isPointPos = True
+        vel.isPointPos = False
         vel.isScreenShot = False
         key = mKeyboard.getKey()
         vel.keyboardControl(key, param_dic)

@@ -324,7 +324,7 @@ class velocity_controller:
             else:
                 break
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
-        delta_w_h = (mb*offSpeed*5/7.8*offspeed/9.81-5*delta_h)/2
+        delta_w_h = (mb*offSpeed*5/7.8*offSpeed/9.81-5*delta_h)/2
         print('Actual height: %3f' % delta_h)
         print('Actual wheel height: %3f' % delta_w_h)
         loss_height = math.fabs(delta_h - desire_h)
