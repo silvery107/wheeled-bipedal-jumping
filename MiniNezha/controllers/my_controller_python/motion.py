@@ -482,5 +482,7 @@ class velocity_controller:
         self.panel.updateTouch()
         self.panel.updateEncoder()
         self.panel.updateDirection()
+        self.panel.updateBodyHeight()
         self.panel.updateWheelVelocity()
         self.panel.updateBodyVelocity(self.cur_height)
+
