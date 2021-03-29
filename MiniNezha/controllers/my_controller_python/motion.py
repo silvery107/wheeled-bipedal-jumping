@@ -261,7 +261,7 @@ class velocity_controller:
 
             # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
             # torque = -35 # constant
-            torque = -(10*a * t + 100*b * t ** 2 + 1000*c * t ** 3 + 10*d)  # poly function
+            torque = -(10*a * t + 100*b * t**2 + 1000*c * t**3 + 10*d)  # poly function
             # torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
 
             if torque > 0 or torque < -35:
