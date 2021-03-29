@@ -17,7 +17,7 @@ class velocity_controller:
         self.factor2 = 1
         # 平衡小车之家说还要乘0.6,我没乘
         # 角度
-        self.pitch_Kp = 10.0  # 2.8  # 4 的时候平衡车，kp越大越稳
+        self.pitch_Kp = 10.0  # 2.8  # 4 的时候平衡车，kp越大越稳 10
         self.pitch_Kd = 0.0  # 再大就会抖
         self.count = 0
         self.pitch_exp = 0
@@ -33,7 +33,7 @@ class velocity_controller:
         self.omgz_pid = PID_Controller(self.omgz_Kp, self.omgz_Kd, 0.0)
 
         # body速度
-        self.translation_Kp = 10000.0  # 8000  #
+        self.translation_Kp = 20000.0  # 8000  #10000
         self.translation_Kp1 = 0.00001  # 0.00008  # 这一项确定数量级
         self.translation_Ki = 0.0  #
 
@@ -61,6 +61,8 @@ class velocity_controller:
         self.screenShotCount = 0
 
         self.isScreenShot = False
+        self.isPointPos = False
+
 
     def calc_balance_angle_1(self, h):
         '''
@@ -97,13 +99,13 @@ class velocity_controller:
             self.cur_height = h
 
     def setXVel(self, Ev):  # 注意：pitch方向和车方向相反，前倾为负
-
+        orig_angle = -0.013
         if Ev == 0.0:
-            self.pitch_exp = -0.007 + 0.07 * self.panel.bodyVel - 0.048 * (0.3 - self.cur_height)
+            self.pitch_exp = orig_angle + 0.07 * self.panel.bodyVel - 0.048 * (0.3 - self.cur_height)
         elif Ev > 0:
-            self.pitch_exp = -0.007 + 0.05 * (self.panel.bodyVel - Ev) / Ev
+            self.pitch_exp = orig_angle + 0.05 * (self.panel.bodyVel - Ev) / Ev
         else:
-            self.pitch_exp = -0.007 - 0.05 * (self.panel.bodyVel - Ev) / Ev
+            self.pitch_exp = orig_angle - 0.05 * (self.panel.bodyVel - Ev) / Ev
         # print("self.theta3",self.theta3)
         # print("self.pitch_exp",self.pitch_exp)
         if self.pitch_exp > self.theta3 / 10:
@@ -210,6 +212,20 @@ class velocity_controller:
     #             # self.setHeight(0.43)
     #             break
 
+    def savePointPos(self):
+        # WEBOTS_HOME/projects/robots/neuronics/ipr/worlds/ipr_cube.wbt
+        # \Webots\projects\samples\howto\worlds\supervisor_trail.wbt
+        # https://cyberbotics.com/doc/guide/supervisor-programming?tab-language=python
+        TIME = self.robot.getTime()
+        wheel = self.robot.getFromDef("LEFTWHEEL")
+        print("wheel: ", wheel.getBaseTypeName())
+        if self.isPointPos:
+            self.WheelPos = wheel.getPosition()
+            print(self.WheelPos)
+            # file_handle = open('WheelPos.txt', mode='a')
+            # file_handle.writelines([str(TIME),',',str(self.WheelPos),',',str(self.panel.bodyVel), ',', str(self.panel.gps_v), '\n'])
+            # file_handle.close()
+
     def screenShot(self, filetype, quality=100):
         if self.isScreenShot:
             if self.screenShotCount % 4 == 0:
@@ -218,6 +234,7 @@ class velocity_controller:
                 self.robot.exportImage(file_str, quality)
                 self.imageCount += 1
             self.screenShotCount += 1
+        self.savePointPos()
 
     def jump(self, params, desire_h=0.3):  # desire_h
         a = params["jump_a"]
@@ -243,7 +260,7 @@ class velocity_controller:
         # tor0 = self.motors[2].getTorqueFeedback()
         # velocity2 = self.motors[2].getVelocity()
         # velocity0 = self.motors[0].getVelocity()
-
+        offSpeed = 0
         count = 0
         energy = 0
         last_theta = math.pi - self.panel.encoder[2]
@@ -282,6 +299,7 @@ class velocity_controller:
             #     break
 
             if self.panel.gps_v >= opt_vel:
+                offSpeed = self.panel.gps_v
                 # print(self.panel.gps_v)
                 # print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
                 # print("t:", t)
@@ -306,7 +324,9 @@ class velocity_controller:
             else:
                 break
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
+        delta_w_h = (mb*offSpeed*5/7.8*offspeed/9.81-5*delta_h)/2
         print('Actual height: %3f' % delta_h)
+        print('Actual wheel height: %3f' % delta_w_h)
         loss_height = math.fabs(delta_h - desire_h)
         # loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
         loss = loss_height * 1000 + energy  # 权重可修改
@@ -316,6 +336,7 @@ class velocity_controller:
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
             self.screenShot("Touch")
+            print('shot')
             # self.motors[2].setPosition(0.7*math.pi)
             # self.motors[3].setPosition(0.7*math.pi)
             self.setHeight(0.3)
@@ -461,5 +482,6 @@ class velocity_controller:
         self.panel.updateTouch()
         self.panel.updateEncoder()
         self.panel.updateDirection()
+        self.panel.updateBodyHeight()
         self.panel.updateWheelVelocity()
         self.panel.updateBodyVelocity(self.cur_height)

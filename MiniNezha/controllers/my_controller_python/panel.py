@@ -88,6 +88,8 @@ class panel:
         self.touch_sensors = touch_sensors
         self.F = [[0, 0, 0], [0, 0, 0]]
 
+        self.BodyHeight = 0
+
         # self.mb = 5
         # self.r = 0.05
         # self.g = 9.8
@@ -146,6 +148,10 @@ class panel:
     def updateTouch(self):
         self.F[0] = self.touch_sensors[0].getValues()
         self.F[1] = self.touch_sensors[1].getValues()
+
+    # Use Hip_pos temperily. Can try translation field later.
+    def updateBodyHeight(self):
+        self.BodyHeight = self.robot.getFromDef("LEFT_LEG").getPosition()
 
     def getRotation(self):
         return self.rotation
