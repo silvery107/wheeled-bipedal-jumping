@@ -215,6 +215,7 @@ class velocity_controller:
     def savePointPos(self):
         # WEBOTS_HOME/projects/robots/neuronics/ipr/worlds/ipr_cube.wbt
         # \Webots\projects\samples\howto\worlds\supervisor_trail.wbt
+        # https://cyberbotics.com/doc/guide/supervisor-programming?tab-language=python
         TIME = self.robot.getTime()
         wheel = self.robot.getFromDef("LEFTWHEEL")
         print("wheel: ", wheel.getBaseTypeName())
