@@ -259,7 +259,7 @@ class velocity_controller:
         # tor0 = self.motors[2].getTorqueFeedback()
         # velocity2 = self.motors[2].getVelocity()
         # velocity0 = self.motors[0].getVelocity()
-
+        offSpeed = 0
         count = 0
         energy = 0
         last_theta = math.pi - self.panel.encoder[2]
@@ -297,6 +297,7 @@ class velocity_controller:
 
             if self.panel.gps_v >= opt_vel:
                 print(self.panel.gps_v)
+                offSpeed = self.panel.gps_v
                 print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
                 print("t:", t)
                 break
@@ -323,7 +324,9 @@ class velocity_controller:
             else:
                 break
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
+        delta_w_h = (mb*offSpeed*5/7.8*offspeed/9.81-5*delta_h)/2
         print('Actual height: %3f' % delta_h)
+        print('Actual wheel height: %3f' % delta_w_h)
         loss_height = math.fabs(delta_h - desire_h)
         # loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
         loss = loss_height * 1000 + energy  # 权重可修改
