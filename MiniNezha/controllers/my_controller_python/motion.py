@@ -3,6 +3,7 @@
 from utilities import *
 from PID_control import *
 import math
+import sys
 
 
 class velocity_controller:
@@ -251,7 +252,7 @@ class velocity_controller:
         count = 0
         energy = 0
         last_theta = math.pi - self.panel.encoder[2]
-        penalties = [0,0,0,0,0]
+        penalties = [0,0,0,0,0,0] # torque <=0, torque >=-35, theta <=0.7pi, theta >=0.1pi, energy <=mgh, pitch <=0.15pi
         # take off phase
         while 1:
             if self.robot.getTime() > 3:
@@ -277,7 +278,7 @@ class velocity_controller:
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
             self.screenShot("Jump")
-            theta = math.pi - self.panel.encoder[2]  # angle between wo legs
+            theta = math.pi - self.panel.encoder[2]  # angle between two legs
 
             # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
             # torque = -35 # constant
@@ -295,16 +296,14 @@ class velocity_controller:
             if theta > math.pi or theta <= 0:
                 break
             energy += math.fabs(torque)*math.fabs(theta - last_theta)
-            # energy_baseline += 35*math.fabs(theta-last_theta)
             last_theta = theta
 
             self.motors[2].setTorque(torque)
             self.motors[3].setTorque(torque)
 
-
         h_ref = self.panel.gps_y  # height, when jump starts
         h_max = -1  # height of the top point
-        # print('h_ref :%3f' % h_ref)
+
         # flight phase
         while 1:
             if self.robot.getTime() > 4:
@@ -324,38 +323,39 @@ class velocity_controller:
 
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
         delta_w_h = (mb * offSpeed * 5 / 7.8 * offSpeed / 9.81 - 5 * delta_h) / 2
+        # print('h_ref :%3f' % h_ref)
         # print('Actual height: %3f' % delta_h)
         # print('Actual wheel height: %3f' % delta_w_h)
-        # loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
-
         energy_baseline = m*g*delta_h
-        if energy>energy_baseline:
+        if energy > energy_baseline:
             penalties[4] = square_penalize(energy-energy_baseline)
 
+        # loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
         loss_height = math.fabs(delta_h - desire_h)
         loss = (loss_height * 1000)
-        for penalty in penalties:
-            loss += penalty
-        print("loss_height:", (loss_height * 1000), ",energy:", energy, ",penalty:", penalties,",loss:",loss)
-
+        
         # landing phase
         self.setHeight(0.3)
         while 1:
-            if self.robot.getTime() > 5:
-                break
-            if not self.checkPitch(70): # check if flight away
-                print("flight away")
-                return loss
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
             self.screenShot("Touch")
-            # print('shot')
-            # self.motors[2].setPosition(0.7*math.pi)
-            # self.motors[3].setPosition(0.7*math.pi)
+            if self.robot.getTime() > 5:
+                break
+            if self.panel.pitch > 0.15*math.pi:
+                penalties[5] += 10*square_penalize(self.panel.pitch-0.15*math.pi)
+            if self.panel.pitch > 0.25*math.pi:
+                break
+
             touch_F = self.panel.F[0][1]
             if touch_F > 1:
                 print('touch_F %3f' % touch_F)
                 break
+
+        for penalty in penalties:
+            loss += penalty
+        print("loss_height: %.3f"%(loss_height * 1000),file=sys.stdout)
+        print("penalty:", penalties,",loss:",loss,file=sys.stdout)
 
         return loss
 

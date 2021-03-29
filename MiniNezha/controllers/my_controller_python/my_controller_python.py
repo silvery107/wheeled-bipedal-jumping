@@ -109,9 +109,8 @@ while robot.step(TIME_STEP) != -1:
     #     key = mKeyboard.getKey()
     #     vel.keyboardControl(key,param_dic)
     #     fall_flag = not vel.checkPitch(30)
-    # vel.savePointPos()
     vel.isPrint = False
-    vel.isPointPos = True
+    vel.isPointPos = False
     vel.isScreenShot = False
     if 0<TIME<0.5:
         vel.setHeight(0.2)
@@ -121,12 +120,10 @@ while robot.step(TIME_STEP) != -1:
         vel.setXVel(0)
     elif TIME >= 1.6 and jump_metrics == 9999:
         jump_metrics = vel.jump(param_dic, 0.3)
-        break
+        # break
     else:
         key = mKeyboard.getKey()
         vel.keyboardControl(key, param_dic)
-    # vel.isPointPos = True
-    # vel.savePointPos()
 
 # metrics_dic["restart_metrics"] = restart_metrics
 metrics_dic["jump_metrics"] = jump_metrics
@@ -134,4 +131,4 @@ metrics_dic["jump_metrics"] = jump_metrics
 with open("./metrics.txt", 'w') as metrics:
     metrics.write(str(metrics_dic))
 
-robot.simulationQuit(0)
+# robot.simulationQuit(0)
