@@ -89,7 +89,7 @@ while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)
     vel.sensor_update()
-    if TIME > 6:
+    if TIME > 5:
         break
 
     # if fall_flag:
@@ -119,7 +119,7 @@ while robot.step(TIME_STEP) != -1:
     elif 1.5 <= TIME < 1.6:
         vel.setXVel(0)
     elif TIME >= 1.6 and jump_metrics == 9999:
-        jump_metrics = vel.jump(param_dic, 0.5)
+        jump_metrics = vel.jump(param_dic, 0.3)
         # break
     else:
         key = mKeyboard.getKey()
@@ -135,4 +135,4 @@ metrics_dic["jump_metrics"] = jump_metrics
 with open("./metrics.txt", 'w') as metrics:
     metrics.write(str(metrics_dic))
 
-robot.simulationQuit(0)
+# robot.simulationQuit(0)

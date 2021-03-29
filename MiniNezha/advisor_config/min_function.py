@@ -29,9 +29,9 @@ def main():
     f1.write(str(param_dic))
 
   # run webots
-  command = "webots --mode=fast --no-rendering --stdout --stderr --minimize"
-  os.system("sshpass -p 082003 ssh -p 22 SSH_Server@10.17.86.40 %s"%(command))
-  # os.system("webots --mode=fast --no-rendering --stdout --stderr --minimize")
+  # command = "webots --mode=fast --no-rendering --stdout --stderr --minimize"
+  # os.system("sshpass -p 082003 ssh -p 22 SSH_Server@10.17.86.40 %s"%(command))
+  os.system("webots --mode=fast --no-rendering --stdout --minimize")
 
   # read metrics from txt
   with open("../controllers/my_controller_python/metrics.txt",'r') as f2:
