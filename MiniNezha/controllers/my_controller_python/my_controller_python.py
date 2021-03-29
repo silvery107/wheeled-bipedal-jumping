@@ -4,12 +4,7 @@
 
 from controller import Robot
 from controller import Supervisor
-from controller import Motor
-from controller import InertialUnit
-from controller import Gyro
 from controller import Keyboard
-from controller import Brake
-from controller import TouchSensor
 
 from PID_control import *
 from motion import *
@@ -140,4 +135,4 @@ metrics_dic["jump_metrics"] = jump_metrics
 with open("./metrics.txt", 'w') as metrics:
     metrics.write(str(metrics_dic))
 
-# robot.simulationQuit(0)
+robot.simulationQuit(0)

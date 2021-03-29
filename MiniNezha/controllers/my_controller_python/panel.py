@@ -153,7 +153,8 @@ class panel:
 
     # Use Hip_pos temperily. Can try translation field later.
     def updateBodyHeight(self):
-        self.BodyHeight = self.robot.getFromDef("LEFT_LEG").getPosition()
+        # self.BodyHeight = self.robot.getFromDef("LEFT_LEG").getPosition()
+        a=1
 
     def getRotation(self):
         return self.rotation

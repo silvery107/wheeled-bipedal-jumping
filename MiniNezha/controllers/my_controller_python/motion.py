@@ -276,7 +276,7 @@ class velocity_controller:
 
             # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
             # torque = -35 # constant
-            torque = -(10 * a * t + 100 * b * t ** 2 + 1000 * c * t ** 3 + 10 * d)  # poly function
+            torque = -(10 * a * t + 100 * b * t ** 2 + 1000 * c * t ** 3 + d)  # poly function
             # torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
 
             if torque > 0 or torque < -35:
@@ -464,7 +464,6 @@ class velocity_controller:
             self.setAVel(68, -0.6)
         elif rotation == 0:
             self.setAVel(70, 0.0)
-        # change robot position.
         # self.printInfo()
 
     def printInfo(self):
@@ -473,7 +472,7 @@ class velocity_controller:
         print('Torque: %3f' % self.motors[2].getTorqueFeedback())
 
     def sensor_update(self):
-        # get sensors data
+        '''update sensors data'''
         self.panel.updateGPS()
         self.panel.updateIMU()
         self.panel.updateGyro()
