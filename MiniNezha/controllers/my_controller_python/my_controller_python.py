@@ -107,7 +107,7 @@ while robot.step(TIME_STEP) != -1:
     #     vel.keyboardControl(key,param_dic)
     #     fall_flag = not vel.checkPitch(30)
     vel.isPrint = False
-    vel.isPointPos = True
+    vel.isPointPos = False
     vel.isScreenShot = False
     vel.Bayes_Jump = 1
     vel.Model_Jump = 0

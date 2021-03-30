@@ -218,11 +218,7 @@ class velocity_controller:
         # \Webots\projects\samples\howto\worlds\supervisor_trail.wbt
         # https://cyberbotics.com/doc/guide/supervisor-programming?tab-language=python
         if self.isPointPos:
-            TIME = self.robot.getTime()
-            wheel = self.robot.getFromDef("LEFTWHEEL")
-            # print("wheel: ", wheel.getBaseTypeName())
-            self.WheelPos = wheel.getPosition()
-            self.printX(self.WheelPos)
+            a = 1
             # file_handle = open('WheelPos.txt', mode='a')
             # file_handle.writelines([str(TIME),',',str(self.WheelPos),',',str(self.panel.bodyVel), ',', str(self.panel.gps_v), '\n'])
             # file_handle.close()
@@ -250,6 +246,8 @@ class velocity_controller:
 
         self.motors[0].setTorque(0.05)  # make base floating and no over rotating
         self.motors[1].setTorque(0.05)
+        # self.motors[4].setTorque(0.05)
+        # self.motors[5].setTorque(0.05)
         self.motors[2].enableTorqueFeedback(1)
         offSpeed = 0
         count = 0
@@ -269,7 +267,7 @@ class velocity_controller:
             theta = math.pi - self.panel.encoder[2]  # angle between two legs
 
             if self.robot.getTime() > 3:
-                print("timeout 3 take-off")
+                # print("timeout 3 take-off")
                 break
 
             if self.Bayes_Jump:
@@ -325,13 +323,13 @@ class velocity_controller:
             self.motors[3].setTorque(torque)
         print("t:", t)
         print("takeoff speed:", self.panel.supervisorBodyVel[1])
-        h_ref = self.WheelPos[1]  # height, when jump starts
+        h_ref = self.panel.WheelPos[1]  # height, when jump starts
         h_max = -1  # height of the top point
 
         # flight phase
         while 1:
             if self.robot.getTime() > 4:
-                print("timeout 4 flight")
+                # print("timeout 4 flight")
                 break
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
@@ -341,8 +339,8 @@ class velocity_controller:
             # self.motors[3].setPosition(lock_val)
             self.motors[2].setPosition(3 / 4 * math.pi)
             self.motors[3].setPosition(3 / 4 * math.pi)
-            if h_max <= self.WheelPos[1]:
-                h_max = self.WheelPos[1]
+            if h_max <= self.panel.WheelPos[1]:
+                h_max = self.panel.WheelPos[1]
             else:
                 break
 
@@ -369,7 +367,7 @@ class velocity_controller:
             self.sensor_update()
             self.screenShot("Touch")
             if self.robot.getTime() > 5:
-                print("timeout 5 landing")
+                # print("timeout 5 landing")
                 break
             if self.panel.pitch > 0.15 * math.pi:
                 penalties[5] += 10 * square_penalize(self.panel.pitch - 0.15 * math.pi)
@@ -523,12 +521,12 @@ class velocity_controller:
         self.panel.updateGyro()
         self.panel.updateTouch()
         self.panel.updateEncoder()
+        self.panel.updateWheelPos()
         self.panel.updateDirection()
         self.panel.updateBodyHeight()
         self.panel.updateWheelVelocity()
         self.panel.updateSupervisorBodyVel()
         self.panel.updateBodyVelocity(self.cur_height)
-        self.savePointPos()
 
     def printX(self, string):
         if self.isPrint:
