@@ -259,8 +259,8 @@ class velocity_controller:
             if self.robot.getTime() > 3:
                 break
 
-            if self.panel.gps_v >= opt_vel:
-                offSpeed = self.panel.gps_v
+            if self.panel.supervisorBodyVel[2] >= opt_vel:
+                offSpeed = self.panel.supervisorBodyVel[2]
                 # print(self.panel.gps_v)
                 # print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
                 # print("t:", t)
