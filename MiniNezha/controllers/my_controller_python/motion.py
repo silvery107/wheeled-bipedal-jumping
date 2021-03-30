@@ -269,6 +269,7 @@ class velocity_controller:
             theta = math.pi - self.panel.encoder[2]  # angle between two legs
 
             if self.robot.getTime() > 3:
+                print("timeout 3 take-off")
                 break
 
             if self.Bayes_Jump:
@@ -312,8 +313,8 @@ class velocity_controller:
                 penalties[2] += 100 * square_penalize(theta - math.pi * 0.7)
             if theta < math.pi * 0.1:
                 penalties[3] += 1000 * square_penalize(-theta + 0.1 * math.pi)
-            # if theta > math.pi*0.7 or theta <= 0:
-            #     break
+            if theta > math.pi or theta <= 0:
+                break
             energy += math.fabs(torque) * math.fabs(theta - last_theta)
             last_theta = theta
 
@@ -327,6 +328,7 @@ class velocity_controller:
         # flight phase
         while 1:
             if self.robot.getTime() > 4:
+                print("timeout 4 flight")
                 break
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
@@ -364,6 +366,7 @@ class velocity_controller:
             self.sensor_update()
             self.screenShot("Touch")
             if self.robot.getTime() > 5:
+                print("timeout 5 landing")
                 break
             if self.panel.pitch > 0.15 * math.pi:
                 penalties[5] += 10 * square_penalize(self.panel.pitch - 0.15 * math.pi)
