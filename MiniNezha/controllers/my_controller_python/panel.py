@@ -159,7 +159,7 @@ class panel:
 
     def updateSupervisorBodyVel(self):
         self.supervisorBodyVel = self.robot.getFromDef("hip_link").getVelocity()
-        #print(self.supervisorBodyVel)
+        # print(self.supervisorBodyVel)
 
     def getRotation(self):
         return self.rotation

@@ -266,6 +266,14 @@ class velocity_controller:
                 # print("t:", t)
                 break
 
+            # print(self.robot.getTime() - startTime)
+            # if self.robot.getTime()-startTime>t0:
+            #     offSpeed = self.panel.gps_v
+            #     # print(self.panel.gps_v)
+            #     # print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
+            #     # print("t:", t)
+            #     break
+
             # if self.panel.gps_v >= math.sqrt(desire_h * 2 * g) * 7.8 / 5.6:
             #     print(self.panel.gps_v)
             #     print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
@@ -308,21 +316,6 @@ class velocity_controller:
             #     print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
             #     print("t:",t)
             #     break
-
-            # print(self.robot.getTime() - startTime)
-            # if self.robot.getTime()-startTime>t0:
-            #     offSpeed = self.panel.gps_v
-            #     # print(self.panel.gps_v)
-            #     # print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
-            #     # print("t:", t)
-            #     break
-
-            if self.panel.gps_v >= opt_vel:
-                offSpeed = self.panel.gps_v
-                # print(self.panel.gps_v)
-                # print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
-                # print("t:", t)
-                break
 
         h_ref = self.panel.gps_y  # height, when jump starts
         h_max = -1  # height of the top point
