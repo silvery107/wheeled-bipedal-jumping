@@ -269,12 +269,13 @@ class velocity_controller:
             theta = math.pi - self.panel.encoder[2]  # angle between two legs
 
             if self.robot.getTime() > 3:
+                print("timeout 3 take-off")
                 break
 
             if self.Bayes_Jump:
                 torque = -(10 * a * t + 100 * b * t ** 2 + 1000 * c * t ** 3 + 10 * d)  # poly function
-                if self.panel.supervisorBodyVel[2] >= opt_vel:
-                    offSpeed = self.panel.supervisorBodyVel[2]
+                if self.panel.supervisorBodyVel[1] >= opt_vel:
+                    offSpeed = self.panel.supervisorBodyVel[1]
                     break
             elif self.Model_Jump:
                 torque = -((1 / t0 * 7.8 / 5 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb / math.cos(
@@ -284,8 +285,8 @@ class velocity_controller:
             else:
                 torque = -35
                 desire_v = math.sqrt(desire_h * 2 * g) * 7.8 / 5.6
-                if self.panel.supervisorBodyVel[2] >= desire_v:
-                    offSpeed = self.panel.supervisorBodyVel[2]
+                if self.panel.supervisorBodyVel[1] >= desire_v:
+                    offSpeed = self.panel.supervisorBodyVel[1]
                     break
 
             # print(self.robot.getTime() - startTime)
@@ -319,13 +320,15 @@ class velocity_controller:
 
             self.motors[2].setTorque(torque)
             self.motors[3].setTorque(torque)
-
+        print("t:",t)
+        print("takeoff speed:",self.panel.supervisorBodyVel[1])
         h_ref = self.WheelPos[1]  # height, when jump starts
         h_max = -1  # height of the top point
 
         # flight phase
         while 1:
             if self.robot.getTime() > 4:
+                print("timeout 4 flight")
                 break
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
@@ -363,6 +366,7 @@ class velocity_controller:
             self.sensor_update()
             self.screenShot("Touch")
             if self.robot.getTime() > 5:
+                print("timeout 5 landing")
                 break
             if self.panel.pitch > 0.15 * math.pi:
                 penalties[5] += 10 * square_penalize(self.panel.pitch - 0.15 * math.pi)
