@@ -236,7 +236,7 @@ class velocity_controller:
             self.screenShotCount += 1
         self.savePointPos()
 
-    def jump(self, params, desire_h=0.3):  # desire_h
+    def jump(self, params, desire_h=0.4):  # desire_h
         a = params["jump_a"]
         b = params["jump_b"]
         c = params["jump_c"]
@@ -255,6 +255,7 @@ class velocity_controller:
         count = 0
         energy = 0
         last_theta = math.pi - self.panel.encoder[2]
+
         penalties = [0, 0, 0, 0, 0,
                      0]  # torque <=0, torque >=-35, theta <=0.7pi, theta >=0.1pi, energy <=mgh, pitch <=0.15pi
 
@@ -280,8 +281,12 @@ class velocity_controller:
             elif self.Model_Jump:
                 torque = -((1 / t0 * 7.8 / 5 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb / math.cos(
                     theta / 2)  # torque based on model
-                if t >= t0:
+                desire_v = math.sqrt(desire_h * 2 * g) * 7.8 / 5.6
+                if self.panel.supervisorBodyVel[1] >= desire_v:
+                    offSpeed = self.panel.supervisorBodyVel[1]
                     break
+                # if t >= t0:
+                #     break
             else:
                 torque = -35
                 desire_v = math.sqrt(desire_h * 2 * g) * 7.8 / 5.6
@@ -309,19 +314,19 @@ class velocity_controller:
                 penalties[0] += 0.01 * square_penalize(torque)
             if torque < -35:
                 penalties[1] += 0.01 * square_penalize(-torque - 35)
-            if theta > math.pi * 0.7:
-                penalties[2] += 100 * square_penalize(theta - math.pi * 0.7)
+            # if theta > math.pi * 0.7:
+            #     penalties[2] += 100 * square_penalize(theta - math.pi * 0.7)
             if theta < math.pi * 0.1:
                 penalties[3] += 1000 * square_penalize(-theta + 0.1 * math.pi)
-            if theta > math.pi or theta <= 0:
+            if theta > math.pi * 0.7 or theta <= 0:
                 break
             energy += math.fabs(torque) * math.fabs(theta - last_theta)
             last_theta = theta
 
             self.motors[2].setTorque(torque)
             self.motors[3].setTorque(torque)
-        print("t:",t)
-        print("takeoff speed:",self.panel.supervisorBodyVel[1])
+        print("t:", t)
+        print("takeoff speed:", self.panel.supervisorBodyVel[1])
         h_ref = self.WheelPos[1]  # height, when jump starts
         h_max = -1  # height of the top point
 
