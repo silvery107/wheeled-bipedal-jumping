@@ -90,8 +90,8 @@ class panel:
 
         self.robot = robot
         self.BodyHeight = 0
-        self.bodyVelocity = [0, 0, 0]
 
+        self.supervisorBodyVel = 0
         # self.mb = 5
         # self.r = 0.05
         # self.g = 9.8
@@ -154,12 +154,12 @@ class panel:
 
     # Use Hip_pos temperily. Can try translation field later.
     def updateBodyHeight(self):
-        # self.BodyHeight = self.robot.getFromDef("LEFT_LEG").getPosition()
-        a = 1
+        self.BodyHeight = self.robot.getFromDef("LEFT_LEG").getPosition()
+        # a=1
+
+    def updateSupervisorBodyVel(self):
+        self.supervisorBodyVel = self.robot.getFromDef("hip_link").getVelocity()
+        # print(self.supervisorBodyVel)
 
     def getRotation(self):
         return self.rotation
-
-    def getUpV(self):
-        # self.bodyVelocity = self.robot.getVelocity()
-        pass
