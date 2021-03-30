@@ -92,6 +92,7 @@ class panel:
         self.BodyHeight = 0
 
         self.supervisorBodyVel = 0
+        self.WheelPos = 0
         # self.mb = 5
         # self.r = 0.05
         # self.g = 9.8
@@ -159,7 +160,10 @@ class panel:
 
     def updateSupervisorBodyVel(self):
         self.supervisorBodyVel = self.robot.getFromDef("hip_link").getVelocity()
-        # print(self.supervisorBodyVel)
+        #print(self.supervisorBodyVel)
+
+    def updateWheelPos(self):
+        self.WheelPos = self.robot.getFromDef("LEFTWHEEL").getPosition()
 
     def getRotation(self):
         return self.rotation
