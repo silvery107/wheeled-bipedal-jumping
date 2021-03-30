@@ -19,7 +19,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0 1 0 3.1415926
-  position 1.4 0.3 -6.83204
+  position 1.3999999376910437 0.3 -5.669338067092053
   follow "MiniNezha"
   followType "None"
   followSmoothness 0
@@ -99,7 +99,7 @@ DEF NeZha Robot {
                   HingeJoint {
                     jointParameters HingeJointParameters {
                       axis 0 0 1
-                      dampingConstant 0.2
+                      dampingConstant 0.1
                     }
                     device [
                       PositionSensor {
@@ -249,7 +249,7 @@ DEF NeZha Robot {
                   HingeJoint {
                     jointParameters HingeJointParameters {
                       axis 0 0 1
-                      dampingConstant 0.2
+                      dampingConstant 0.1
                     }
                     device [
                       PositionSensor {
