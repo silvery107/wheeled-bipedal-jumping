@@ -89,9 +89,6 @@ while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)
     vel.sensor_update()
-    if TIME > 5:
-        break
-
     # if fall_flag:
     #     if not restart_flag:
     #         restart_flag = vel.checkVel(0.005)
@@ -112,6 +109,8 @@ while robot.step(TIME_STEP) != -1:
     vel.isPrint = False
     vel.isPointPos = False
     vel.isScreenShot = False
+    if TIME > 5:
+        break
     if 0<TIME<0.5:
         vel.setHeight(0.2)
     if 0.5 <= TIME < 1.5:
@@ -124,6 +123,9 @@ while robot.step(TIME_STEP) != -1:
     else:
         key = mKeyboard.getKey()
         vel.keyboardControl(key, param_dic)
+    # key = mKeyboard.getKey()
+    # vel.keyboardControl(key,param_dic)
+    # vel.savePointPos()
 
 # metrics_dic["restart_metrics"] = restart_metrics
 metrics_dic["jump_metrics"] = jump_metrics

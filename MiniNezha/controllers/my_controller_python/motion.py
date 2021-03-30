@@ -240,7 +240,7 @@ class velocity_controller:
         c = params["jump_c"]
         d = params["jump_d"]
         opt_vel = params["opt_vel"]
-        t0 = 0.7  # desire time
+        t0 = 0.09  # desire time
         m = 7.8  # body mass
         mb = 5  # total mass
         l0 = 0.22  # leg length
@@ -254,6 +254,7 @@ class velocity_controller:
         last_theta = math.pi - self.panel.encoder[2]
         penalties = [0,0,0,0,0,0] # torque <=0, torque >=-35, theta <=0.7pi, theta >=0.1pi, energy <=mgh, pitch <=0.15pi
         # take off phase
+        startTime = self.robot.getTime()
         while 1:
             if self.robot.getTime() > 3:
                 break
@@ -264,6 +265,14 @@ class velocity_controller:
                 # print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
                 # print("t:", t)
                 break
+
+            # print(self.robot.getTime() - startTime)
+            # if self.robot.getTime()-startTime>t0:
+            #     offSpeed = self.panel.gps_v
+            #     # print(self.panel.gps_v)
+            #     # print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
+            #     # print("t:", t)
+            #     break
 
             # if self.panel.gps_v >= math.sqrt(desire_h * 2 * g) * 7.8 / 5.6:
             #     print(self.panel.gps_v)
@@ -280,9 +289,10 @@ class velocity_controller:
             self.screenShot("Jump")
             theta = math.pi - self.panel.encoder[2]  # angle between two legs
 
-            # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb * math.cos(theta / 2)  # torque based on model
+            # torque = -((1 / t0 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb / math.cos(theta / 2)  # torque based on model
             # torque = -35 # constant
             torque = -(10*a * t + 100*b * t**2 + 1000*c * t**3 + 10*d)  # poly function
+            # torque = -( a * t + 10 * b * t ** 2 + 100 * c * t ** 3 + d)  # poly function
             # torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
 
             if torque > 0:
@@ -300,6 +310,12 @@ class velocity_controller:
 
             self.motors[2].setTorque(torque)
             self.motors[3].setTorque(torque)
+
+            # if self.panel.gps_v >= math.sqrt(desire_h * 2 * g) * 7.8 / 5.6:
+            #     print(self.panel.gps_v)
+            #     print(math.sqrt(desire_h * 2 * g) * 7.8 / 5.6)
+            #     print("t:",t)
+            #     break
 
         h_ref = self.panel.gps_y  # height, when jump starts
         h_max = -1  # height of the top point
@@ -323,9 +339,10 @@ class velocity_controller:
 
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
         delta_w_h = (mb * offSpeed * 5 / 7.8 * offSpeed / 9.81 - 5 * delta_h) / 2
+        #print('Actual delta height: %3f' % delta_h)
+        #print('Actual wheel delta height: %3f' % delta_w_h)
         # print('h_ref :%3f' % h_ref)
-        # print('Actual height: %3f' % delta_h)
-        # print('Actual wheel height: %3f' % delta_w_h)
+
         energy_baseline = m*g*delta_h
         if energy > energy_baseline:
             penalties[4] = square_penalize(energy-energy_baseline)
@@ -333,7 +350,7 @@ class velocity_controller:
         # loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
         loss_height = math.fabs(delta_h - desire_h)
         loss = (loss_height * 1000)
-        
+
         # landing phase
         self.setHeight(0.3)
         while 1:
@@ -497,6 +514,7 @@ class velocity_controller:
         self.panel.updateDirection()
         self.panel.updateBodyHeight()
         self.panel.updateWheelVelocity()
+        self.panel.updateSupervisorBodyVel()
         self.panel.updateBodyVelocity(self.cur_height)
 
     def printX(self, string):
