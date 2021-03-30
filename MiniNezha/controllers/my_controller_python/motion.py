@@ -341,7 +341,7 @@ class velocity_controller:
                 break
 
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
-        print("wheel delta h: %.3f " % delta_h, 'h_ref: ', h_ref, 'h_max: ', h_max)
+        print("wheel delta h: %.3f " % delta_h)
         delta_w_h = (mb * offSpeed * 5 / 7.8 * offSpeed / 9.81 - 5 * delta_h) / 2
         # print('Actual delta height: %3f' % delta_h)
         # print('Actual wheel delta height: %3f' % delta_w_h)
