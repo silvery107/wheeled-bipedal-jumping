@@ -273,8 +273,8 @@ class velocity_controller:
 
             if self.Bayes_Jump:
                 torque = -(10 * a * t + 100 * b * t ** 2 + 1000 * c * t ** 3 + 10 * d)  # poly function
-                if self.panel.supervisorBodyVel[2] >= opt_vel:
-                    offSpeed = self.panel.supervisorBodyVel[2]
+                if self.panel.supervisorBodyVel[1] >= opt_vel:
+                    offSpeed = self.panel.supervisorBodyVel[1]
                     break
             elif self.Model_Jump:
                 torque = -((1 / t0 * 7.8 / 5 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb / math.cos(
@@ -284,8 +284,8 @@ class velocity_controller:
             else:
                 torque = -35
                 desire_v = math.sqrt(desire_h * 2 * g) * 7.8 / 5.6
-                if self.panel.supervisorBodyVel[2] >= desire_v:
-                    offSpeed = self.panel.supervisorBodyVel[2]
+                if self.panel.supervisorBodyVel[1] >= desire_v:
+                    offSpeed = self.panel.supervisorBodyVel[1]
                     break
 
             # print(self.robot.getTime() - startTime)
@@ -312,14 +312,15 @@ class velocity_controller:
                 penalties[2] += 100 * square_penalize(theta - math.pi * 0.7)
             if theta < math.pi * 0.1:
                 penalties[3] += 1000 * square_penalize(-theta + 0.1 * math.pi)
-            if theta > math.pi or theta <= 0:
-                break
+            # if theta > math.pi*0.7 or theta <= 0:
+            #     break
             energy += math.fabs(torque) * math.fabs(theta - last_theta)
             last_theta = theta
 
             self.motors[2].setTorque(torque)
             self.motors[3].setTorque(torque)
-
+        print("t:",t)
+        print("takeoff speed:",self.panel.supervisorBodyVel[1])
         h_ref = self.WheelPos[1]  # height, when jump starts
         h_max = -1  # height of the top point
 
