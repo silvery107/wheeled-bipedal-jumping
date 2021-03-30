@@ -107,8 +107,10 @@ while robot.step(TIME_STEP) != -1:
     #     vel.keyboardControl(key,param_dic)
     #     fall_flag = not vel.checkPitch(30)
     vel.isPrint = False
-    vel.isPointPos = False
+    vel.isPointPos = True
     vel.isScreenShot = False
+    vel.Bayes_Jump = 0
+    vel.Model_Jump = 1
     if TIME > 5:
         break
     if 0 < TIME < 0.5:
@@ -118,7 +120,7 @@ while robot.step(TIME_STEP) != -1:
     elif 1.5 <= TIME < 1.6:
         vel.setXVel(0)
     elif TIME >= 1.6 and jump_metrics == 9999:
-        jump_metrics = vel.jump(param_dic, 0.3)
+        jump_metrics = vel.jump(param_dic)
         # break
     else:
         key = mKeyboard.getKey()
@@ -126,7 +128,6 @@ while robot.step(TIME_STEP) != -1:
     # key = mKeyboard.getKey()
     # vel.keyboardControl(key,param_dic)
     # vel.savePointPos()
-
 
 # metrics_dic["restart_metrics"] = restart_metrics
 metrics_dic["jump_metrics"] = jump_metrics
