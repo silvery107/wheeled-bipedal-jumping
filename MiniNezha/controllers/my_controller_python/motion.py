@@ -236,7 +236,7 @@ class velocity_controller:
             self.screenShotCount += 1
         self.savePointPos()
 
-    def jump(self, params, desire_h=0.4):  # desire_h
+    def jump(self, params, desire_h=0.3):  # desire_h
         a = params["jump_a"]
         b = params["jump_b"]
         c = params["jump_c"]
@@ -255,7 +255,6 @@ class velocity_controller:
         count = 0
         energy = 0
         last_theta = math.pi - self.panel.encoder[2]
-
         penalties = [0, 0, 0, 0, 0,
                      0]  # torque <=0, torque >=-35, theta <=0.7pi, theta >=0.1pi, energy <=mgh, pitch <=0.15pi
 
@@ -285,8 +284,6 @@ class velocity_controller:
                 if self.panel.supervisorBodyVel[1] >= desire_v:
                     offSpeed = self.panel.supervisorBodyVel[1]
                     break
-                # if t >= t0:
-                #     break
             else:
                 torque = -35
                 desire_v = math.sqrt(desire_h * 2 * g) * 7.8 / 5.6
@@ -311,15 +308,16 @@ class velocity_controller:
             # torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
 
             if torque > 0:
-                penalties[0] += 0.01 * square_penalize(torque)
+                penalties[0] += 0.1 * square_penalize(torque)
             if torque < -35:
-                penalties[1] += 0.01 * square_penalize(-torque - 35)
-            # if theta > math.pi * 0.7:
-            #     penalties[2] += 100 * square_penalize(theta - math.pi * 0.7)
+                penalties[1] += 0.1 * square_penalize(-torque - 35)
+            if theta > math.pi * 0.7:
+                penalties[2] += 100 * square_penalize(theta - math.pi * 0.7)
             if theta < math.pi * 0.1:
                 penalties[3] += 1000 * square_penalize(-theta + 0.1 * math.pi)
-            if theta > math.pi * 0.7 or theta <= 0:
-                break
+            if theta > math.pi or theta <= 0:
+                break  
+            
             energy += math.fabs(torque) * math.fabs(theta - last_theta)
             last_theta = theta
 
@@ -349,7 +347,7 @@ class velocity_controller:
                 break
 
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
-        print("wheel delta h: %.3f " % delta_h)
+        print("wheel delta h: %.3f " % delta_h, 'h_ref: ', h_ref, 'h_max: ', h_max)
         delta_w_h = (mb * offSpeed * 5 / 7.8 * offSpeed / 9.81 - 5 * delta_h) / 2
         # print('Actual delta height: %3f' % delta_h)
         # print('Actual wheel delta height: %3f' % delta_w_h)
