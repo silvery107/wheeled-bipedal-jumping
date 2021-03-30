@@ -140,4 +140,4 @@ metrics_dic["jump_metrics"] = jump_metrics
 with open("./metrics.txt", 'w') as metrics:
     metrics.write(str(metrics_dic))
 
-# robot.simulationQuit(0)
+robot.simulationQuit(0)
