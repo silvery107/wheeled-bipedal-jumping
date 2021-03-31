@@ -61,7 +61,7 @@ class drawer:
         #plt.plot(dates, lows, c='blue')
 
         # 设置图形格式
-        title = "Wheel trajectory"+str(self.height)
+        title = "Wheel trajectory"+str(self.height)+'_'+str(self.line)
         plt.title(title, fontsize=24)
         plt.xlabel('Time', fontsize=16)
         fig.autofmt_xdate()  # 绘制斜的日期标签，以免它们彼此重叠

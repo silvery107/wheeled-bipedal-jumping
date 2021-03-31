@@ -88,7 +88,7 @@ vel.setXVel(0.0)
 # restart_metrics = 99999
 jump_metrics = 9999
 
-dataDrawer.changeArgs(0.3,2)
+dataDrawer.changeArgs(0.3,3)
 vel.filename = 'WheelPos'+str(dataDrawer.height)+'_'+str(dataDrawer.line)+'.txt'
 dataDrawer.fileName=vel.filename
 
