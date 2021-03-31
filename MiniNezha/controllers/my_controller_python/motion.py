@@ -237,7 +237,7 @@ class velocity_controller:
             self.screenShotCount += 1
         self.savePointPos()
 
-    def jump(self, params, desire_h=0.3):  # desire_h
+    def jump(self, params, desire_h):  # desire_h
         a = params["jump_a"]
         b = params["jump_b"]
         c = params["jump_c"]
@@ -262,7 +262,7 @@ class velocity_controller:
                      0]  # torque <=0, torque >=-35, theta <=0.7pi, theta >=0.1pi, energy <=mgh, pitch <=0.15pi
 
         # take off phase
-        startTime = self.robot.getTime()
+        # startTime = self.robot.getTime()
         h_ref = self.panel.WheelPos[1]  # height, when jump starts
         while 1:
             count += 1
@@ -350,7 +350,7 @@ class velocity_controller:
                 break
 
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
-        print("wheel delta h: %.3f " % delta_h, 'h_ref: ', h_ref, 'h_max: ', h_max)
+        print("wheel delta h: %.5f " % delta_h, 'h_ref: ', h_ref, 'h_max: ', h_max)
         delta_w_h = (mb * offSpeed * 5 / 7.8 * offSpeed / 9.81 - 5 * delta_h) / 2
         # print('Actual delta height: %3f' % delta_h)
         # print('Actual wheel delta height: %3f' % delta_w_h)
@@ -363,7 +363,7 @@ class velocity_controller:
 
         # loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
         loss_height = math.fabs(delta_h - desire_h)
-        loss = loss_height * 1000 + energy
+        loss = loss_height * 2000 + energy
 
         # landing phase
         self.setHeight(0.3)

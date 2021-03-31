@@ -23,7 +23,7 @@ class drawer:
         elif height == 0.3:
             csvName = 'args_16.684-h=0.3.csv'
         elif height == 0.4:
-            csvName = 'args_24.735-h=0.4.csv'
+            csvName = 'args_20.788-h=0.4.csv'
         else:
             csvName = ''
         with open(csvName, 'r') as csvfile:
