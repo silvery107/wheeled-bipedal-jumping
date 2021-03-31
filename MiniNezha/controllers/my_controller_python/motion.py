@@ -262,8 +262,8 @@ class velocity_controller:
                      0]  # torque <=0, torque >=-35, theta <=0.7pi, theta >=0.1pi, energy <=mgh, pitch <=0.15pi
 
         # take off phase
-        startTime = self.robot.getTime()
-
+        # startTime = self.robot.getTime()
+        h_ref = self.panel.WheelPos[1]  # height, when jump starts
         while 1:
             count += 1
             t = count * self.TIME_STEP * 0.001
@@ -327,7 +327,6 @@ class velocity_controller:
 
             self.motors[2].setTorque(torque)
             self.motors[3].setTorque(torque)
-        h_ref = self.panel.WheelPos[1]  # height, when jump starts
         print("t:", t)
         print("takeoff speed:", self.panel.supervisorBodyVel[1])
         h_max = -1  # height of the top point
@@ -364,7 +363,7 @@ class velocity_controller:
 
         # loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
         loss_height = math.fabs(delta_h - desire_h)
-        loss = loss_height * 1000 + energy
+        loss = loss_height * 2000 + energy
 
         # landing phase
         self.setHeight(0.3)
