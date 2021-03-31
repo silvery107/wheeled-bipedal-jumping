@@ -71,10 +71,6 @@ motors[5].enableTorqueFeedback(TIME_STEP)
 brakes.append(motors[4].getBrake())
 brakes.append(motors[5].getBrake())
 
-metrics_dic = dict()
-with open("./args.txt", 'r') as args:
-    param_dic = eval(args.read())
-
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors, robot)
 vel = velocity_controller(motors, panel, robot)
@@ -94,6 +90,9 @@ dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer
 vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
 dataDrawer.txtFileName= vel.filename
 
+metrics_dic = dict()
+with open("./args.txt", 'r') as args:
+    param_dic = eval(args.read())
 
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
@@ -118,7 +117,7 @@ while robot.step(TIME_STEP) != -1:
     #     fall_flag = not vel.checkPitch(30)
     vel.isPrint = False
     vel.isPointPos = True
-    vel.isScreenShot = False
+    vel.isScreenShot = True
     vel.Bayes_Jump = 1
     vel.Model_Jump = 0
     if TIME > 5:

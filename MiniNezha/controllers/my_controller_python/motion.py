@@ -230,7 +230,7 @@ class velocity_controller:
 
     def screenShot(self, filetype, quality=100):
         if self.isScreenShot:
-            if self.screenShotCount % 16 == 0:
+            if self.screenShotCount % 64 == 0:
                 file_str = "../../screenshot/" + filetype + str(self.imageCount) + ".jpg"
                 self.robot.exportImage(file_str, quality)
                 self.imageCount += 1
