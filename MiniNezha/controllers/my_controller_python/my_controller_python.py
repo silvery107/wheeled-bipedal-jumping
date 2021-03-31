@@ -9,6 +9,7 @@ from controller import Keyboard
 from PID_control import *
 from motion import *
 from panel import *
+from drawData import drawer
 import os
 import sys
 import time
@@ -77,6 +78,7 @@ with open("./args.txt", 'r') as args:
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors, robot)
 vel = velocity_controller(motors, panel, robot)
+dataDrawer = drawer()
 
 vel.setHeight(0.3)
 vel.setXVel(0.0)
@@ -85,6 +87,11 @@ vel.setXVel(0.0)
 # restart_time0 = 0
 # restart_metrics = 99999
 jump_metrics = 9999
+
+dataDrawer.changeArgs(0.3,2)
+vel.filename = 'WheelPos'+str(dataDrawer.height)+'_'+str(dataDrawer.line)+'.txt'
+dataDrawer.fileName=vel.filename
+
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
     # vel.showMsg(TIME)
@@ -107,12 +114,12 @@ while robot.step(TIME_STEP) != -1:
     #     vel.keyboardControl(key,param_dic)
     #     fall_flag = not vel.checkPitch(30)
     vel.isPrint = False
-    vel.isPointPos = False
+    vel.isPointPos = True
     vel.isScreenShot = False
     vel.Bayes_Jump = 1
     vel.Model_Jump = 0
-    if TIME > 5:
-        break
+    # if TIME > 5:
+    #     break
     if 0 < TIME < 0.5:
         vel.setHeight(0.2)
         vel.savePointPos()
@@ -123,7 +130,7 @@ while robot.step(TIME_STEP) != -1:
         vel.setXVel(0)
         vel.savePointPos()
     elif TIME >= 1.6 and jump_metrics == 9999:
-        jump_metrics = vel.jump(param_dic)
+        jump_metrics = vel.jump(param_dic,dataDrawer.height)
         vel.savePointPos()
         # break
     else:

@@ -65,6 +65,8 @@ class velocity_controller:
         self.Bayes_Jump = False
         self.Model_Jump = False
 
+        self.time = 0
+        self.filename=''
     def calc_balance_angle_1(self, h):
         '''
         legs without mass
@@ -218,13 +220,13 @@ class velocity_controller:
         # \Webots\projects\samples\howto\worlds\supervisor_trail.wbt
         # https://cyberbotics.com/doc/guide/supervisor-programming?tab-language=python
         if self.isPointPos:
-            TIME = self.robot.getTime()
-            file_handle = open('WheelPos.txt', mode='a')
+            TIME = self.time
+            file_handle = open(self.filename, mode='a')
             file_handle.writelines([str(TIME),',',str(self.panel.WheelPos[1]),'\n'])
             file_handle.close()
-            file_handle = open('BodyHeight.txt', mode='a')
-            file_handle.writelines([str(TIME), ',', str(self.panel.BodyHeight[1]), '\n'])
-            file_handle.close()
+            # file_handle = open('BodyHeight.txt', mode='a')
+            # file_handle.writelines([str(TIME), ',', str(self.panel.BodyHeight[1]), '\n'])
+            # file_handle.close()
 
     def screenShot(self, filetype, quality=100):
         if self.isScreenShot:
@@ -528,6 +530,7 @@ class velocity_controller:
         self.panel.updateDirection()
         self.panel.updateBodyHeight()
         self.panel.updateWheelVelocity()
+        self.time = self.robot.getTime()
         self.panel.updateSupervisorBodyVel()
         self.panel.updateBodyVelocity(self.cur_height)
 
