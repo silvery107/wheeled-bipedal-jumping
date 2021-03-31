@@ -88,9 +88,12 @@ vel.setXVel(0.0)
 # restart_metrics = 99999
 jump_metrics = 9999
 
-dataDrawer.changeArgs(0.4,1)
-vel.filename = 'WheelPos'+str(dataDrawer.height)+'_'+str(dataDrawer.line)+'.txt'
-dataDrawer.fileName=vel.filename
+dataDrawer.changeArgs(0.4, 2)
+
+dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
+vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
+dataDrawer.txtFileName= vel.filename
+
 
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
@@ -115,7 +118,7 @@ while robot.step(TIME_STEP) != -1:
     #     fall_flag = not vel.checkPitch(30)
     vel.isPrint = False
     vel.isPointPos = True
-    vel.isScreenShot = True
+    vel.isScreenShot = False
     vel.Bayes_Jump = 1
     vel.Model_Jump = 0
     if TIME > 5:
@@ -130,7 +133,7 @@ while robot.step(TIME_STEP) != -1:
         vel.setXVel(0)
         vel.screenShot("Start")
     elif TIME >= 1.6 and jump_metrics == 9999:
-        jump_metrics = vel.jump(param_dic,dataDrawer.height)
+        jump_metrics = vel.jump(param_dic, dataDrawer.height)
         vel.screenShot("Jump")
         # break
     else:
