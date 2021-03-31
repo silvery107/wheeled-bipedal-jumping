@@ -163,7 +163,7 @@ class panel:
         #print(self.supervisorBodyVel)
 
     def updateWheelPos(self):
-        self.WheelPos = self.robot.getFromDef("LEFTWHEEL").getPosition()
+        self.WheelPos = self.robot.getFromDef("REALLEFTWHEEL").getPosition()
 
     def getRotation(self):
         return self.rotation

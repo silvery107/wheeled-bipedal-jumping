@@ -222,7 +222,7 @@ class velocity_controller:
         if self.isPointPos:
             TIME = self.time
             file_handle = open(self.filename, mode='a')
-            file_handle.writelines([str(TIME),',',str(self.panel.WheelPos[1]-0.1),'\n'])
+            file_handle.writelines([str(TIME),',',str(self.panel.WheelPos[1]-0.05),'\n'])
             file_handle.close()
             # file_handle = open('BodyHeight.txt', mode='a')
             # file_handle.writelines([str(TIME), ',', str(self.panel.BodyHeight[1]), '\n'])
@@ -230,7 +230,7 @@ class velocity_controller:
 
     def screenShot(self, filetype, quality=100):
         if self.isScreenShot:
-            if self.screenShotCount % 4 == 0:
+            if self.screenShotCount % 16 == 0:
                 file_str = "../../screenshot/" + filetype + str(self.imageCount) + ".jpg"
                 self.robot.exportImage(file_str, quality)
                 self.imageCount += 1

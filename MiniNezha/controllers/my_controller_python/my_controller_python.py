@@ -88,7 +88,7 @@ vel.setXVel(0.0)
 # restart_metrics = 99999
 jump_metrics = 9999
 
-dataDrawer.changeArgs(0.3,3)
+dataDrawer.changeArgs(0.4,1)
 vel.filename = 'WheelPos'+str(dataDrawer.height)+'_'+str(dataDrawer.line)+'.txt'
 dataDrawer.fileName=vel.filename
 
@@ -115,26 +115,26 @@ while robot.step(TIME_STEP) != -1:
     #     fall_flag = not vel.checkPitch(30)
     vel.isPrint = False
     vel.isPointPos = True
-    vel.isScreenShot = False
+    vel.isScreenShot = True
     vel.Bayes_Jump = 1
     vel.Model_Jump = 0
     if TIME > 5:
         break
     if 0 < TIME < 0.5:
         vel.setHeight(0.2)
-        vel.savePointPos()
+        vel.screenShot("Start")
     if 0.5 <= TIME < 1.5:
         vel.setXVel(3)
-        vel.savePointPos()
+        vel.screenShot("Start")
     elif 1.5 <= TIME < 1.6:
         vel.setXVel(0)
-        vel.savePointPos()
+        vel.screenShot("Start")
     elif TIME >= 1.6 and jump_metrics == 9999:
         jump_metrics = vel.jump(param_dic,dataDrawer.height)
-        vel.savePointPos()
+        vel.screenShot("Jump")
         # break
     else:
-        vel.savePointPos()
+        vel.screenShot("Land")
         key = mKeyboard.getKey()
         vel.keyboardControl(key, param_dic)
     # key = mKeyboard.getKey()
@@ -149,4 +149,4 @@ with open("./metrics.txt", 'w') as metrics:
 
 dataDrawer.drawData()
 
-robot.simulationQuit(0)
+# robot.simulationQuit(0)
