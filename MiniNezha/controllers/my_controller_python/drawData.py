@@ -49,10 +49,10 @@ class drawer:
             times,wheelHeights = [], []
             for row in reader:
 
-                time = int(row[0])
+                time = float(row[0])
                 times.append(time)
 
-                wheelHeight = int(row[1])
+                wheelHeight = float(row[1])
                 wheelHeights.append(wheelHeight)
 
         # 根据数据绘制图形
@@ -61,12 +61,14 @@ class drawer:
         #plt.plot(dates, lows, c='blue')
 
         # 设置图形格式
-        plt.title("Daily high and low temperatures - 2014", fontsize=24)
-        plt.xlabel('', fontsize=16)
+        title = "Wheel trajectory"+str(self.height)
+        plt.title(title, fontsize=24)
+        plt.xlabel('Time', fontsize=16)
         fig.autofmt_xdate()  # 绘制斜的日期标签，以免它们彼此重叠
-        plt.ylabel("Temperture (F)", fontsize=16)
+        plt.ylabel("Wheel Height", fontsize=16)
         plt.tick_params(axis='both', which='major', labelsize=16)
 
         plt.show()
-        plt.savefig("tmp3.png", bbox_inches='tight')
+        figureName = self.fileName+".png"
+        plt.savefig(figureName, bbox_inches='tight')
 

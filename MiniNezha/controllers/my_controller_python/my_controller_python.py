@@ -118,8 +118,8 @@ while robot.step(TIME_STEP) != -1:
     vel.isScreenShot = False
     vel.Bayes_Jump = 1
     vel.Model_Jump = 0
-    # if TIME > 5:
-    #     break
+    if TIME > 5:
+        break
     if 0 < TIME < 0.5:
         vel.setHeight(0.2)
         vel.savePointPos()
@@ -146,5 +146,7 @@ metrics_dic["jump_metrics"] = jump_metrics
 
 with open("./metrics.txt", 'w') as metrics:
     metrics.write(str(metrics_dic))
+
+dataDrawer.drawData()
 
 robot.simulationQuit(0)
