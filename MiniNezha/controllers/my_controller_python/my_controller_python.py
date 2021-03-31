@@ -115,14 +115,19 @@ while robot.step(TIME_STEP) != -1:
         break
     if 0 < TIME < 0.5:
         vel.setHeight(0.2)
+        vel.savePointPos()
     if 0.5 <= TIME < 1.5:
         vel.setXVel(3)
+        vel.savePointPos()
     elif 1.5 <= TIME < 1.6:
         vel.setXVel(0)
+        vel.savePointPos()
     elif TIME >= 1.6 and jump_metrics == 9999:
         jump_metrics = vel.jump(param_dic)
+        vel.savePointPos()
         # break
     else:
+        vel.savePointPos()
         key = mKeyboard.getKey()
         vel.keyboardControl(key, param_dic)
     # key = mKeyboard.getKey()

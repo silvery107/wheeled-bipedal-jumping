@@ -218,10 +218,13 @@ class velocity_controller:
         # \Webots\projects\samples\howto\worlds\supervisor_trail.wbt
         # https://cyberbotics.com/doc/guide/supervisor-programming?tab-language=python
         if self.isPointPos:
-            a = 1
-            # file_handle = open('WheelPos.txt', mode='a')
-            # file_handle.writelines([str(TIME),',',str(self.WheelPos),',',str(self.panel.bodyVel), ',', str(self.panel.gps_v), '\n'])
-            # file_handle.close()
+            TIME = self.robot.getTime()
+            file_handle = open('WheelPos.txt', mode='a')
+            file_handle.writelines([str(TIME),',',str(self.panel.WheelPos[1]),'\n'])
+            file_handle.close()
+            file_handle = open('BodyHeight.txt', mode='a')
+            file_handle.writelines([str(TIME), ',', str(self.panel.BodyHeight[1]), '\n'])
+            file_handle.close()
 
     def screenShot(self, filetype, quality=100):
         if self.isScreenShot:
