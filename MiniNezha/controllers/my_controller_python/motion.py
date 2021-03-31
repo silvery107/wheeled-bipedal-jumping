@@ -237,7 +237,7 @@ class velocity_controller:
             self.screenShotCount += 1
         self.savePointPos()
 
-    def jump(self, params, desire_h=0.3):  # desire_h
+    def jump(self, params, desire_h):  # desire_h
         a = params["jump_a"]
         b = params["jump_b"]
         c = params["jump_c"]
@@ -263,7 +263,7 @@ class velocity_controller:
 
         # take off phase
         startTime = self.robot.getTime()
-        h_ref = self.panel.WheelPos[1]  # height, when jump starts
+
         while 1:
             count += 1
             t = count * self.TIME_STEP * 0.001
@@ -327,6 +327,7 @@ class velocity_controller:
 
             self.motors[2].setTorque(torque)
             self.motors[3].setTorque(torque)
+        h_ref = self.panel.WheelPos[1]  # height, when jump starts
         print("t:", t)
         print("takeoff speed:", self.panel.supervisorBodyVel[1])
         h_max = -1  # height of the top point
@@ -350,7 +351,7 @@ class velocity_controller:
                 break
 
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
-        print("wheel delta h: %.3f " % delta_h, 'h_ref: ', h_ref, 'h_max: ', h_max)
+        print("wheel delta h: %.5f " % delta_h, 'h_ref: ', h_ref, 'h_max: ', h_max)
         delta_w_h = (mb * offSpeed * 5 / 7.8 * offSpeed / 9.81 - 5 * delta_h) / 2
         # print('Actual delta height: %3f' % delta_h)
         # print('Actual wheel delta height: %3f' % delta_w_h)

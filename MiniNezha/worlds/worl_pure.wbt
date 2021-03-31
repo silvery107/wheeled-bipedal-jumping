@@ -19,7 +19,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0 1 0 3.1415926
-  position 1.4 0.3 -6.83204
+  position 1.2 0.3 -6.83204
   follow "MiniNezha"
   followType "None"
   followSmoothness 0
@@ -389,35 +389,4 @@ DEF NeZha Robot {
   }
   controller "my_controller_python"
   supervisor TRUE
-}
-Robot {
-  translation 0 0.02 0
-  children [
-    DEF ground_touch Shape {
-      appearance PBRAppearance {
-      }
-      geometry Box {
-        size 5 0.04 2
-      }
-    }
-    TouchSensor {
-      translation 0 0.02 0
-      name "ground_touch_sensor"
-      boundingObject Box {
-        size 5 0.005 2
-      }
-      physics Physics {
-        density -1
-        mass 1
-      }
-      type "force-3d"
-      lookupTable []
-    }
-  ]
-  boundingObject USE ground_touch
-  physics Physics {
-    density -1
-    mass 1
-  }
-  controller "ground"
 }

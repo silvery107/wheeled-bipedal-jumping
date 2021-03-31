@@ -84,7 +84,7 @@ vel.setXVel(0.0)
 # restart_metrics = 99999
 jump_metrics = 9999
 
-dataDrawer.changeArgs(0.4, 2)
+dataDrawer.changeArgs(0.3, 1)
 
 dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
 vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
@@ -117,7 +117,7 @@ while robot.step(TIME_STEP) != -1:
     #     fall_flag = not vel.checkPitch(30)
     vel.isPrint = False
     vel.isPointPos = True
-    vel.isScreenShot = True
+    vel.isScreenShot = False
     vel.Bayes_Jump = 1
     vel.Model_Jump = 0
     if TIME > 5:

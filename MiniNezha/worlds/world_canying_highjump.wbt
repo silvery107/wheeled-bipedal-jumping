@@ -155,7 +155,7 @@ DEF NeZha Robot {
                                   maxTorque 35
                                 }
                               ]
-                              endPoint Solid {
+                              endPoint DEF REALLEFTWHEEL Solid {
                                 translation 0 -0.11 -0.025000000000000015
                                 rotation 1 7.853589927914979e-17 -7.853589927914979e-17 1.57
                                 children [
@@ -393,48 +393,17 @@ DEF NeZha Robot {
   supervisor TRUE
 }
 Solid {
-  translation 1.42 0.1 -1.6
+  translation 1.42 0.15 -1.6
   children [
     DEF block Shape {
       appearance Appearance {
       }
       geometry Box {
-        size 0.1 0.2 1
+        size 0.1 0.3 1
       }
     }
   ]
   boundingObject USE block
   physics Physics {
   }
-}
-Robot {
-  translation 0 0.02 0
-  children [
-    DEF ground_touch Shape {
-      appearance PBRAppearance {
-      }
-      geometry Box {
-        size 5 0.04 2
-      }
-    }
-    TouchSensor {
-      translation 0 0.02 0
-      name "ground_touch_sensor"
-      boundingObject Box {
-        size 5 0.005 2
-      }
-      physics Physics {
-        density -1
-        mass 1
-      }
-      type "force-3d"
-      lookupTable []
-    }
-  ]
-  boundingObject USE ground_touch
-  physics Physics {
-    density -1
-    mass 1
-  }
-  controller "ground"
 }
