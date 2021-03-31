@@ -222,7 +222,7 @@ class velocity_controller:
         if self.isPointPos:
             TIME = self.time
             file_handle = open(self.filename, mode='a')
-            file_handle.writelines([str(TIME),',',str(self.panel.WheelPos[1]),'\n'])
+            file_handle.writelines([str(TIME),',',str(self.panel.WheelPos[1]-0.1),'\n'])
             file_handle.close()
             # file_handle = open('BodyHeight.txt', mode='a')
             # file_handle.writelines([str(TIME), ',', str(self.panel.BodyHeight[1]), '\n'])
@@ -263,6 +263,7 @@ class velocity_controller:
 
         # take off phase
         startTime = self.robot.getTime()
+        h_ref = self.panel.WheelPos[1]  # height, when jump starts
         while 1:
             count += 1
             t = count * self.TIME_STEP * 0.001
@@ -328,7 +329,6 @@ class velocity_controller:
             self.motors[3].setTorque(torque)
         print("t:", t)
         print("takeoff speed:", self.panel.supervisorBodyVel[1])
-        h_ref = self.panel.WheelPos[1]  # height, when jump starts
         h_max = -1  # height of the top point
 
         # flight phase
