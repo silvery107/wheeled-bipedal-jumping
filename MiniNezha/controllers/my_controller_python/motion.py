@@ -66,7 +66,8 @@ class velocity_controller:
         self.Model_Jump = False
 
         self.time = 0
-        self.filename=''
+        self.filename = ''
+
     def calc_balance_angle_1(self, h):
         '''
         legs without mass
@@ -222,7 +223,8 @@ class velocity_controller:
         if self.isPointPos:
             TIME = self.time
             file_handle = open(self.filename, mode='a')
-            file_handle.writelines([str(TIME),',',str(self.panel.WheelPos[1]-0.05),',',str(self.panel.WheelPos[0]),'\n'])
+            file_handle.writelines(
+                [str(TIME), ',', str(self.panel.WheelPos[1] - 0.05), ',', str(self.panel.WheelPos[0]), '\n'])
             file_handle.close()
             # file_handle = open('BodyHeight.txt', mode='a')
             # file_handle.writelines([str(TIME), ',', str(self.panel.BodyHeight[1]), '\n'])
@@ -248,6 +250,7 @@ class velocity_controller:
         mb = 5  # total mass
         l0 = 0.22  # leg length
         g = 9.81
+        desire_h = 0.1
 
         self.motors[0].setTorque(0.05)  # make base floating and no over rotating
         self.motors[1].setTorque(0.05)
@@ -282,12 +285,16 @@ class velocity_controller:
                     offSpeed = self.panel.supervisorBodyVel[1]
                     break
             elif self.Model_Jump:
-                torque = -((1 / t0 * 7.8 / 5 * math.sqrt(2 * desire_h / m)) + g) * l0 * mb / math.cos(
-                    theta / 2)  # torque based on model
-                desire_v = math.sqrt(desire_h * 2 * g) * 7.8 / 5.6
-                if self.panel.supervisorBodyVel[1] >= desire_v:
-                    offSpeed = self.panel.supervisorBodyVel[1]
+                torque = -((1 / t0 * 7.8 / 5.6 * math.sqrt(2 * g * desire_h)) + g) * l0 * mb * math.cos(
+                    theta / 2)/2  # torque based on model
+                if torque <= -35:
+                    torque = -35
+                if t >= t0:
                     break
+                # desire_v = math.sqrt(desire_h * 2 * g) * 7.8 / 5.6
+                # if self.panel.supervisorBodyVel[1] >= desire_v:
+                #     offSpeed = self.panel.supervisorBodyVel[1]
+                #     break
             else:
                 torque = -35
                 desire_v = math.sqrt(desire_h * 2 * g) * 7.8 / 5.6
@@ -320,8 +327,8 @@ class velocity_controller:
             if theta < math.pi * 0.1:
                 penalties[3] += 1000 * square_penalize(-theta + 0.1 * math.pi)
             if theta > math.pi or theta <= 0:
-                break  
-            
+                break
+
             energy += math.fabs(torque) * math.fabs(theta - last_theta)
             last_theta = theta
 
