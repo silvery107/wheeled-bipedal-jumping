@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.7
+#!/home/silvery/anaconda3/envs/webots/bin/python
 # -*- coding: UTF-8 -*-
 """my_controller_python controller."""
 
@@ -74,7 +74,6 @@ brakes.append(motors[5].getBrake())
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors, robot)
 vel = velocity_controller(motors, panel, robot)
-dataDrawer = drawer()
 
 vel.setHeight(0.3)
 vel.setXVel(0.0)
@@ -84,11 +83,14 @@ vel.setXVel(0.0)
 # restart_metrics = 99999
 jump_metrics = 9999
 
-dataDrawer.changeArgs(0.3, 1)
 
-dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
-vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
-dataDrawer.txtFileName= vel.filename
+isTraining = True
+if not isTraining:
+    dataDrawer = drawer()
+    dataDrawer.changeArgs(0.2, 4)
+    dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
+    vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
+    dataDrawer.txtFileName= vel.filename
 
 metrics_dic = dict()
 with open("./args.txt", 'r') as args:
@@ -116,7 +118,7 @@ while robot.step(TIME_STEP) != -1:
     #     vel.keyboardControl(key,param_dic)
     #     fall_flag = not vel.checkPitch(30)
     vel.isPrint = False
-    vel.isPointPos = True
+    vel.isPointPos = False
     vel.isScreenShot = False
     vel.Bayes_Jump = 1
     vel.Model_Jump = 0
@@ -132,7 +134,7 @@ while robot.step(TIME_STEP) != -1:
         vel.setXVel(0)
         vel.screenShot("Start")
     elif TIME >= 1.6 and jump_metrics == 9999:
-        jump_metrics = vel.jump(param_dic, dataDrawer.height)
+        jump_metrics = vel.jump(param_dic, 0.2)
         vel.screenShot("Jump")
         # break
     else:
@@ -149,6 +151,6 @@ metrics_dic["jump_metrics"] = jump_metrics
 with open("./metrics.txt", 'w') as metrics:
     metrics.write(str(metrics_dic))
 
-dataDrawer.drawData()
+# dataDrawer.drawData()
 
-# robot.simulationQuit(0)
+robot.simulationQuit(0)
