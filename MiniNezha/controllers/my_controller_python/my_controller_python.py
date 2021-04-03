@@ -76,7 +76,7 @@ panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors, robot)
 vel = velocity_controller(motors, panel, robot)
 dataDrawer = drawer()
 
-vel.setHeight(0.3)
+vel.setHeight(0.4)
 vel.setXVel(0.0)
 # fall_flag = False
 # restart_flag = False
@@ -84,11 +84,11 @@ vel.setXVel(0.0)
 # restart_metrics = 99999
 jump_metrics = 9999
 
-dataDrawer.changeArgs(0.3, 1)
+dataDrawer.changeArgs(0.4, 3)
 
 dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
 vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
-dataDrawer.txtFileName= vel.filename
+dataDrawer.txtFileName = vel.filename
 
 metrics_dic = dict()
 with open("./args.txt", 'r') as args:
@@ -119,19 +119,24 @@ while robot.step(TIME_STEP) != -1:
     vel.isPointPos = True
     vel.isScreenShot = False
     vel.Bayes_Jump = 0
-    vel.Model_Jump = 1
+    vel.W_SLIP_Model_Jump = 1
+    vel.Time_Based_Jump = 0
     if TIME > 5:
         break
     if 0 < TIME < 0.5:
-        vel.setHeight(0.2)
+        if vel.W_SLIP_Model_Jump:
+            l_low = vel.obtain_delta_L_for_W_SLIP(dataDrawer.height)
+            vel.setHeight(l_low)
+        else:
+            vel.setHeight(0.2)
         vel.screenShot("Start")
     if 0.5 <= TIME < 1.5:
         vel.setXVel(3)
         vel.screenShot("Start")
-    elif 1.5 <= TIME < 1.6:
+    elif 1.5 <= TIME < 1.65:
         vel.setXVel(0)
         vel.screenShot("Start")
-    elif TIME >= 1.6 and jump_metrics == 9999:
+    elif TIME >= 1.65 and jump_metrics == 9999:
         jump_metrics = vel.jump(param_dic, dataDrawer.height)
         vel.screenShot("Jump")
         # break
@@ -139,8 +144,9 @@ while robot.step(TIME_STEP) != -1:
         vel.screenShot("Land")
         key = mKeyboard.getKey()
         vel.keyboardControl(key, param_dic)
+
     # key = mKeyboard.getKey()
-    # vel.keyboardControl(key,param_dic)
+    # vel.keyboardControl(key, param_dic)
     # vel.savePointPos()
 
 # metrics_dic["restart_metrics"] = restart_metrics
