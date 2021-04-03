@@ -21,7 +21,7 @@ class drawer:
         if height == 0.2:
             csvName = 'args_11.341-h=0.2.csv'
         elif height == 0.3:
-            csvName = 'args_16.684-h=0.3.csv'
+            csvName = 'args_14.767-h=0.3.csv'
         elif height == 0.4:
             csvName = 'args_20.788-h=0.4.csv'
         else:
