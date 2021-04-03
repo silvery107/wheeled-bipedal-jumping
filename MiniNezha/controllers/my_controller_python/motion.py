@@ -239,7 +239,7 @@ class velocity_controller:
             self.screenShotCount += 1
         self.savePointPos()
 
-    def jump(self, params, desire_h):  # desire_h
+    def jump(self, params, desire_h=0.1):  # desire_h
         a = params["jump_a"]
         b = params["jump_b"]
         c = params["jump_c"]
@@ -250,7 +250,6 @@ class velocity_controller:
         mb = 5  # total mass
         l0 = 0.22  # leg length
         g = 9.81
-        desire_h = 0.1
 
         self.motors[0].setTorque(0.05)  # make base floating and no over rotating
         self.motors[1].setTorque(0.05)
