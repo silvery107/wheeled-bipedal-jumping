@@ -84,7 +84,7 @@ vel.setXVel(0.0)
 jump_metrics = 9999
 
 
-isTraining = True
+isTraining = Fasle
 if not isTraining:
     dataDrawer = drawer()
     dataDrawer.changeArgs(0.2, 4)
@@ -136,7 +136,7 @@ while robot.step(TIME_STEP) != -1:
     elif TIME >= 1.6 and jump_metrics == 9999:
         jump_metrics = vel.jump(param_dic, 0.2)
         vel.screenShot("Jump")
-        # break
+        break
     else:
         vel.screenShot("Land")
         key = mKeyboard.getKey()
