@@ -120,8 +120,8 @@ while robot.step(TIME_STEP) != -1:
     vel.isPrint = False
     vel.isPointPos = False
     vel.isScreenShot = False
-    vel.Bayes_Jump = 1
-    vel.Model_Jump = 0
+    vel.Bayes_Jump = 0
+    vel.Model_Jump = 1
     if TIME > 5:
         break
     if 0 < TIME < 0.5:
