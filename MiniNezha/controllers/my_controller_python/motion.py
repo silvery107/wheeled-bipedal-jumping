@@ -284,6 +284,7 @@ class velocity_controller:
                     offSpeed = self.panel.supervisorBodyVel[1]
                     break
             elif self.Model_Jump:
+                desire_h = 0.1
                 torque = -((1 / t0 * 7.8 / 5.6 * math.sqrt(2 * g * desire_h)) + g) * l0 * mb * math.cos(
                     theta / 2)/2  # torque based on model
                 if torque <= -35:
