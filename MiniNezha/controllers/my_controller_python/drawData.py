@@ -19,7 +19,7 @@ class drawer:
         self.height = height
         self.line = line
         if height == 0.2:
-            csvName = 'args_11.341-h=0.2.csv'
+            csvName = 'args_9.953-h=0.2.csv'
         elif height == 0.3:
             csvName = 'args_14.767-h=0.3.csv'
         elif height == 0.4:
