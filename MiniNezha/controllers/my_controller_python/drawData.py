@@ -3,12 +3,12 @@ from matplotlib import pyplot as plt
 
 
 class drawer:
-    def __init__(self):
+    def __init__(self,height):
         self.bodyHeight = []
         self.opt_vel = 0
         self.obj_val = 0
         self.a, self.b, self.c, self.d = 0, 0, 0, 0
-        self.height = 0
+        self.height = height
         self.line = 0
 
         self.isPointPos = False

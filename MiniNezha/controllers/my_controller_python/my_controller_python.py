@@ -74,22 +74,19 @@ brakes.append(motors[5].getBrake())
 # main loop
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors, robot)
 vel = velocity_controller(motors, panel, robot)
-dataDrawer = drawer()
 
 vel.setHeight(0.4)
 vel.setXVel(0.0)
 # fall_flag = False
 # restart_flag = False
-# restart_time0 = 0
-# restart_metrics = 99999
 jump_metrics = 9999
 
-dataDrawer.changeArgs(0.4, 3)
 
+# TODO data drawer 在下面!!!
 isTraining = False
 if not isTraining:
-    dataDrawer = drawer()
-    dataDrawer.changeArgs(0.2, 4)
+    dataDrawer = drawer(height=0.4)
+    dataDrawer.changeArgs(height=0.2, line=4) # edit this only for Bayes_Jump
     dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
     vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
     dataDrawer.txtFileName= vel.filename
@@ -100,8 +97,8 @@ with open("./args.txt", 'r') as args:
 
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
-    # vel.showMsg(TIME)
     vel.sensor_update()
+    # vel.showMsg(TIME)
     # if fall_flag:
     #     if not restart_flag:
     #         restart_flag = vel.checkVel(0.005)
@@ -110,9 +107,8 @@ while robot.step(TIME_STEP) != -1:
     #         if vel.fall_recovery(brakes):
     #             restart_flag = False
     #             fall_flag = False
-    #             restart_metrics = robot.getTime()-restart_time0
     #     else:
-    #         # print("shutdown")
+    #         print("shutdown")
     #         vel.shutdown(brakes, 0.25)
     #         continue
     # else:
@@ -153,12 +149,12 @@ while robot.step(TIME_STEP) != -1:
     # vel.keyboardControl(key, param_dic)
     # vel.savePointPos()
 
-# metrics_dic["restart_metrics"] = restart_metrics
 metrics_dic["jump_metrics"] = jump_metrics
 
 with open("./metrics.txt", 'w') as metrics:
     metrics.write(str(metrics_dic))
 
-dataDrawer.drawData()
-
-# robot.simulationQuit(0)
+if isTraining:
+    robot.simulationQuit(0)
+else:
+    dataDrawer.drawData()
