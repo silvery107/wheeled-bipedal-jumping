@@ -83,14 +83,13 @@ vel.setXVel(0.0)
 # restart_metrics = 99999
 jump_metrics = 9999
 
-
-isTraining = Fasle
+isTraining = False
 if not isTraining:
     dataDrawer = drawer()
     dataDrawer.changeArgs(0.2, 4)
     dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
     vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
-    dataDrawer.txtFileName= vel.filename
+    dataDrawer.txtFileName = vel.filename
 
 metrics_dic = dict()
 with open("./args.txt", 'r') as args:
