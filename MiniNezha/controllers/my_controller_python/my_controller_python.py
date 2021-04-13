@@ -66,6 +66,8 @@ for i in range(len(motor_names)):
     motors[i].setPosition(0)  # enable velocity control
 
 brakes = []
+motors[2].enableTorqueFeedback(TIME_STEP)
+motors[3].enableTorqueFeedback(TIME_STEP)
 motors[4].enableTorqueFeedback(TIME_STEP)
 motors[5].enableTorqueFeedback(TIME_STEP)
 brakes.append(motors[4].getBrake())
@@ -75,19 +77,25 @@ brakes.append(motors[5].getBrake())
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors, robot)
 vel = velocity_controller(motors, panel, robot)
 
-vel.setHeight(0.4)
+vel.setHeight(0.3)
 vel.setXVel(0.0)
 # fall_flag = False
 # restart_flag = False
 jump_metrics = 9999
-
+vel.Bayes_Jump = 1
+vel.W_SLIP_Model_Jump = 0
+vel.Time_Based_Jump = 0
 
 # TODO data drawer 在下面!!!
 isTraining = False
 if not isTraining:
-    dataDrawer = drawer(height=0.4)
-    dataDrawer.changeArgs(height=0.2, line=4) # edit this only for Bayes_Jump
+    dataDrawer = drawer()
+    dataDrawer.changeArgs(height=0.4, line=1)  # edit this only for Bayes_Jump
     dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
+    if (vel.Bayes_Jump):
+        dataDrawer.fileName += '_Bayes'
+    if (vel.W_SLIP_Model_Jump):
+        dataDrawer.fileName += '_Slip'
     vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
     dataDrawer.txtFileName = vel.filename
 
@@ -116,12 +124,9 @@ while robot.step(TIME_STEP) != -1:
     #     vel.keyboardControl(key,param_dic)
     #     fall_flag = not vel.checkPitch(30)
     vel.isPrint = False
-    vel.isPointPos = False
+    vel.isPointPos = True
     vel.isScreenShot = False
-    vel.Bayes_Jump = 0
-    vel.W_SLIP_Model_Jump = 1
-    vel.Time_Based_Jump = 0
-    if TIME > 5:
+    if TIME > 3:
         break
     if 0 < TIME < 0.5:
         if vel.W_SLIP_Model_Jump:
@@ -130,12 +135,15 @@ while robot.step(TIME_STEP) != -1:
         else:
             vel.setHeight(0.2)
         vel.screenShot("Start")
+        vel.torque = motors[3].getTorqueFeedback()
     if 0.5 <= TIME < 1.5:
         vel.setXVel(3)
         vel.screenShot("Start")
+        vel.torque = motors[3].getTorqueFeedback()
     elif 1.5 <= TIME < 1.65:
         vel.setXVel(0)
         vel.screenShot("Start")
+        vel.torque = motors[3].getTorqueFeedback()
     elif TIME >= 1.65 and jump_metrics == 9999:
         jump_metrics = vel.jump(param_dic, dataDrawer.height)
         vel.screenShot("Jump")
@@ -144,6 +152,7 @@ while robot.step(TIME_STEP) != -1:
         vel.screenShot("Land")
         key = mKeyboard.getKey()
         vel.keyboardControl(key, param_dic)
+        vel.torque = motors[3].getTorqueFeedback()
 
     # key = mKeyboard.getKey()
     # vel.keyboardControl(key, param_dic)
