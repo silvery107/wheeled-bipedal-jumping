@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.7
 
 import argparse
 import os
@@ -28,14 +28,13 @@ def main():
     f1.write(str(param_dic))
 
   # run webots
-  os.system("webots --mode=fast --no-rendering --minimize")
+  os.system("webots --mode=fast --no-rendering --minimize --stderr --stdout")
 
   # read metrics from txt
   with open("../controllers/my_controller_python/metrics.txt",'r') as f2:
     metrics_dic = eval(f2.read())
     metrics = metrics_dic["jump_metrics"]
-    # metrics = metrics_dic["restart_metrics"]
-
+    
   # Output the metrics
   print(metrics)
 

@@ -1,4 +1,4 @@
-#!/home/silvery/anaconda3/envs/webots/bin/python
+#!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 """my_controller_python controller."""
 
@@ -75,18 +75,18 @@ brakes.append(motors[5].getBrake())
 panel = panel(gps, gyro, imu, motors, encoders, TIME_STEP, touch_sensors, robot)
 vel = velocity_controller(motors, panel, robot)
 
-vel.setHeight(0.3)
+vel.setHeight(0.4)
 vel.setXVel(0.0)
 # fall_flag = False
 # restart_flag = False
-# restart_time0 = 0
-# restart_metrics = 99999
 jump_metrics = 9999
 
+
+# TODO data drawer 在下面!!!
 isTraining = False
 if not isTraining:
-    dataDrawer = drawer()
-    dataDrawer.changeArgs(0.2, 4)
+    dataDrawer = drawer(height=0.4)
+    dataDrawer.changeArgs(height=0.2, line=4) # edit this only for Bayes_Jump
     dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
     vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
     dataDrawer.txtFileName = vel.filename
@@ -97,8 +97,8 @@ with open("./args.txt", 'r') as args:
 
 while robot.step(TIME_STEP) != -1:
     TIME = robot.getTime()
-    # vel.showMsg(TIME)
     vel.sensor_update()
+    # vel.showMsg(TIME)
     # if fall_flag:
     #     if not restart_flag:
     #         restart_flag = vel.checkVel(0.005)
@@ -107,9 +107,8 @@ while robot.step(TIME_STEP) != -1:
     #         if vel.fall_recovery(brakes):
     #             restart_flag = False
     #             fall_flag = False
-    #             restart_metrics = robot.getTime()-restart_time0
     #     else:
-    #         # print("shutdown")
+    #         print("shutdown")
     #         vel.shutdown(brakes, 0.25)
     #         continue
     # else:
@@ -120,36 +119,42 @@ while robot.step(TIME_STEP) != -1:
     vel.isPointPos = False
     vel.isScreenShot = False
     vel.Bayes_Jump = 0
-    vel.Model_Jump = 1
+    vel.W_SLIP_Model_Jump = 1
+    vel.Time_Based_Jump = 0
     if TIME > 5:
         break
     if 0 < TIME < 0.5:
-        vel.setHeight(0.2)
+        if vel.W_SLIP_Model_Jump:
+            l_low = vel.obtain_delta_L_for_W_SLIP(dataDrawer.height)
+            vel.setHeight(l_low)
+        else:
+            vel.setHeight(0.2)
         vel.screenShot("Start")
     if 0.5 <= TIME < 1.5:
         vel.setXVel(3)
         vel.screenShot("Start")
-    elif 1.5 <= TIME < 1.6:
+    elif 1.5 <= TIME < 1.65:
         vel.setXVel(0)
         vel.screenShot("Start")
-    elif TIME >= 1.6 and jump_metrics == 9999:
-        jump_metrics = vel.jump(param_dic, 0.2)
+    elif TIME >= 1.65 and jump_metrics == 9999:
+        jump_metrics = vel.jump(param_dic, dataDrawer.height)
         vel.screenShot("Jump")
-        break
+        # break
     else:
         vel.screenShot("Land")
         key = mKeyboard.getKey()
         vel.keyboardControl(key, param_dic)
+
     # key = mKeyboard.getKey()
-    # vel.keyboardControl(key,param_dic)
+    # vel.keyboardControl(key, param_dic)
     # vel.savePointPos()
 
-# metrics_dic["restart_metrics"] = restart_metrics
 metrics_dic["jump_metrics"] = jump_metrics
 
 with open("./metrics.txt", 'w') as metrics:
     metrics.write(str(metrics_dic))
 
-# dataDrawer.drawData()
-
-robot.simulationQuit(0)
+if isTraining:
+    robot.simulationQuit(0)
+else:
+    dataDrawer.drawData()

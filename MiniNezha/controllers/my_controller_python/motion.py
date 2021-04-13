@@ -7,6 +7,17 @@ import sys
 
 
 class velocity_controller:
+    global t0, m, mb, l_leg, g, k, alpha_i, alpha_f, alpha_low, l0
+    t0 = 0.09  # desire time
+    m = 7.8  # total mass
+    mb = 5.6  # body mass
+    l_leg = 0.22  # leg length
+    g = 9.81
+    k = 1036.34
+    alpha_i = 2.2822  # setHeight(0.4)
+    alpha_f = 0.9439  # setHeight(0.2)
+    # alpha_low = 0
+    l0 = 0.4
 
     def __init__(self, motors, panel, robot):
         self.Ev = 0.0
@@ -63,7 +74,8 @@ class velocity_controller:
         self.isPointPos = False
         self.isPrint = False
         self.Bayes_Jump = False
-        self.Model_Jump = False
+        self.Time_Based_Jump = False
+        self.W_SLIP_Model_Jump = False
 
         self.time = 0
         self.filename = ''
@@ -152,70 +164,6 @@ class velocity_controller:
             self.rotation_u = 0.0
             self.panel.rotation = 0
 
-    # def jump(self, robot, h=0.27):
-    #     pre_velocity = self.panel.rightWheelVel
-    #     # samplingPeriod = self.motors[2].getTorqueFeedbackSamplingPeriod() / 1000
-    #     # print('sam:%3f' % samplingPeriod)
-    #     # self.motors[2].enableTorqueFeedback(samplingPeriod)
-    #     self.motors[2].enableTorqueFeedback(1)
-    #     self.motors[0].enableTorqueFeedback(1)
-    #     self.motors[2].setPosition(0)
-    #     self.motors[3].setPosition(0)
-    #     self.motors[0].setPosition(0)
-    #     self.motors[1].setPosition(0)
-    #     tor2 = self.motors[2].getTorqueFeedback()
-    #     tor0 = self.motors[2].getTorqueFeedback()
-    #     velocity2 = self.motors[2].getVelocity()
-    #     velocity0 = self.motors[0].getVelocity()
-    #     print('torque[2]:%3f' % tor2)
-    #         self.sensor_update()
-    #         print("jump phase 1")
-    #         if self.panel.gps_y > 0.48:  # 直立时gps0.488
-    #             while 1:
-    #                 print("jump phase 2")
-    #                 TIME_STEP = int(robot.getBasicTimeStep())
-    #                 robot.step(TIME_STEP)
-    #                 self.sensor_update()
-    #                 self.setHeight(h)
-    #                 if self.panel.gps_y <= h + 0.06:
-    #                     while 1:  # 为了保留结构暂时这么写，不要奇怪这个while break
-    #                         print("jump phase 3")
-    #                         TIME_STEP = int(robot.getBasicTimeStep())
-    #                         robot.step(TIME_STEP)
-    #                         self.sensor_update()
-    #                         self.motors[4].setPosition(float('+inf'))
-    #                         self.motors[5].setPosition(float('+inf'))
-    #                         self.motors[4].setVelocity(pre_velocity)
-    #                         self.motors[5].setVelocity(pre_velocity)
-    #                         break
-    #                         # if self.panel.gps_y > 0.49:
-    #                         #     while 1:
-    #                         #         print("jump phase 4")
-    #                         #         TIME_STEP = int(robot.getBasicTimeStep() / 16)
-    #                         #         robot.step(TIME_STEP)
-    #                         #         self.panel.updateGPS()
-    #                         #         if self.panel.gps_y <= 0.49:
-    #                         #             # h = 0.44
-    #                         #             # self.motors[4].setPosition(float('+inf'))
-    #                         #             # self.motors[5].setPosition(float('+inf'))
-    #                         #             # self.motors[4].setVelocity(0)
-    #                         #             # self.motors[5].setVelocity(0)
-    #                         #             # while 1:
-    #                         #             #     print("jump phase 5")
-    #                         #             #     TIME_STEP = int(robot.getBasicTimeStep() / 16)
-    #                         #             #     robot.step(TIME_STEP)
-    #                         #             #     self.panel.updateGPS()
-    #                         #             #     if self.panel.gps_y <= h + 0.05:
-    #                         #             #         h -= 0.01
-    #                         #             #         self.setHeight(h)
-    #                         #             #     if h <= 0.3:
-    #                         #             #         break
-    #                         #             break
-    #                         #     break
-    #                     break
-    #             # self.setHeight(0.43)
-    #             break
-
     def savePointPos(self):
         # WEBOTS_HOME/projects/robots/neuronics/ipr/worlds/ipr_cube.wbt
         # \Webots\projects\samples\howto\worlds\supervisor_trail.wbt
@@ -239,17 +187,12 @@ class velocity_controller:
             self.screenShotCount += 1
         self.savePointPos()
 
-    def jump(self, params, desire_h=0.1):  # desire_h
+    def jump(self, params, desire_h):  # desire_h
         a = params["jump_a"]
         b = params["jump_b"]
         c = params["jump_c"]
         d = params["jump_d"]
         opt_vel = params["opt_vel"]
-        t0 = 0.09  # desire time
-        m = 7.8  # body mass
-        mb = 5  # total mass
-        l0 = 0.22  # leg length
-        g = 9.81
 
         self.motors[0].setTorque(0.05)  # make base floating and no over rotating
         self.motors[1].setTorque(0.05)
@@ -259,9 +202,9 @@ class velocity_controller:
         offSpeed = 0
         count = 0
         energy = 0
-        last_theta = math.pi - self.panel.encoder[2]
+        last_alpha = math.pi - self.panel.encoder[2]
         penalties = [0, 0, 0, 0, 0,
-                     0]  # torque <=0, torque >=-35, theta <=0.7pi, theta >=0.1pi, energy <=mgh, pitch <=0.15pi
+                     0]  # torque <=0, torque >=-35, alpha <=0.7pi, alpha >=0.1pi, energy <=mgh, pitch <=0.15pi
 
         # take off phase
         # startTime = self.robot.getTime()
@@ -272,7 +215,7 @@ class velocity_controller:
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
             self.screenShot("Jump")
-            theta = math.pi - self.panel.encoder[2]  # angle between two legs
+            alpha = math.pi - self.panel.encoder[2]  # angle between two legs
 
             if self.robot.getTime() > 3:
                 # print("timeout 3 take-off")
@@ -283,21 +226,25 @@ class velocity_controller:
                 if self.panel.supervisorBodyVel[1] >= opt_vel:
                     offSpeed = self.panel.supervisorBodyVel[1]
                     break
-            elif self.Model_Jump:
-                desire_h = 0.1
-                torque = -((1 / t0 * 7.8 / 5.6 * math.sqrt(2 * g * desire_h)) + g) * l0 * mb * math.cos(
-                    theta / 2)/2  # torque based on model
+            elif self.Time_Based_Jump:
+                torque = -((1 / t0 * 7.8 / 5.6 * math.sqrt(2 * g * desire_h)) + g) * l_leg * mb * math.cos(
+                    alpha / 2) / 2
                 if torque <= -35:
                     torque = -35
                 if t >= t0:
                     break
-                # desire_v = math.sqrt(desire_h * 2 * g) * 7.8 / 5.6
-                # if self.panel.supervisorBodyVel[1] >= desire_v:
-                #     offSpeed = self.panel.supervisorBodyVel[1]
-                #     break
+            elif self.W_SLIP_Model_Jump:
+                if alpha >= alpha_i:
+                    break
+                damping = 0.1 * self.motors[2].getVelocity()
+                torque = -(k * (l0 - 2 * l_leg * math.sin(alpha / 2)) * l0 * math.cos(alpha / 2) + damping) / 2
+                if torque <= -35:
+                    torque = -35
+                print('rotate speed: %.3f' % self.motors[2].getVelocity())
+                print('torque: %.3f' % torque)
             else:
                 torque = -35
-                desire_v = math.sqrt(desire_h * 2 * g) * 7.8 / 5.6
+                desire_v = math.sqrt(desire_h * 2 * g) * m / mb
                 if self.panel.supervisorBodyVel[1] >= desire_v:
                     offSpeed = self.panel.supervisorBodyVel[1]
                     break
@@ -322,15 +269,17 @@ class velocity_controller:
                 penalties[0] += 0.1 * square_penalize(torque)
             if torque < -35:
                 penalties[1] += 0.1 * square_penalize(-torque - 35)
-            if theta > math.pi * 0.7:
-                penalties[2] += 100 * square_penalize(theta - math.pi * 0.7)
-            if theta < math.pi * 0.1:
-                penalties[3] += 1000 * square_penalize(-theta + 0.1 * math.pi)
-            if theta > math.pi or theta <= 0:
+            if alpha > math.pi * 0.7:
+                penalties[2] += 100 * square_penalize(alpha - math.pi * 0.7)
+            if alpha < math.pi * 0.1:
+                penalties[3] += 1000 * square_penalize(-alpha + 0.1 * math.pi)
+            if alpha > math.pi or alpha <= 0:
                 break
 
-            energy += math.fabs(torque) * math.fabs(theta - last_theta)
-            last_theta = theta
+            if torque <= -35:
+                torque = -35
+            energy += math.fabs(torque) * math.fabs(alpha - last_alpha)
+            last_alpha = alpha
 
             self.motors[2].setTorque(torque)
             self.motors[3].setTorque(torque)
@@ -349,8 +298,8 @@ class velocity_controller:
             # lock_val = (self.panel.encoder[2] if self.panel.encoder[2] < 3.14 else 3)
             # self.motors[2].setPosition(lock_val)  # lock keen motors, avoid passing min-angle
             # self.motors[3].setPosition(lock_val)
-            self.motors[2].setPosition(3 / 4 * math.pi)
-            self.motors[3].setPosition(3 / 4 * math.pi)
+            self.motors[2].setPosition(math.pi - alpha_f)
+            self.motors[3].setPosition(math.pi - alpha_f)
             if h_max <= self.panel.WheelPos[1]:
                 h_max = self.panel.WheelPos[1]
             else:
@@ -523,7 +472,7 @@ class velocity_controller:
 
     def printInfo(self):
         print("GPS_height: %.3f" % self.panel.gps_y)
-        print('Angle2: %3f' % self.panel.encoder[2])
+        print('Angle alpha: %3f' % (math.pi - self.panel.encoder[2]))
         print('Torque: %3f' % self.motors[2].getTorqueFeedback())
 
     def sensor_update(self):
@@ -544,3 +493,12 @@ class velocity_controller:
     def printX(self, string):
         if self.isPrint:
             print(string)
+
+    def obtain_delta_L_for_W_SLIP(self, desire_h):
+        mb = 5.52
+        delta_L = math.sqrt(
+            (desire_h - 2 * l_leg * (
+                    math.sin(alpha_i / 2) - math.sin(alpha_f / 2)) * mb / m) * 2 * g * m * m / mb / k)
+        l_low = l0 - delta_L
+        # alpha_low = 2 * math.asin(l_low / (2 * l_leg))
+        return l_low
