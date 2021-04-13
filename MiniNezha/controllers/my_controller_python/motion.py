@@ -72,7 +72,7 @@ class velocity_controller:
 
         self.isScreenShot = False
         self.isPointPos = False
-        self.isprint = False
+        self.isPrint = False
         self.Bayes_Jump = False
         self.Time_Based_Jump = False
         self.W_SLIP_Model_Jump = False
@@ -500,8 +500,8 @@ class velocity_controller:
         self.panel.updateBodyVelocity(self.cur_height)
 
     def printX(self, string,a='',b='',c='',d='',e=''):
-        if self.isprint:
-            self.printX(string,a,b,c,d,e)
+        if self.isPrint:
+            print(string,a,b,c,d,e)
 
     def obtain_delta_L_for_W_SLIP(self, desire_h):
         mb = 5.52
