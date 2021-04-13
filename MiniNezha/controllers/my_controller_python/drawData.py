@@ -76,7 +76,7 @@ class drawer:
         # plt.plot(wheelLengths, wheelHeights, c='red')
         # plt.scatter(wheelLengthPs, wheelHeightPs, marker = 'o',c='red')
         # type = "Wheel trajectory with distance"
-        # title = type + str(self.height) + '_' + str(self.line)
+        # title = type + str(self.height) + '_' + str(self.)
         # xlabel = 'Distance'
         # ylabel = 'Wheel Height'
 
