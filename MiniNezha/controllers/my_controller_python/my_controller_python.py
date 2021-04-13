@@ -90,7 +90,7 @@ vel.Time_Based_Jump = 0
 isTraining = False
 if not isTraining:
     dataDrawer = drawer()
-    dataDrawer.changeArgs(height=0.4, line=1)  # edit this only for Bayes_Jump
+    dataDrawer.changeArgs(height=0.3, line=4)  # edit this only for Bayes_Jump
     dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
     if (vel.Bayes_Jump):
         dataDrawer.fileName += '_Bayes'
