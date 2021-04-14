@@ -1,7 +1,7 @@
 {
   "name": "optimal_jump1",
   "algorithm": "BayesianOptimization",
-  "trialNumber": 150,
+  "trialNumber": 100,
   "path": "./advisor_config/",
   "command": "./min_function.py",
   "search_space": {
@@ -30,12 +30,12 @@
             "parameterName": "jump_d",
             "type": "DOUBLE",
             "minValue": 0,
-            "maxValue": 4.0
+            "maxValue": 3.5
           },
           {
             "parameterName": "opt_vel",
             "type": "DOUBLE",
-            "minValue": 3.0,
+            "minValue": 2.0,
             "maxValue": 6.0
           }
       ]
