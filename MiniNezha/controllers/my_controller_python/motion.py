@@ -229,8 +229,10 @@ class velocity_controller:
                 break
 
             if self.Bayes_Jump:
-                # torque = -(10 * a * t + 100 * b * t ** 2 + 1000 * c * t ** 3 + 10 * d)  # poly function
-                torque = -35/(1+math.exp(-10*a*(t+t_start)))
+                if b==0:
+                    torque = -35/(1+math.exp(-10*a*(t+t_start)))
+                else:
+                    torque = -(10 * a * t + 100 * b * t ** 2 + 1000 * c * t ** 3 + 10 * d)  # poly function
                 if self.panel.supervisorBodyVel[1] >= opt_vel:
                     offSpeed = self.panel.supervisorBodyVel[1]
                     break
