@@ -19,6 +19,7 @@ class drawer:
         self.takeOffIndex = 0
         self.startIndex = 0
         self.startTorqueIndex = 0
+        self.highestIndex = 0
 
     def changeArgs(self, height, line, csvName=None):
         self.height = height
@@ -79,12 +80,12 @@ class drawer:
                 count += 1
         # 根据数据绘制图形
         fig = plt.figure(dpi=128, figsize=(10, 6))
-        plt.plot(times[self.startIndex:self.takeOffIndex], torques[self.startIndex:self.takeOffIndex], c='red',zorder=1)
-        plt.scatter(times[self.startTorqueIndex],torques[self.startTorqueIndex],marker = '^',c='blue',zorder=2)
-        plt.scatter(times[self.takeOffIndex], torques[self.takeOffIndex], marker='^', c='blue', zorder=2)
+        plt.plot(times[self.startIndex-1:self.takeOffIndex], torques[self.startIndex-1:self.takeOffIndex], c='red',zorder=1)
+        plt.scatter(times[self.startTorqueIndex-1],torques[self.startTorqueIndex-1],marker = '^',c='blue',zorder=2)
+        plt.scatter(times[self.takeOffIndex-1], torques[self.takeOffIndex-1], marker='^', c='blue', zorder=2)
         type = "Knee Torque vs Time"
-        xlabel = 'Time'
-        ylabel = 'Knee Torque'
+        xlabel = 'Time(s)'
+        ylabel = 'Knee Torque(N·m)'
 
         # 设置图形格式
         title = type + " ("+str(self.height) + "m)"#'_' + str(self.line)
@@ -103,10 +104,20 @@ class drawer:
         fig2 = plt.figure(dpi=128, figsize=(10, 6))
         plt.scatter(wheelLengthPs, wheelHeightPs, marker = '^',c='blue',zorder=2)
         plt.plot(wheelLengths, wheelHeights, c='red',zorder=1)
+        plt.plot([0.2,wheelLengths[self.highestIndex-1] ], [wheelHeights[self.highestIndex-1], wheelHeights[self.highestIndex-1]], c='b', linestyle='--',zorder=1)
+        text = "heighest: "+str(('%.3f' % wheelHeights[self.highestIndex-1]))+'m'
+        plt.text(wheelLengths[self.highestIndex-1] + 0.2, wheelHeights[self.highestIndex-1], text, ha='center', va='bottom', fontsize=12)
         type = "Wheel Trajectory vs Distance"
         title = type + " ("+str(self.height) + "m)"# + '_' + str(self.)
-        xlabel = 'Distance'
-        ylabel = 'Wheel Height'
+        xlabel = 'Distance(m)'
+        ylabel = 'Wheel Height(m)'
+        plt.xlim(0.2,max(wheelLengths)+0.1)
+        # ax = plt.gca()
+        # # 移到原点
+        # ax.xaxis.set_ticks_position('bottom')
+        # ax.yaxis.set_ticks_position('left')
+        # # ax.spines['bottom'].set_position(('data', 0))
+        # ax.spines['left'].set_position(('data', 0))
 
         # 设置图形格式
         title = type + " ("+str(self.height) + "m)"#'_' + str(self.line)
