@@ -16,23 +16,23 @@ class drawer:
         self.fileName = ''
         self.txtFileName = ''
 
-    def changeArgs(self, height, line):
+    def changeArgs(self, height, line, csvName=" "):
         self.height = height
         self.line = line
-        if height == 0.2:
-            csvName = 'args_9.953-h=0.2.csv'
-        elif height == 0.3:
-            csvName = 'args_14.767-h=0.3.csv'
-        elif height == 0.4:
-            csvName = 'args_20.788-h=0.4.csv'
-        else:
-            csvName = ''
+        if csvName is None:
+            if height == 0.2:
+                csvName = 'args_9.953-h=0.2.csv'
+            elif height == 0.3:
+                csvName = 'args_14.767-h=0.3.csv'
+            elif height == 0.4:
+                csvName = 'args_20.788-h=0.4.csv'
+
         with open(csvName, 'r') as csvfile:
-            reader = csv.reader(csvfile)
+            reader = csv.DictReader(csvfile)
             for i, rows in enumerate(reader):
-                if i == line:
+                if i == line-1:
                     row = rows
-        self.opt_vel, self.obj_val, self.d, self.c, self.b, self.a = row[0], row[1], row[2], row[3], row[4], row[5]
+        self.opt_vel, self.obj_val, self.d, self.c, self.b, self.a = row["opt_vel"], row["objective_value"], row["jump_d"], row["jump_c"], row["jump_b"], row["jump_a"]
         # print(self.opt_vel, self.obj_val, self.d, self.c, self.b, self.a)
         file_handle = open('args.txt', mode='w')
         file_handle.writelines(['{\'opt_vel\'', ': ', str(self.opt_vel), ', ',
