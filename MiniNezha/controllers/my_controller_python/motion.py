@@ -316,7 +316,8 @@ class velocity_controller:
                 break
 
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
-        self.printX("wheel delta h: %.5f " % delta_h, 'h_ref: ', h_ref, 'h_max: ', h_max)
+        print("wheel delta h: %.5f " % delta_h, 'h_ref: ', h_ref, 'h_max: ', h_max)
+        print("highest point: %.5f" % self.panel.WheelPos[0])
         delta_w_h = (mb * offSpeed * 5 / 7.8 * offSpeed / 9.81 - 5 * delta_h) / 2
         # self.printX('Actual delta height: %3f' % delta_h)
         # self.printX('Actual wheel delta height: %3f' % delta_w_h)
@@ -357,7 +358,7 @@ class velocity_controller:
         for penalty in penalties:
             loss += penalty
         self.printX("loss_height: %.3f" % (loss_height * 1000))
-        self.printX("penalty:", penalties, ",loss:", loss, "energy:", energy)
+        print("penalty:", penalties, ",loss:", loss, "energy:", energy)
 
         return loss
 

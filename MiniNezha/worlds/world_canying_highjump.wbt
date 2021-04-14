@@ -18,8 +18,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0 1 0 3.1415926
-  position 1.3999999376910437 0.3 -5.669338067092053
+  orientation -0.0029694694554211025 0.9982334213608715 0.05933985784717074 3.0417689644533135
+  position 1.4629610878196238 0.39379132916795845 -4.431334516500884
   follow "MiniNezha"
   followType "None"
   followSmoothness 0
@@ -393,13 +393,13 @@ DEF NeZha Robot {
   supervisor TRUE
 }
 Solid {
-  translation 1.415 0.199877 -2.8
+  translation 1.43 0.14 -1.51011
   children [
     DEF block Shape {
       appearance Appearance {
       }
       geometry Box {
-        size 0.025 0.4 1
+        size 0.003 0.28 1
       }
     }
   ]

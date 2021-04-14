@@ -1,1 +1,1 @@
-{'jump_metrics': 9999}
+{'jump_metrics': 19.003198466519542}
