@@ -1,1 +1,1 @@
-{'opt_vel': 2.434279654, 'objective_value': 11.72538273, 'jump_d': 2.486106349, 'jump_c': 3.031374654, 'jump_b': -3.790678231, 'jump_a': 0.203048619}
+{'opt_vel': 3.12133834, 'objective_value': 16.79260659, 'jump_d': 0, 'jump_c': 0, 'jump_b': 0, 'jump_a': 19.18949605}

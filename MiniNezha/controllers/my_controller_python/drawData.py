@@ -17,7 +17,8 @@ class drawer:
         self.txtFileName = ''
 
         self.takeOffIndex = 0
-        self.torqueStartIndex = 0
+        self.startIndex = 0
+        self.startTorqueIndex = 0
 
     def changeArgs(self, height, line, csvName=None):
         self.height = height
@@ -78,20 +79,37 @@ class drawer:
                 count += 1
         # 根据数据绘制图形
         fig = plt.figure(dpi=128, figsize=(10, 6))
-        # plt.plot(wheelLengths, wheelHeights, c='red')
-        # plt.scatter(wheelLengthPs, wheelHeightPs, marker = 'o',c='red')
-        # type = "Wheel trajectory with distance"
-        # title = type + str(self.height) + '_' + str(self.)
-        # xlabel = 'Distance'
-        # ylabel = 'Wheel Height'
-
-        plt.plot(times[self.torqueStartIndex:self.takeOffIndex], torques[self.torqueStartIndex:self.takeOffIndex], c='red')
-        type = "Knee torque vs time"
+        plt.plot(times[self.startIndex:self.takeOffIndex], torques[self.startIndex:self.takeOffIndex], c='red',zorder=1)
+        plt.scatter(times[self.startTorqueIndex],torques[self.startTorqueIndex],marker = '^',c='blue',zorder=2)
+        plt.scatter(times[self.takeOffIndex], torques[self.takeOffIndex], marker='^', c='blue', zorder=2)
+        type = "Knee Torque vs Time"
         xlabel = 'Time'
         ylabel = 'Knee Torque'
 
         # 设置图形格式
-        title = type + str(self.height) + '_' + str(self.line)
+        title = type + " ("+str(self.height) + "m)"#'_' + str(self.line)
+        plt.title(title, fontsize=24)
+        plt.xlabel(xlabel, fontsize=16)
+        fig.autofmt_xdate()  # 绘制斜的日期标签，以免它们彼此重叠
+        plt.ylabel(ylabel, fontsize=16)
+        plt.tick_params(axis='both', which='major', labelsize=16)
+        plt.grid()
+
+        # plt.show()
+        figureName = "./chart/" + self.fileName + '_' + type + ".jpg"
+        plt.savefig(figureName, bbox_inches='tight')
+
+        #### fig2
+        fig2 = plt.figure(dpi=128, figsize=(10, 6))
+        plt.scatter(wheelLengthPs, wheelHeightPs, marker = '^',c='blue',zorder=2)
+        plt.plot(wheelLengths, wheelHeights, c='red',zorder=1)
+        type = "Wheel Trajectory vs Distance"
+        title = type + " ("+str(self.height) + "m)"# + '_' + str(self.)
+        xlabel = 'Distance'
+        ylabel = 'Wheel Height'
+
+        # 设置图形格式
+        title = type + " ("+str(self.height) + "m)"#'_' + str(self.line)
         plt.title(title, fontsize=24)
         plt.xlabel(xlabel, fontsize=16)
         fig.autofmt_xdate()  # 绘制斜的日期标签，以免它们彼此重叠

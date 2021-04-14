@@ -235,7 +235,6 @@ class velocity_controller:
 
             if self.Bayes_Jump:
                 alpha_f = 0.9439
-                # torque = -(10 * a * t + 100 * b * t ** 2 + 1000 * c * t ** 3 + 10 * d)  # poly function
                 if b==0:
                     torque = -35/(1+math.exp(-10*a*(t+t_start)))
                 else:
