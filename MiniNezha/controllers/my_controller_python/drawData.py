@@ -33,13 +33,14 @@ class drawer:
                 csvName = 'args_20.788-h=0.4.csv'
             else:
                 csvName = ''
-        if csvName !='':
+        if csvName != '':
             with open(csvName, 'r') as csvfile:
                 reader = csv.DictReader(csvfile)
                 for i, rows in enumerate(reader):
-                    if i == line-1:
+                    if i == line - 1:
                         row = rows
-            self.opt_vel, self.obj_val, self.d, self.c, self.b, self.a = row["opt_vel"], row["objective_value"], row["jump_d"], row["jump_c"], row["jump_b"], row["jump_a"]
+            self.opt_vel, self.obj_val, self.d, self.c, self.b, self.a = row["opt_vel"], row["objective_value"], row[
+                "jump_d"], row["jump_c"], row["jump_b"], row["jump_a"]
             # print(self.opt_vel, self.obj_val, self.d, self.c, self.b, self.a)
             file_handle = open('args.txt', mode='w')
             file_handle.writelines(['{\'opt_vel\'', ': ', str(self.opt_vel), ', ',
@@ -80,15 +81,17 @@ class drawer:
                 count += 1
         # 根据数据绘制图形
         fig = plt.figure(dpi=128, figsize=(10, 6))
-        plt.plot(times[self.startIndex-1:self.takeOffIndex], torques[self.startIndex-1:self.takeOffIndex], c='red',zorder=1)
-        plt.scatter(times[self.startTorqueIndex-1],torques[self.startTorqueIndex-1],marker = '^',c='blue',zorder=2)
-        plt.scatter(times[self.takeOffIndex-1], torques[self.takeOffIndex-1], marker='^', c='blue', zorder=2)
+        plt.plot(times[self.startIndex - 1:self.takeOffIndex], torques[self.startIndex - 1:self.takeOffIndex], c='red',
+                 zorder=1)
+        plt.scatter(times[self.startTorqueIndex - 1], torques[self.startTorqueIndex - 1], marker='^', c='blue',
+                    zorder=2)
+        plt.scatter(times[self.takeOffIndex - 1], torques[self.takeOffIndex - 1], marker='^', c='blue', zorder=2)
         type = "Knee Torque vs Time"
         xlabel = 'Time(s)'
         ylabel = 'Knee Torque(N·m)'
 
         # 设置图形格式
-        title = type + " ("+str(self.height) + "m)"#'_' + str(self.line)
+        title = type + " (" + str(self.height) + "m)"  # '_' + str(self.line)
         plt.title(title, fontsize=24)
         plt.xlabel(xlabel, fontsize=16)
         fig.autofmt_xdate()  # 绘制斜的日期标签，以免它们彼此重叠
@@ -102,16 +105,19 @@ class drawer:
 
         #### fig2
         fig2 = plt.figure(dpi=128, figsize=(10, 6))
-        plt.scatter(wheelLengthPs, wheelHeightPs, marker = '^',c='blue',zorder=2)
-        plt.plot(wheelLengths, wheelHeights, c='red',zorder=1)
-        plt.plot([0.2,wheelLengths[self.highestIndex-1] ], [wheelHeights[self.highestIndex-1], wheelHeights[self.highestIndex-1]], c='b', linestyle='--',zorder=1)
-        text = "heighest: "+str(('%.3f' % wheelHeights[self.highestIndex-1]))+'m'
-        plt.text(wheelLengths[self.highestIndex-1] + 0.2, wheelHeights[self.highestIndex-1], text, ha='center', va='bottom', fontsize=12)
+        plt.scatter(wheelLengthPs, wheelHeightPs, marker='^', c='blue', zorder=2)
+        plt.plot(wheelLengths, wheelHeights, c='red', zorder=1)
+        plt.plot([0.2, wheelLengths[self.highestIndex - 1]],
+                 [wheelHeights[self.highestIndex - 1], wheelHeights[self.highestIndex - 1]], c='b', linestyle='--',
+                 zorder=1)
+        text = "heighest: " + str(('%.3f' % wheelHeights[self.highestIndex - 1])) + 'm'
+        plt.text(wheelLengths[self.highestIndex - 1] + 0.2, wheelHeights[self.highestIndex - 1], text, ha='center',
+                 va='bottom', fontsize=12)
         type = "Wheel Trajectory vs Distance"
-        title = type + " ("+str(self.height) + "m)"# + '_' + str(self.)
+        title = type + " (" + str(self.height) + "m)"  # + '_' + str(self.)
         xlabel = 'Distance(m)'
         ylabel = 'Wheel Height(m)'
-        plt.xlim(0.2,max(wheelLengths)+0.1)
+        plt.xlim(0.2, max(wheelLengths) + 0.1)
         # ax = plt.gca()
         # # 移到原点
         # ax.xaxis.set_ticks_position('bottom')
@@ -120,10 +126,10 @@ class drawer:
         # ax.spines['left'].set_position(('data', 0))
 
         # 设置图形格式
-        title = type + " ("+str(self.height) + "m)"#'_' + str(self.line)
+        title = type + " (" + str(self.height) + "m)"  # '_' + str(self.line)
         plt.title(title, fontsize=24)
         plt.xlabel(xlabel, fontsize=16)
-        fig.autofmt_xdate()  # 绘制斜的日期标签，以免它们彼此重叠
+        # fig.autofmt_xdate()  # 绘制斜的日期标签，以免它们彼此重叠
         plt.ylabel(ylabel, fontsize=16)
         plt.tick_params(axis='both', which='major', labelsize=16)
         plt.grid()
