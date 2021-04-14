@@ -85,19 +85,23 @@ jump_metrics = 9999
 vel.Bayes_Jump = 1
 vel.W_SLIP_Model_Jump = 0
 vel.Time_Based_Jump = 0
+height = 0.2
+line = 4
 
-isTraining = True
+isTraining = False
 if not isTraining:
     dataDrawer = drawer()
     '''
     valid csvName = poly-h=0.2, poly-h=0.3, poly-h=0.4, sigmoid-h=0.2, sigmoid-h=0.3, sigmoid-h=0.4 
+    !Change "height" above at the same time when changing the csvName!
     '''
-    dataDrawer.changeArgs(height=0.4, line=2, csvName="../../records/poly-h=0.3.csv")  # edit this only for Bayes_Jump
-    dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
+    dataDrawer.changeArgs(height, line, csvName="../../records/poly-h=0.3.csv")  # edit this only for Bayes_Jump
+    dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_'
     if (vel.Bayes_Jump):
+        dataDrawer.fileName += str(dataDrawer.line)
         dataDrawer.fileName += '_Bayes'
     if (vel.W_SLIP_Model_Jump):
-        dataDrawer.fileName += '_Slip'
+        dataDrawer.fileName += 'Slip'
     vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
     dataDrawer.txtFileName = vel.filename
 else:
@@ -128,13 +132,13 @@ while robot.step(TIME_STEP) != -1:
     #     vel.keyboardControl(key,param_dic)
     #     fall_flag = not vel.checkPitch(30)
     vel.isPrint = False
-    vel.isPointPos = False
+    vel.isPointPos = True
     vel.isScreenShot = False
     if TIME > 3:
         break
     if 0 < TIME < 0.5:
         if vel.W_SLIP_Model_Jump:
-            l_low = vel.obtain_delta_L_for_W_SLIP(dataDrawer.height)
+            l_low = vel.obtain_delta_L_for_W_SLIP(height)
             vel.setHeight(l_low)
         else:
             vel.setHeight(0.2)
@@ -148,8 +152,11 @@ while robot.step(TIME_STEP) != -1:
         vel.setXVel(0)
         vel.screenShot("Start")
         vel.torque = motors[3].getTorqueFeedback()
+        if TIME ==1.55:
+            dataDrawer.torqueStartIndex = vel.indexCount
     elif TIME >= 1.65 and jump_metrics == 9999:
-        jump_metrics = vel.jump(param_dic, dataDrawer.height)
+        jump_metrics = vel.jump(param_dic, height)
+        dataDrawer.takeOffIndex = vel.takeOffIndex
         vel.screenShot("Jump")
         # break
     else:

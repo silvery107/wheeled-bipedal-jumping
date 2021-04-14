@@ -16,6 +16,9 @@ class drawer:
         self.fileName = ''
         self.txtFileName = ''
 
+        self.takeOffIndex = 0
+        self.torqueStartIndex = 0
+
     def changeArgs(self, height, line, csvName=None):
         self.height = height
         self.line = line
@@ -26,22 +29,24 @@ class drawer:
                 csvName = 'args_14.767-h=0.3.csv'
             elif height == 0.4:
                 csvName = 'args_20.788-h=0.4.csv'
-
-        with open(csvName, 'r') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for i, rows in enumerate(reader):
-                if i == line-1:
-                    row = rows
-        self.opt_vel, self.obj_val, self.d, self.c, self.b, self.a = row["opt_vel"], row["objective_value"], row["jump_d"], row["jump_c"], row["jump_b"], row["jump_a"]
-        # print(self.opt_vel, self.obj_val, self.d, self.c, self.b, self.a)
-        file_handle = open('args.txt', mode='w')
-        file_handle.writelines(['{\'opt_vel\'', ': ', str(self.opt_vel), ', ',
-                                '\'objective_value\': ', str(self.obj_val), ', ',
-                                '\'jump_d\': ', str(self.d), ', ',
-                                '\'jump_c\': ', str(self.c), ', ',
-                                '\'jump_b\': ', str(self.b), ', ',
-                                '\'jump_a\': ', str(self.a), '}'])
-        file_handle.close()
+            else:
+                csvName = ''
+        if csvName !='':
+            with open(csvName, 'r') as csvfile:
+                reader = csv.DictReader(csvfile)
+                for i, rows in enumerate(reader):
+                    if i == line-1:
+                        row = rows
+            self.opt_vel, self.obj_val, self.d, self.c, self.b, self.a = row["opt_vel"], row["objective_value"], row["jump_d"], row["jump_c"], row["jump_b"], row["jump_a"]
+            # print(self.opt_vel, self.obj_val, self.d, self.c, self.b, self.a)
+            file_handle = open('args.txt', mode='w')
+            file_handle.writelines(['{\'opt_vel\'', ': ', str(self.opt_vel), ', ',
+                                    '\'objective_value\': ', str(self.obj_val), ', ',
+                                    '\'jump_d\': ', str(self.d), ', ',
+                                    '\'jump_c\': ', str(self.c), ', ',
+                                    '\'jump_b\': ', str(self.b), ', ',
+                                    '\'jump_a\': ', str(self.a), '}'])
+            file_handle.close()
 
     def drawData(self):
         with open(self.txtFileName) as f:
@@ -80,7 +85,7 @@ class drawer:
         # xlabel = 'Distance'
         # ylabel = 'Wheel Height'
 
-        plt.plot(times, torques, c='red')
+        plt.plot(times[self.torqueStartIndex:self.takeOffIndex], torques[self.torqueStartIndex:self.takeOffIndex], c='red')
         type = "Knee torque vs time"
         xlabel = 'Time'
         ylabel = 'Knee Torque'
