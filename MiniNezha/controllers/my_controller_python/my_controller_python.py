@@ -86,11 +86,10 @@ vel.Bayes_Jump = 1
 vel.W_SLIP_Model_Jump = 0
 vel.Time_Based_Jump = 0
 
-# TODO data drawer 在下面!!!
 isTraining = False
 if not isTraining:
     dataDrawer = drawer()
-    dataDrawer.changeArgs(height=0.4, line=1)  # edit this only for Bayes_Jump
+    dataDrawer.changeArgs(height=0.4, line=1, csvName="../../records/args_25.399.csv")  # edit this only for Bayes_Jump
     dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
     if (vel.Bayes_Jump):
         dataDrawer.fileName += '_Bayes'
@@ -98,6 +97,8 @@ if not isTraining:
         dataDrawer.fileName += '_Slip'
     vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
     dataDrawer.txtFileName = vel.filename
+else:
+    dataDrawer = drawer(0.4)
 
 metrics_dic = dict()
 with open("./args.txt", 'r') as args:

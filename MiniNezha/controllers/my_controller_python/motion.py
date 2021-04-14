@@ -72,7 +72,7 @@ class velocity_controller:
 
         self.isScreenShot = False
         self.isPointPos = False
-        self.isprint = False
+        self.isPrint = False
         self.Bayes_Jump = False
         self.Time_Based_Jump = False
         self.W_SLIP_Model_Jump = False
@@ -214,6 +214,8 @@ class velocity_controller:
         # take off phase
         # startTime = self.robot.getTime()
         h_ref = self.panel.WheelPos[1]  # height, when jump starts
+        init_torque = math.fabs(self.torque)
+        t_start = math.log(35/init_torque-1)/(-10*a)
         while 1:
             count += 1
             t = count * self.TIME_STEP * 0.001
@@ -227,7 +229,8 @@ class velocity_controller:
                 break
 
             if self.Bayes_Jump:
-                torque = -(10 * a * t + 100 * b * t ** 2 + 1000 * c * t ** 3 + 10 * d)  # poly function
+                # torque = -(10 * a * t + 100 * b * t ** 2 + 1000 * c * t ** 3 + 10 * d)  # poly function
+                torque = -35/(1+math.exp(-10*a*(t+t_start)))
                 if self.panel.supervisorBodyVel[1] >= opt_vel:
                     offSpeed = self.panel.supervisorBodyVel[1]
                     break
@@ -245,8 +248,8 @@ class velocity_controller:
                 torque = -(k * (l0 - 2 * l_leg * math.sin(alpha / 2)) * l0 * math.cos(alpha / 2) + damping) / 2
                 if torque <= -35:
                     torque = -35
-                self.printX('rotate speed: %.3f' % self.motors[2].getVelocity())
-                self.printX('torque: %.3f' % torque)
+                # self.printX('rotate speed: %.3f' % self.motors[2].getVelocity())
+                # self.printX('torque: %.3f' % torque)
 
             else:
                 torque = -35
@@ -269,8 +272,6 @@ class velocity_controller:
             #     self.printX("t:",t)
             #     break
 
-            # torque = -a * desire_h / (1 + math.exp(-b * t))-c  # sigmoid function, a > 0, b > 0
-
             if torque > 0:
                 penalties[0] += 0.1 * square_penalize(torque)
             if torque < -35:
@@ -290,7 +291,7 @@ class velocity_controller:
             self.torque = torque
             self.motors[2].setTorque(torque)
             self.motors[3].setTorque(torque)
-            self.printX('Motor torque: %.3f' % self.motors[3].getTorqueFeedback())
+            # self.printX('Motor torque: %.3f' % self.motors[3].getTorqueFeedback())
         self.printX("t:", t)
         self.printX("takeoff speed:", self.panel.supervisorBodyVel[1])
         h_max = -1  # height of the top point
@@ -322,9 +323,6 @@ class velocity_controller:
         # self.printX('h_ref :%3f' % h_ref)
         # self.printX('Actual height: %3f' % delta_h)
         # self.printX('Actual wheel height: %3f' % delta_w_h)
-        # energy_baseline = m*g*desire_h
-        # if energy > energy_baseline:
-        #     penalties[4] = square_penalize(energy-energy_baseline)
 
         # loss_v = (self.panel.gps_v - math.sqrt(desire_h * 2 * g) * 7.8 / 5.6) ** 2
         loss_height = math.fabs(delta_h - desire_h)
@@ -336,6 +334,10 @@ class velocity_controller:
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
             self.screenShot("Touch")
+            line_y = self.panel.BodyHeight[1]-self.panel.WheelPos[1]
+            line_x = self.panel.BodyHeight[0]-self.panel.WheelPos[0]
+            line_angle = math.atan2(line_y,line_x)
+            
             if self.robot.getTime() > 5:
                 # self.printX("timeout 5 landing")
                 break
@@ -343,7 +345,10 @@ class velocity_controller:
                 penalties[5] += 10 * square_penalize(self.panel.pitch - 0.15 * math.pi)
             if self.panel.pitch > 0.25 * math.pi:
                 break
-
+            if line_angle > 0.55*math.pi:
+                penalties[4] += 10 * square_penalize(line_angle-0.55*math.pi)
+            if line_angle > 0.65*math.pi:
+                break
             touch_F = self.panel.F[0][1]
             if touch_F > 1:
                 self.printX('touch_F %3f' % touch_F)
@@ -500,8 +505,8 @@ class velocity_controller:
         self.panel.updateBodyVelocity(self.cur_height)
 
     def printX(self, string,a='',b='',c='',d='',e=''):
-        if self.isprint:
-            self.printX(string,a,b,c,d,e)
+        if self.isPrint:
+            print(string,a,b,c,d,e)
 
     def obtain_delta_L_for_W_SLIP(self, desire_h):
         mb = 5.52
