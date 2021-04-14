@@ -16,7 +16,7 @@ class drawer:
         self.fileName = ''
         self.txtFileName = ''
 
-    def changeArgs(self, height, line, csvName=" "):
+    def changeArgs(self, height, line, csvName=None):
         self.height = height
         self.line = line
         if csvName is None:
