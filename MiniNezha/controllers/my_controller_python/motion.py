@@ -15,7 +15,9 @@ class velocity_controller:
     g = 9.81
     k = 1036.34
     alpha_i = 2.2822  # setHeight(0.4)
-    alpha_f = 0.9439  # setHeight(0.2)
+    alpha_f = 0
+    # alpha_f = 0.9439  # setHeight(0.2)
+      # setHeight(0.2)
     # alpha_low = 0
     l0 = 0.4
 
@@ -80,8 +82,11 @@ class velocity_controller:
         self.torque = 0
 
         self.time = 0
-        self.takeOffTime = 0
         self.filename = ''
+
+        self.indexCount = 0
+        self.takeOffIndex = 0
+        self.highestIndex = 0
 
 
     def calc_balance_angle_1(self, h):
@@ -175,9 +180,12 @@ class velocity_controller:
         if self.isPointPos:
             TIME = self.time
             file_handle = open(self.filename, mode='a+')
+            if(self.indexCount==0):
+                file_handle.truncate(0)
             file_handle.writelines(
                 [str(TIME), ',', str(self.panel.WheelPos[1] - 0.05), ',', str(self.panel.WheelPos[0]),',',str(self.torque), '\n'])
             file_handle.close()
+            self.indexCount +=1
             # print("Motor torque: ", self.torque)
             # file_handle = open('BodyHeight.txt', mode='a')
             # file_handle.writelines([str(TIME), ',', str(self.panel.BodyHeight[1]), '\n'])
@@ -229,6 +237,7 @@ class velocity_controller:
                 break
 
             if self.Bayes_Jump:
+                alpha_f = 0.9439
                 if b==0:
                     torque = -35/(1+math.exp(-10*a*(t+t_start)))
                 else:
@@ -244,14 +253,16 @@ class velocity_controller:
                 if t >= t0:
                     break
             elif self.W_SLIP_Model_Jump:
+                alpha_f = 1.3
                 if alpha >= alpha_i:
                     break
-                damping = 0.1 * self.motors[2].getVelocity()
+                damping = 0.14 * self.motors[2].getVelocity()
                 torque = -(k * (l0 - 2 * l_leg * math.sin(alpha / 2)) * l0 * math.cos(alpha / 2) + damping) / 2
                 if torque <= -35:
                     torque = -35
                 # self.printX('rotate speed: %.3f' % self.motors[2].getVelocity())
                 # self.printX('torque: %.3f' % torque)
+
 
             else:
                 torque = -35
@@ -293,9 +304,10 @@ class velocity_controller:
             self.torque = torque
             self.motors[2].setTorque(torque)
             self.motors[3].setTorque(torque)
-            # self.printX('Motor torque: %.3f' % self.motors[3].getTorqueFeedback())
+            self.printX('Motor torque: %.3f' % self.motors[3].getTorqueFeedback())
         self.printX("t:", t)
         self.printX("takeoff speed:", self.panel.supervisorBodyVel[1])
+        self.takeOffIndex = self.indexCount
         h_max = -1  # height of the top point
 
         # flight phase
@@ -312,12 +324,14 @@ class velocity_controller:
             # self.motors[3].setPosition(lock_val)
             self.motors[2].setPosition(math.pi - alpha_f)
             self.motors[3].setPosition(math.pi - alpha_f)
+            self.printX('knee angle: ',(math.pi - self.panel.encoder[2])-alpha_f)
             if h_max <= self.panel.WheelPos[1]:
                 h_max = self.panel.WheelPos[1]
             else:
                 break
 
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
+        self.highestIndex = self.indexCount
         print("wheel delta h: %.5f " % delta_h, 'h_ref: ', h_ref, 'h_max: ', h_max)
         print("highest point: %.5f" % self.panel.WheelPos[0])
         delta_w_h = (mb * offSpeed * 5 / 7.8 * offSpeed / 9.81 - 5 * delta_h) / 2
@@ -340,7 +354,7 @@ class velocity_controller:
             line_y = self.panel.BodyHeight[1]-self.panel.WheelPos[1]
             line_x = self.panel.BodyHeight[0]-self.panel.WheelPos[0]
             line_angle = math.atan2(line_y,line_x)
-            
+
             if self.robot.getTime() > 5:
                 # self.printX("timeout 5 landing")
                 break
@@ -512,7 +526,8 @@ class velocity_controller:
             print(string,a,b,c,d,e)
 
     def obtain_delta_L_for_W_SLIP(self, desire_h):
-        mb = 5.52
+        mb = 5.7
+        alpha_f=1.3
         delta_L = math.sqrt(
             (desire_h - 2 * l_leg * (
                     math.sin(alpha_i / 2) - math.sin(alpha_f / 2)) * mb / m) * 2 * g * m * m / mb / k)
