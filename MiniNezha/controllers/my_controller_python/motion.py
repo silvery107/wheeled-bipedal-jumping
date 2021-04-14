@@ -174,7 +174,7 @@ class velocity_controller:
         # https://cyberbotics.com/doc/guide/supervisor-programming?tab-language=python
         if self.isPointPos:
             TIME = self.time
-            file_handle = open(self.filename, mode='a')
+            file_handle = open(self.filename, mode='a+')
             file_handle.writelines(
                 [str(TIME), ',', str(self.panel.WheelPos[1] - 0.05), ',', str(self.panel.WheelPos[0]),',',str(self.torque), '\n'])
             file_handle.close()
