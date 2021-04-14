@@ -86,11 +86,11 @@ vel.Bayes_Jump = 1
 vel.W_SLIP_Model_Jump = 0
 vel.Time_Based_Jump = 0
 
-isTraining = False
+isTraining = True
 if not isTraining:
     dataDrawer = drawer()
     '''
-    valid csvName = poly-h=0.2, poly-h=0.3, poly-h=0.4, sigmoid-h=0.3, sigmoid-h=0.4 
+    valid csvName = poly-h=0.2, poly-h=0.3, poly-h=0.4, sigmoid-h=0.2, sigmoid-h=0.3, sigmoid-h=0.4 
     '''
     dataDrawer.changeArgs(height=0.4, line=2, csvName="../../records/poly-h=0.3.csv")  # edit this only for Bayes_Jump
     dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
@@ -101,7 +101,7 @@ if not isTraining:
     vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
     dataDrawer.txtFileName = vel.filename
 else:
-    dataDrawer = drawer(0.3)
+    dataDrawer = drawer(0.2)
 
 metrics_dic = dict()
 with open("./args.txt", 'r') as args:
@@ -127,8 +127,8 @@ while robot.step(TIME_STEP) != -1:
     #     key = mKeyboard.getKey()
     #     vel.keyboardControl(key,param_dic)
     #     fall_flag = not vel.checkPitch(30)
-    vel.isPrint = True
-    vel.isPointPos = True
+    vel.isPrint = False
+    vel.isPointPos = False
     vel.isScreenShot = False
     if TIME > 3:
         break
