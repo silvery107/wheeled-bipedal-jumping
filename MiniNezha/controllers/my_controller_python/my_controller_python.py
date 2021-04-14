@@ -92,7 +92,7 @@ if not isTraining:
     '''
     valid csvName = poly-h=0.2, poly-h=0.3, poly-h=0.4, sigmoid-h=0.3, sigmoid-h=0.4 
     '''
-    dataDrawer.changeArgs(height=0.4, line=2, csvName="../../records/sigmoid-h=0.4")  # edit this only for Bayes_Jump
+    dataDrawer.changeArgs(height=0.4, line=2, csvName="../../records/poly-h=0.3.csv")  # edit this only for Bayes_Jump
     dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_' + str(dataDrawer.line)
     if (vel.Bayes_Jump):
         dataDrawer.fileName += '_Bayes'
