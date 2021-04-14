@@ -100,7 +100,7 @@ class drawer:
         plt.grid()
 
         # plt.show()
-        figureName = "./chart/" + self.fileName + '_' + type + ".jpg"
+        figureName = "./chart/" + self.fileName + '_' + type + ".png"
         plt.savefig(figureName, bbox_inches='tight')
 
         #### fig2
@@ -135,5 +135,5 @@ class drawer:
         plt.grid()
 
         # plt.show()
-        figureName = "./chart/" + self.fileName + '_' + type + ".jpg"
+        figureName = "./chart/" + self.fileName + '_' + type + ".png"
         plt.savefig(figureName, bbox_inches='tight')

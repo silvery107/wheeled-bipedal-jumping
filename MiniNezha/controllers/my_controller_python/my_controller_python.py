@@ -82,11 +82,11 @@ vel.setXVel(0.0)
 # fall_flag = False
 # restart_flag = False
 jump_metrics = 9999
-vel.Bayes_Jump = 1
-vel.W_SLIP_Model_Jump = 0
+vel.Bayes_Jump = 0
+vel.W_SLIP_Model_Jump = 1
 vel.Time_Based_Jump = 0
-height = 0.35
-line = 5
+height = 0.4
+line = 1
 
 isTraining = False
 if not isTraining:
@@ -95,7 +95,7 @@ if not isTraining:
     valid csvName = poly-h=0.2, poly-h=0.3, poly-h=0.4, sigmoid-h=0.2, sigmoid-h=0.3, sigmoid-h=0.4 
     !Change "height" above at the same time when changing the csvName!
     '''
-    dataDrawer.changeArgs(height, line, csvName="../../records/sigmoid-h=0.35.csv")  # edit this only for Bayes_Jump
+    dataDrawer.changeArgs(height, line, csvName="../../records/sigmoid-h=0.45.csv")  # edit this only for Bayes_Jump
     dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_'
     if (vel.Bayes_Jump):
         dataDrawer.fileName += str(dataDrawer.line)
