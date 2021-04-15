@@ -82,8 +82,8 @@ vel.setXVel(0.0)
 # fall_flag = False
 # restart_flag = False
 jump_metrics = 9999
-vel.Bayes_Jump = 1
-vel.W_SLIP_Model_Jump = 0
+vel.Bayes_Jump = 0
+vel.W_SLIP_Model_Jump = 1
 vel.Time_Based_Jump = 0
 height = 0.4
 line = 2
@@ -92,10 +92,11 @@ dataDrawer = drawer(height)
 isTraining = False
 if not isTraining:
     '''
-    valid csvName = poly-h=0.2, poly-h=0.3, poly-h=0.4, sigmoid-h=0.2, sigmoid-h=0.3, sigmoid-h=0.4 
+    valid csvName = poly-h=0.2, poly-h=0.3, poly-h=0.4,
+                    sigmoid-h=0.2, sigmoid-h=0.3, sigmoid-h=0.35, sigmoid-h=0.4 , sigmoid-h=0.45, sigmoid-h=0.5
     !Change "height" above at the same time when changing the csvName!
     '''
-    dataDrawer.changeArgs(height, line, csvName="../../records/sigmoid-h=0.4.csv")  # edit this only for Bayes_Jump
+    dataDrawer.changeArgs(height, line, csvName="../../records/sigmoid-h=0.45.csv")  # edit this only for Bayes_Jump
     dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_'
     if (vel.Bayes_Jump):
         dataDrawer.fileName += str(dataDrawer.line)
@@ -130,7 +131,7 @@ while robot.step(TIME_STEP) != -1:
     #     vel.keyboardControl(key,param_dic)
     #     fall_flag = not vel.checkPitch(30)
     vel.isPrint = False
-    vel.isPointPos = True
+    vel.isPointPos = False
     vel.isScreenShot = False
     if TIME > 3:
         break

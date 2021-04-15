@@ -86,6 +86,7 @@ class velocity_controller:
 
         self.indexCount = 0
         self.takeOffIndex = 0
+        self.highestIndex = 0
 
 
     def calc_balance_angle_1(self, h):
@@ -179,6 +180,8 @@ class velocity_controller:
         if self.isPointPos:
             TIME = self.time
             file_handle = open(self.filename, mode='a+')
+            if(self.indexCount==0):
+                file_handle.truncate(0)
             file_handle.writelines(
                 [str(TIME), ',', str(self.panel.WheelPos[1] - 0.05), ',', str(self.panel.WheelPos[0]),',',str(self.torque), '\n'])
             file_handle.close()
@@ -332,6 +335,7 @@ class velocity_controller:
                 break
 
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
+        self.highestIndex = self.indexCount
         print("wheel delta h: %.5f " % delta_h, 'h_ref: ', h_ref, 'h_max: ', h_max)
         print("highest point: %.5f" % self.panel.WheelPos[0])
         delta_w_h = (mb * offSpeed * 5 / 7.8 * offSpeed / 9.81 - 5 * delta_h) / 2
