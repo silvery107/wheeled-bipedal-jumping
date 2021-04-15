@@ -191,7 +191,11 @@ class velocity_controller:
     def screenShot(self, filetype, quality=100):
         if self.isScreenShot:
             if self.screenShotCount % 64 == 0:
-                file_str = "../../screenshot/" + filetype + str(self.imageCount) + ".jpg"
+                if self.imageCount<10:
+                    numstr = "0"+str(self.imageCount)
+                else:
+                    numstr = str(self.imageCount)
+                file_str = "../../screenshot/" + filetype + "_" + numstr + ".png"
                 self.robot.exportImage(file_str, quality)
                 self.imageCount += 1
             self.screenShotCount += 1
@@ -226,7 +230,7 @@ class velocity_controller:
             t = count * self.TIME_STEP * 0.001
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
-            self.screenShot("Jump")
+            self.screenShot("2Jump")
             alpha = math.pi - self.panel.encoder[2]  # angle between two legs
 
             if self.robot.getTime() > 3:
@@ -314,7 +318,7 @@ class velocity_controller:
                 break
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
-            self.screenShot("Jump")
+            self.screenShot("2Jump")
             self.torque = self.motors[2].getTorqueFeedback()
             # lock_val = (self.panel.encoder[2] if self.panel.encoder[2] < 3.14 else 3)
             # self.motors[2].setPosition(lock_val)  # lock keen motors, avoid passing min-angle
@@ -346,7 +350,7 @@ class velocity_controller:
         while 1:
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
-            self.screenShot("Touch")
+            self.screenShot("3Touch")
             line_y = self.panel.BodyHeight[1]-self.panel.WheelPos[1]
             line_x = self.panel.BodyHeight[0]-self.panel.WheelPos[0]
             line_angle = math.atan2(line_y,line_x)
