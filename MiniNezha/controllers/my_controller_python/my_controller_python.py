@@ -85,17 +85,17 @@ jump_metrics = 9999
 vel.Bayes_Jump = 1
 vel.W_SLIP_Model_Jump = 0
 vel.Time_Based_Jump = 0
-height = 0.3
-line = 1
+height = 0.4
+line = 2
+dataDrawer = drawer(height)
 
 isTraining = False
 if not isTraining:
-    dataDrawer = drawer()
     '''
     valid csvName = poly-h=0.2, poly-h=0.3, poly-h=0.4, sigmoid-h=0.2, sigmoid-h=0.3, sigmoid-h=0.4 
     !Change "height" above at the same time when changing the csvName!
     '''
-    dataDrawer.changeArgs(height, line, csvName="../../records/sigmoid-h=0.3.csv")  # edit this only for Bayes_Jump
+    dataDrawer.changeArgs(height, line, csvName="../../records/sigmoid-h=0.4.csv")  # edit this only for Bayes_Jump
     dataDrawer.fileName = 'WheelPos' + str(dataDrawer.height) + '_'
     if (vel.Bayes_Jump):
         dataDrawer.fileName += str(dataDrawer.line)
@@ -104,8 +104,6 @@ if not isTraining:
         dataDrawer.fileName += 'Slip'
     vel.filename = './dataset/' + dataDrawer.fileName + '.txt'
     dataDrawer.txtFileName = vel.filename
-else:
-    dataDrawer = drawer(0.2)
 
 metrics_dic = dict()
 with open("./args.txt", 'r') as args:
@@ -142,15 +140,15 @@ while robot.step(TIME_STEP) != -1:
             vel.setHeight(l_low)
         else:
             vel.setHeight(0.2)
-        vel.screenShot("Start")
+        vel.screenShot("1Start")
         vel.torque = motors[3].getTorqueFeedback()
     if 0.5 <= TIME < 1.5:
         vel.setXVel(3)
-        vel.screenShot("Start")
+        vel.screenShot("1Start")
         vel.torque = motors[3].getTorqueFeedback()
     elif 1.5 <= TIME < 1.65:
         vel.setXVel(0)
-        vel.screenShot("Start")
+        vel.screenShot("1Start")
         vel.torque = motors[3].getTorqueFeedback()
         if TIME ==1.55:
             dataDrawer.startIndex = vel.indexCount
@@ -158,10 +156,10 @@ while robot.step(TIME_STEP) != -1:
         dataDrawer.startTorqueIndex = vel.indexCount
         jump_metrics = vel.jump(param_dic, height)
         dataDrawer.takeOffIndex = vel.takeOffIndex
-        vel.screenShot("Jump")
+        vel.screenShot("2Jump")
         # break
     else:
-        vel.screenShot("Land")
+        vel.screenShot("4Land")
         key = mKeyboard.getKey()
         vel.keyboardControl(key, param_dic)
         vel.torque = motors[3].getTorqueFeedback()
