@@ -1,8 +1,8 @@
-================介绍================
+# Introduction
 
-轮式双足机器人的建模和控制
+本项目是轮式双足机器人的建模和控制，主要是定高跳跃控制及基于贝叶斯优化的控制器参数优化
    
-================软件架构说明================
+# Structure
     -requriements.txt
     -model_parameters.txt：机器人相关参数
     -worlds：包含各种wbt文件
@@ -15,14 +15,12 @@
 		-PID_controller.py：PID
 		-parameter.txt：保存运动参数
 
-================安装教程================
-
+# Installation
         安装webots
         需要python3.7
-        安装相应依赖，若有自信可跳过此步：找到requriements.txt，在此目录下执行：pip install -r requriements.txt
+        找到requriements.txt，在此目录下执行：`pip install -r requriements.txt`
 
-================使用说明================
-
+# Qucik Start
        双击任意worlds下的wbt文件，打开仿真。
        机器人控制方法：
 	前进后退：“W”，“S”
@@ -33,5 +31,5 @@
 	【机器人默认速度较大，请小心驾驶】
 	【功能不全，仅可在motion.py中可修改速度】
 
-================参与贡献================
+# Contribution
 Penson, SilverSoul, Sure, YZ, Amanda
