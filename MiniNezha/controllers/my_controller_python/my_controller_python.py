@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.7
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 """my_controller_python controller."""
 
@@ -82,13 +82,13 @@ vel.setXVel(0.0)
 # fall_flag = False
 # restart_flag = False
 jump_metrics = 9999
-vel.Bayes_Jump = 0
-vel.W_SLIP_Model_Jump = 1
+vel.Bayes_Jump = 1
+vel.W_SLIP_Model_Jump = 0
 vel.Time_Based_Jump = 0
-height = 0.5
+height = 0.45
 line = 1
 
-isTraining = False
+isTraining = True
 if not isTraining:
     dataDrawer = drawer()
     '''
