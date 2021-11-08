@@ -37,15 +37,26 @@ Y. Zhuang et al., "*Height Control and Optimal Torque Planning for Jumping With 
 
 # Qucik Start
 
-双击任意worlds下的wbt文件，打开仿真
+## Simulation Setup
+1. Open `*.wbt` file in \<worlds\>
+2. Control the robot using keyboard:
 
-机器人控制方法：
+	|Motion|Command|
+	|-|-|
+	|Jump|Space|
+	|Forward|W|
+	|Backward|S|
+	|Left Turn|A|
+	|Right Turn|D|
+	|Halt Turn|F|
+	|Squat Down|↓|
+	|Stand Up|↑|
 
-	前进后退：“W”，“S”
-	左右：按一下“A”或“D”即可转向
-	停止转向：“F”
-	蹲起：方向键↓、方向键↑
-	跳跃：空格
+## Optimization Setup
+\<TODO\>
 
-# Contribution
+# TODO
+- [ ] Add optimization setup instructions.
+- [ ] Format data collection methods.
+# Contributors
 SilverSoul, Sure, Penson, Amanda, YZ, Xin Yang
