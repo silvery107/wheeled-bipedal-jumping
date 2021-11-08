@@ -38,7 +38,7 @@ Y. Zhuang et al., "*Height Control and Optimal Torque Planning for Jumping With 
 # Qucik Start
 
 ## Simulation Setup
-1. Open `*.wbt` file in \<worlds\>
+1. Open `*.wbt` file in `<worlds>`
 2. Control the robot using keyboard:
 
 	|Motion|Command|
@@ -53,7 +53,8 @@ Y. Zhuang et al., "*Height Control and Optimal Torque Planning for Jumping With 
 	|Stand Up|↑|
 
 ## Optimization Setup
-\<TODO\>
+
+Check `<advisor_config/quick_start.md>`, and results can be plotted using `<utils/plot_results.ipynb>`.
 
 # TODO
 - [ ] Add optimization setup instructions.
