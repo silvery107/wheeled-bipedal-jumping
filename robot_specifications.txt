@@ -1,0 +1,17 @@
+﻿Body: 
+	Dimensions: 0.1*0.15*0.25m    
+	Mass: 5kg
+Thigh: 
+	Length: 0.22m   
+	Mass: 0.1kg
+Calf: 
+	Length: 0.22m   
+	Mass: 0.1kg
+Wheel: 
+	Radius: 0.05m  
+	Height: 0.03m
+	Mass: 1kg
+Knee Motor: 
+	Mass: 0.1kg
+Force Sensor in Wheel: 
+	Mass: 0.1kg

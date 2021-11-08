@@ -113,5 +113,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Costom
+*.wbproj
 .vscode/
-MiniNezha/worlds/.world.wbproj
+drawings/
+records/
+screenshot/

@@ -1,26 +1,42 @@
 # Introduction
 
-本项目是轮式双足机器人的建模和控制，主要是定高跳跃控制及基于贝叶斯优化的控制器参数优化
+<img src=".utils/../utils/ARM2021.jpg" width=400>
+
+We establish a wheeled-bipedal jumping dynamical (W-JBD) model to optimize the height control, and the Bayesian optimization for torque planning (BOTP) method based on a joint optimization framework for torque planning to achieve accurate height control and minimal energy cost.
+
+# Citation
+
+Y. Zhuang et al., "*Height Control and Optimal Torque Planning for Jumping With Wheeled-Bipedal Robots*," 2021 6th IEEE International Conference on Advanced Robotics and Mechatronics (ICARM), 2021, pp. 477-482, doi: 10.1109/ICARM52023.2021.9536196.
+
+# Dependency
+
+- **Webots R2021a**
+- **Python 3.7**
 
 # Structure
-    -requriements.txt
-    -model_parameters.txt：机器人相关参数
-    -worlds：包含各种wbt文件
-    -contrllers：包含控制文件
-	-linear：场景中运动杆的控制器
-	-my_controller_python：机器人控制器
-		-my_controller_python.py：主文件
-		-panel.py：仪表盘，接收、计算、传递各项状态参数
-		-motion.py：动作集，实现各种功能
-		-PID_controller.py：PID
-		-parameter.txt：保存运动参数
 
-# Installation
-- install `webots`
-- install `python3.7`
-- `pip install -r requriements.txt`
+```
+├── contrllers
+│   ├── my_controller_python
+│   ├── ground
+│   └── linear
+├── advisor_config
+│   ├── config.json
+│   ├── min_function.py
+│   ├── quick_start.md
+│   └── sdk.md
+├── worlds
+│   └── ...
+├── utils
+│   └── ...
+├── README.md
+├── requirements.txt
+├── robot_specifications.txt
+└── ...
+```
 
 # Qucik Start
+
 双击任意worlds下的wbt文件，打开仿真
 
 机器人控制方法：
@@ -32,4 +48,4 @@
 	跳跃：空格
 
 # Contribution
-Penson, SilverSoul, Sure, YZ, Amanda
+SilverSoul, Sure, Penson, Amanda, YZ, Xin Yang
