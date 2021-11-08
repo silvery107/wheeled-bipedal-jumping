@@ -56,8 +56,5 @@ Y. Zhuang et al., "*Height Control and Optimal Torque Planning for Jumping With 
 
 Check `<advisor_config/quick_start.md>`, and results can be plotted using `<utils/plot_results.py>`.
 
-# TODO
-- [ ] Add optimization setup instructions.
-- [ ] Format data collection methods.
 # Contributors
 SilverSoul, Sure, Penson, Amanda, YZ, Xin Yang
