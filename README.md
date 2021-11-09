@@ -10,8 +10,12 @@ Y. Zhuang et al., "*Height Control and Optimal Torque Planning for Jumping With 
 
 # Dependency
 
-- **Webots R2021a**
-- **Python 3.7**
+- **Webots  R2021a**
+- **Python  3.7**
+- **Advisor 0.1.6**
+
+This project was tested on Ubuntu 18.04. 
+There are bugs in the source code of [Advisor](https://github.com/tobegit3hub/advisor). if you want to reproduce our results, you can check my [modified version](https://github.com/silvery107/advisor).
 
 # Structure
 
