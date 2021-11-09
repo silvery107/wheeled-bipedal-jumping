@@ -8,6 +8,10 @@ We establish a wheeled-bipedal jumping dynamical (W-JBD) model to optimize the h
 
 Y. Zhuang et al., "*Height Control and Optimal Torque Planning for Jumping With Wheeled-Bipedal Robots*," 2021 6th IEEE International Conference on Advanced Robotics and Mechatronics (ICARM), 2021, pp. 477-482, doi: 10.1109/ICARM52023.2021.9536196.
 
+```
+@INPROCEEDINGS{9536196,  author={Zhuang, Yulun and Xu, Yuan and Huang, Binxin and Chao, Mandan and Shi, Guowei and Yang, Xin and Zhang, Kuangen and Fu, Chenglong},  booktitle={2021 6th IEEE International Conference on Advanced Robotics and Mechatronics (ICARM)},   title={Height Control and Optimal Torque Planning for Jumping With Wheeled-Bipedal Robots},   year={2021},   pages={477-482},  doi={10.1109/ICARM52023.2021.9536196}}
+```
+
 # Dependency
 
 - **Python  3.7**
