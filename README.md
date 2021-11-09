@@ -47,7 +47,7 @@ There are bugs in the source code of [Advisor](https://github.com/tobegit3hub/ad
 # Qucik Start
 
 ## Simulation Setup
-1. Open `*.wbt` file in `<worlds>`
+1. Open `<worlds/world_pure.wbt>`
 2. Control the robot using keyboard:
 
 	|Motion|Command|
@@ -62,8 +62,8 @@ There are bugs in the source code of [Advisor](https://github.com/tobegit3hub/ad
 	|Stand Up|↑|
 
 ## Optimization Setup
-
-Check `<advisor_config/quick_start.md>`, and results can be plotted using `<utils/plot_results.py>`.
+1. Open `<worlds/world_jump.wbt>`
+2. Check `<advisor_config/quick_start.md>`, and results can be plotted using `<utils/plot_results.py>`.
 
 # Contributors
 SilverSoul, Sure, Penson, Amanda, YZ, Xin Yang
