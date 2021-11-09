@@ -191,9 +191,9 @@ Forest {
   maxRadius 6
   minRadius 3
 }
-Robot {
-  translation -39.9989 0.5 -0.803583
-  rotation 0 1 0 2.85387e-06
+DEF NeZha Robot {
+  translation 0.32429 0.492787 -1.51
+  rotation 0 0 1 2.85387e-06
   children [
     GPS {
     }
@@ -227,9 +227,8 @@ Robot {
                 children [
                   DEF Motor_Shape Shape {
                     appearance DEF Motor_Color PBRAppearance {
-                      baseColor 0.93 0.423 0
-                      metalness 0.4
-                      emissiveColor 0.53 0.023 0
+                      baseColor 0.9 0.9 0.9
+                      metalness 0.2
                     }
                     geometry Cylinder {
                       height 0.03
@@ -243,8 +242,10 @@ Robot {
                 children [
                   Shape {
                     appearance PBRAppearance {
-                      baseColor 0.9 0.9 0.9
-                      metalness 0.2
+                      baseColor 0 0.247 0.263
+                      roughness 0.5
+                      metalness 0.5
+                      emissiveColor 0 0.047 0.063
                     }
                     geometry Box {
                       size 0.02 0.22 0.02
@@ -258,6 +259,7 @@ Robot {
                   HingeJoint {
                     jointParameters HingeJointParameters {
                       axis 0 0 1
+                      dampingConstant 0.1
                     }
                     device [
                       PositionSensor {
@@ -292,7 +294,7 @@ Robot {
                           ]
                         }
                         USE Hip_link
-                        Transform {
+                        DEF LEFTWHEEL Transform {
                           translation 0 -0.11 0
                           children [
                             HingeJoint {
@@ -313,21 +315,35 @@ Robot {
                                   maxTorque 35
                                 }
                               ]
-                              endPoint Solid {
-                                translation 0 -0.11 -0.025
-                                rotation 1 8.099014613162322e-17 -8.589863983657008e-17 1.57
+                              endPoint DEF REALLEFTWHEEL Solid {
+                                translation 0 -0.11 -0.025000000000000015
+                                rotation 1 7.853589927914979e-17 -7.853589927914979e-17 1.57
                                 children [
-                                  DEF wheel Shape {
-                                    appearance PBRAppearance {
-                                      baseColor 0 0.247 0.263
-                                      roughness 0.5
-                                      metalness 0.5
-                                      emissiveColor 0 0.047 0.063
+                                  TouchSensor {
+                                    children [
+                                      Shape {
+                                        appearance DEF Wheel PBRAppearance {
+                                          baseColor 0.93 0.423 0
+                                          metalness 0.4
+                                          emissiveColor 0.53 0.023 0
+                                        }
+                                        geometry DEF wheel Cylinder {
+                                          height 0.03
+                                          radius 0.05
+                                        }
+                                      }
+                                    ]
+                                    name "left_touch_sensor"
+                                    boundingObject Cylinder {
+                                      height 0.032
+                                      radius 0.052
                                     }
-                                    geometry DEF wheel Cylinder {
-                                      height 0.03
-                                      radius 0.05
+                                    physics Physics {
+                                      density -1
+                                      mass 0.1
                                     }
+                                    type "force-3d"
+                                    lookupTable []
                                   }
                                 ]
                                 boundingObject USE wheel
@@ -343,7 +359,7 @@ Robot {
                       boundingObject USE Hip_link
                       physics Physics {
                         density -1
-                        mass 0.5
+                        mass 0.1
                         centerOfMass [
                           0 -0.22 0
                         ]
@@ -356,7 +372,7 @@ Robot {
             boundingObject USE Hip_link
             physics Physics {
               density -1
-              mass 0.5
+              mass 0.1
               centerOfMass [
                 0 0 0
               ]
@@ -393,6 +409,7 @@ Robot {
                   HingeJoint {
                     jointParameters HingeJointParameters {
                       axis 0 0 1
+                      dampingConstant 0.1
                     }
                     device [
                       PositionSensor {
@@ -448,20 +465,30 @@ Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0 -0.11 0.02500000000000001
-                                rotation 1 3.681370278710146e-17 1.521633048533527e-16 1.57
+                                translation -5.088427942218804e-07 -0.1099860061753189 0.024999993714566293
+                                rotation -0.9999999600448514 0.00019988604119790872 0.00019988963526137256 4.713186296891846
                                 children [
-                                  DEF wheel Shape {
-                                    appearance PBRAppearance {
-                                      baseColor 0 0.247 0.263
-                                      roughness 0.5
-                                      metalness 0.5
-                                      emissiveColor 0 0.047 0.063
+                                  TouchSensor {
+                                    children [
+                                      Shape {
+                                        appearance USE Wheel
+                                        geometry DEF wheel Cylinder {
+                                          height 0.03
+                                          radius 0.05
+                                        }
+                                      }
+                                    ]
+                                    name "right_touch_sensor"
+                                    boundingObject Cylinder {
+                                      height 0.032
+                                      radius 0.052
                                     }
-                                    geometry DEF wheel Cylinder {
-                                      height 0.03
-                                      radius 0.05
+                                    physics Physics {
+                                      density -1
+                                      mass 0.1
                                     }
+                                    type "force-3d"
+                                    lookupTable []
                                   }
                                 ]
                                 boundingObject USE wheel
@@ -477,7 +504,7 @@ Robot {
                       boundingObject USE Hip_link
                       physics Physics {
                         density -1
-                        mass 0.5
+                        mass 0.1
                         centerOfMass [
                           0 -0.22 0
                         ]
@@ -493,7 +520,7 @@ Robot {
             boundingObject USE Hip_link
             physics Physics {
               density -1
-              mass 0.5
+              mass 0.1
               centerOfMass [
                 0 0 0
               ]
@@ -503,21 +530,16 @@ Robot {
       ]
     }
     DEF BODY Shape {
-      appearance Appearance {
-        material Material {
-        }
-        texture ImageTexture {
-          url [
-            "sustech1.png"
-          ]
-        }
+      appearance PBRAppearance {
+        roughness 0.5
+        metalness 0.5
       }
       geometry Box {
         size 0.15 0.1 0.23
       }
     }
   ]
-  name "MiniNezha(1)"
+  name "MiniNezha"
   contactMaterial "body"
   boundingObject USE BODY
   physics Physics {
@@ -528,6 +550,7 @@ Robot {
     ]
   }
   controller "my_controller_python"
+  supervisor TRUE
 }
 Robot {
   translation -39.4339 0.49 -1.39811

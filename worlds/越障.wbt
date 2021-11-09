@@ -224,9 +224,9 @@ WoodenBox {
   rotation 0.5773529358523396 -0.5773479358528951 -0.5773499358526729 2.0944
   size 0.3 0.3 0.3
 }
-Robot {
-  translation -10.50978020483104 0.6770367039058213 2.8579977542854658
-  rotation -0.014966194348443275 0.9818797597521723 0.18891307634925888 -0.25780905143441246
+DEF NeZha Robot {
+  translation 0.32429 0.492787 -1.51
+  rotation 0 0 1 2.85387e-06
   children [
     GPS {
     }
@@ -240,7 +240,6 @@ Robot {
       children [
         HingeJoint {
           jointParameters HingeJointParameters {
-            position -0.21570225973163465
             axis 0 0 1
           }
           device [
@@ -253,14 +252,17 @@ Robot {
               maxTorque 35
             }
           ]
-          endPoint DEF hip_link Solid {
-            translation -7.53549117380986e-06 1.3785845280412672e-05 5.1365387082614326e-09
-            rotation 2.2087908162081906e-06 1.5378731985652447e-06 -0.999999999996378 0.21570225950809846
+          endPoint Solid {
+            rotation 0 0 1 0
             children [
-              DEF Hip_motor_shape Transform {
+              DEF Hip_Motor_Transform Transform {
                 rotation 1 0 0 1.57
                 children [
-                  Shape {
+                  DEF Motor_Shape Shape {
+                    appearance DEF Motor_Color PBRAppearance {
+                      baseColor 0.9 0.9 0.9
+                      metalness 0.2
+                    }
                     geometry Cylinder {
                       height 0.03
                       radius 0.02
@@ -273,9 +275,10 @@ Robot {
                 children [
                   Shape {
                     appearance PBRAppearance {
-                      baseColor 0 0 0
+                      baseColor 0 0.247 0.263
                       roughness 0.5
                       metalness 0.5
+                      emissiveColor 0 0.047 0.063
                     }
                     geometry Box {
                       size 0.02 0.22 0.02
@@ -288,8 +291,8 @@ Robot {
                 children [
                   HingeJoint {
                     jointParameters HingeJointParameters {
-                      position 0.4271941434017273
                       axis 0 0 1
+                      dampingConstant 0.1
                     }
                     device [
                       PositionSensor {
@@ -302,56 +305,40 @@ Robot {
                       }
                     ]
                     endPoint Solid {
-                      rotation 0 0 1 0.42719414340172684
+                      rotation 0 0 1 0
                       children [
+                        Solid {
+                          rotation 1 0 0 0
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                          name "solid(1)"
+                          boundingObject USE Hip_Motor_Transform
+                          physics Physics {
+                            density -1
+                            mass 0.1
+                          }
+                        }
                         Transform {
                           translation 0 -0.22 0
-                          rotation 1 0 0 1.57
+                          rotation 1 0 0 -0.000795307179585869
                           children [
-                            DEF Motor_Shape Shape {
-                              geometry Cylinder {
-                                height 0.03
-                                radius 0.02
-                              }
-                            }
+                            USE Hip_Motor_Transform
                           ]
                         }
-                        DEF Keen_motor_shape Transform {
-                          rotation 1 0 0 1.57
-                          children [
-                            Shape {
-                              geometry Cylinder {
-                                height 0.03
-                                radius 0.02
-                              }
-                            }
-                          ]
-                        }
-                        DEF Keen_link Transform {
-                          translation 0 -0.11 0
-                          children [
-                            Shape {
-                              appearance PBRAppearance {
-                                baseColor 0 0 0
-                                roughness 0.5
-                                metalness 0.5
-                              }
-                              geometry Box {
-                                size 0.02 0.22 0.02
-                              }
-                            }
-                          ]
-                        }
-                        Transform {
+                        USE Hip_link
+                        DEF LEFTWHEEL Transform {
                           translation 0 -0.11 0
                           children [
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                position -21.542610936349437
                                 axis 0 0 1
                                 anchor 0 -0.11 0
                               }
                               device [
+                                Brake {
+                                  name "left_brake"
+                                }
                                 DEF left_wheel_encoder PositionSensor {
                                   name "left_wheel_encoder"
                                 }
@@ -361,20 +348,35 @@ Robot {
                                   maxTorque 35
                                 }
                               ]
-                              endPoint Solid {
-                                translation 0 -0.11 -0.02499999999999995
-                                rotation -0.15917542100129498 0.6978133830117456 0.6983692918784183 3.4575423185484424
+                              endPoint DEF REALLEFTWHEEL Solid {
+                                translation 0 -0.11 -0.025000000000000015
+                                rotation 1 7.853589927914979e-17 -7.853589927914979e-17 1.57
                                 children [
-                                  DEF wheel Shape {
-                                    appearance PBRAppearance {
-                                      baseColor 1 0 0
-                                      roughness 0.5
-                                      metalness 0.5
+                                  TouchSensor {
+                                    children [
+                                      Shape {
+                                        appearance DEF Wheel PBRAppearance {
+                                          baseColor 0.93 0.423 0
+                                          metalness 0.4
+                                          emissiveColor 0.53 0.023 0
+                                        }
+                                        geometry DEF wheel Cylinder {
+                                          height 0.03
+                                          radius 0.05
+                                        }
+                                      }
+                                    ]
+                                    name "left_touch_sensor"
+                                    boundingObject Cylinder {
+                                      height 0.032
+                                      radius 0.052
                                     }
-                                    geometry DEF wheel Cylinder {
-                                      height 0.03
-                                      radius 0.05
+                                    physics Physics {
+                                      density -1
+                                      mass 0.1
                                     }
+                                    type "force-3d"
+                                    lookupTable []
                                   }
                                 ]
                                 boundingObject USE wheel
@@ -382,14 +384,12 @@ Robot {
                                   density -1
                                   mass 1
                                 }
-                                linearVelocity 0.1465439854333479 0.0405709969069729 0.03781306077792016
-                                angularVelocity 0.7844215635123645 -0.004683643311914781 -3.034955876114565
                               }
                             }
                           ]
                         }
                       ]
-                      boundingObject USE Keen_motor_shape
+                      boundingObject USE Hip_link
                       physics Physics {
                         density -1
                         mass 0.1
@@ -397,16 +397,12 @@ Robot {
                           0 -0.22 0
                         ]
                       }
-                      linearVelocity 0.1466043894508383 0.040588236957069944 0.03782859930977615
-                      angularVelocity 0.013255644510862545 0.00240319388534652 -0.054048771125955644
                     }
                   }
                 ]
               }
-              Shape {
-              }
             ]
-            boundingObject USE Hip_motor_shape
+            boundingObject USE Hip_link
             physics Physics {
               density -1
               mass 0.1
@@ -414,8 +410,6 @@ Robot {
                 0 0 0
               ]
             }
-            linearVelocity 0.16982590467182543 0.03938476144907866 0.043470199853324565
-            angularVelocity 0.013255667597706546 0.002403188165077131 -0.05404883127774509
           }
         }
       ]
@@ -425,7 +419,6 @@ Robot {
       children [
         HingeJoint {
           jointParameters HingeJointParameters {
-            position -0.21570220868157092
             axis 0 0 1
           }
           device [
@@ -439,32 +432,17 @@ Robot {
             }
           ]
           endPoint DEF hip_link Solid {
-            translation -3.4972123550307212e-06 1.903542653135857e-05 2.5947286801663803e-06
-            rotation -6.976789307146653e-06 1.0358285807708476e-06 -0.9999999999751257 0.2157022084837828
+            rotation 0 0 1 0
             children [
-              USE Hip_motor_shape
-              DEF Hip_link Transform {
-                translation 0 -0.11 0
-                children [
-                  Shape {
-                    appearance PBRAppearance {
-                      baseColor 0 0 0
-                      roughness 0.5
-                      metalness 0.5
-                    }
-                    geometry Box {
-                      size 0.02 0.22 0.02
-                    }
-                  }
-                ]
-              }
+              USE Hip_link
+              USE Hip_Motor_Transform
               Transform {
                 translation 0 -0.22 0
                 children [
                   HingeJoint {
                     jointParameters HingeJointParameters {
-                      position 0.42719415138636724
                       axis 0 0 1
+                      dampingConstant 0.1
                     }
                     device [
                       PositionSensor {
@@ -477,30 +455,25 @@ Robot {
                       }
                     ]
                     endPoint Solid {
-                      translation 4.503289613613008e-06 1.970140428846436e-05 -1.119520462444765e-08
-                      rotation -1.1125912874714185e-06 5.23696210802453e-07 0.9999999999992439 0.4271941508820226
+                      rotation 0 0 1 0
                       children [
+                        Solid {
+                          children [
+                            USE Hip_Motor_Transform
+                          ]
+                          name "solid(1)"
+                          boundingObject USE Hip_Motor_Transform
+                          physics Physics {
+                            density -1
+                            mass 0.1
+                          }
+                        }
+                        USE Hip_link
                         Transform {
                           translation 0 -0.22 0
-                          rotation 1 0 0 1.57
+                          rotation 1 0 0 -0.000795307179585869
                           children [
-                            USE Motor_Shape
-                          ]
-                        }
-                        USE Keen_motor_shape
-                        DEF Keen_link Transform {
-                          translation 0 -0.11 0
-                          children [
-                            Shape {
-                              appearance PBRAppearance {
-                                baseColor 0 0 0
-                                roughness 0.5
-                                metalness 0.5
-                              }
-                              geometry Box {
-                                size 0.02 0.22 0.02
-                              }
-                            }
+                            USE Hip_Motor_Transform
                           ]
                         }
                         Transform {
@@ -508,11 +481,13 @@ Robot {
                           children [
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                position -21.60137737748262
                                 axis 0 0 1
                                 anchor 0 -0.11 0
                               }
                               device [
+                                Brake {
+                                  name "right_brake"
+                                }
                                 PositionSensor {
                                   name "right_wheel_encoder"
                                 }
@@ -523,19 +498,30 @@ Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0 -0.11 0.024999999999999932
-                                rotation -0.13818242709324788 0.7000444612662912 0.700602147508133 3.41643441979343
+                                translation -5.088427942218804e-07 -0.1099860061753189 0.024999993714566293
+                                rotation -0.9999999600448514 0.00019988604119790872 0.00019988963526137256 4.713186296891846
                                 children [
-                                  DEF wheel Shape {
-                                    appearance PBRAppearance {
-                                      baseColor 1 0 0
-                                      roughness 0.5
-                                      metalness 0.5
+                                  TouchSensor {
+                                    children [
+                                      Shape {
+                                        appearance USE Wheel
+                                        geometry DEF wheel Cylinder {
+                                          height 0.03
+                                          radius 0.05
+                                        }
+                                      }
+                                    ]
+                                    name "right_touch_sensor"
+                                    boundingObject Cylinder {
+                                      height 0.032
+                                      radius 0.052
                                     }
-                                    geometry DEF wheel Cylinder {
-                                      height 0.03
-                                      radius 0.05
+                                    physics Physics {
+                                      density -1
+                                      mass 0.1
                                     }
+                                    type "force-3d"
+                                    lookupTable []
                                   }
                                 ]
                                 boundingObject USE wheel
@@ -543,14 +529,12 @@ Robot {
                                   density -1
                                   mass 1
                                 }
-                                linearVelocity 0.14728081188646458 0.04078109972879368 0.03800285925648885
-                                angularVelocity 0.7883732137959969 -0.004737270350460422 -3.0502400437723014
                               }
                             }
                           ]
                         }
                       ]
-                      boundingObject USE Keen_motor_shape
+                      boundingObject USE Hip_link
                       physics Physics {
                         density -1
                         mass 0.1
@@ -558,8 +542,6 @@ Robot {
                           0 -0.22 0
                         ]
                       }
-                      linearVelocity 0.1472186102354573 0.04076321222871469 0.03798684733844697
-                      angularVelocity 0.013255670730596884 0.002403148077564323 -0.05404872438223568
                     }
                   }
                 ]
@@ -568,7 +550,7 @@ Robot {
               }
             ]
             name "solid(1)"
-            boundingObject USE Hip_motor_shape
+            boundingObject USE Hip_link
             physics Physics {
               density -1
               mass 0.1
@@ -576,16 +558,14 @@ Robot {
                 0 0 0
               ]
             }
-            linearVelocity 0.17043907684623558 0.039560370849649466 0.04362831133225528
-            angularVelocity 0.013255686590300178 0.002403162940699374 -0.054048796036132184
           }
         }
       ]
     }
     DEF BODY Shape {
       appearance PBRAppearance {
-        roughness 0.1
-        metalness 0.8
+        roughness 0.5
+        metalness 0.5
       }
       geometry Box {
         size 0.15 0.1 0.23
@@ -593,6 +573,7 @@ Robot {
     }
   ]
   name "MiniNezha"
+  contactMaterial "body"
   boundingObject USE BODY
   physics Physics {
     density -1
@@ -602,8 +583,7 @@ Robot {
     ]
   }
   controller "my_controller_python"
-  linearVelocity 0.17013076779297903 0.039472003184223114 0.04354880614246865
-  angularVelocity 0.013255683673982749 0.0024031792126183896 -0.05404881397528362
+  supervisor TRUE
 }
 Solid {
   translation -11.1065 0 2.12198
