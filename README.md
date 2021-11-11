@@ -18,8 +18,7 @@ Y. Zhuang et al., "*Height Control and Optimal Torque Planning for Jumping With 
 - [**Webots  R2021a**](https://github.com/cyberbotics/webots)
 - [**Advisor 0.1.6**](https://github.com/silvery107/advisor)
 
-This project was tested on Ubuntu 18.04. 
-There are bugs in the source code of [Advisor](https://github.com/tobegit3hub/advisor). if you want to reproduce our results, you can check my [modified version](https://github.com/silvery107/advisor).
+This project was tested on Ubuntu 18.04 and Windows 10 while the optimization framework requires Linux.
 
 # Structure
 
