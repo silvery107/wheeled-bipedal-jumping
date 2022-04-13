@@ -65,6 +65,4 @@ This project was tested on Ubuntu 18.04 and Windows 10 while the optimization fr
 2. Check `<advisor_config/quick_start.md>`, and results can be plotted using `<utils/plot_results.py>`.
 
 # Contributors
-SilverSoul, Sure, Penson, Amanda, YZ, Xin Yang
-
 ![GitHub Contributors Image](https://contrib.rocks/image?repo=silvery107/wheeled-bipedal-jumping)
