@@ -67,4 +67,4 @@ This project was tested on Ubuntu 18.04 and Windows 10 while the optimization fr
 # Contributors
 SilverSoul, Sure, Penson, Amanda, YZ, Xin Yang
 
-[![](https://opencollective.com/wheeled-bipedal-jumping/contributors.svg?width=890)](https://github.com/silvery107/wheeled-bipedal-jumping/graphs/contributors)
+![GitHub Contributors Image](https://contrib.rocks/image?repo=silvery107/wheeled-bipedal-jumping)
