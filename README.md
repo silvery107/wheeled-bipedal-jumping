@@ -50,7 +50,7 @@ This project was tested on Ubuntu 18.04 and Windows 10 while the optimization fr
 2. Control the robot using keyboard:
 
 	|Motion|Command|
-	|-|-|
+	|-|:-:|
 	|Jump|Space|
 	|Forward|W|
 	|Backward|S|
