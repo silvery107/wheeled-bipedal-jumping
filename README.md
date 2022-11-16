@@ -3,10 +3,9 @@
 <!--<img src=".utils/../utils/ARM2021.jpg" width=400>-->
 
 
-https://user-images.githubusercontent.com/44640904/202279224-cfa3a059-0714-43fe-954f-b9a0a42e0f99.mp4
-
-
 We establish a wheeled-bipedal jumping dynamical (W-JBD) model to optimize the height control, and the Bayesian optimization for torque planning (BOTP) method based on a joint optimization framework for torque planning to achieve accurate height control and minimal energy cost.
+
+https://user-images.githubusercontent.com/44640904/202279224-cfa3a059-0714-43fe-954f-b9a0a42e0f99.mp4
 
 # Citation
 
