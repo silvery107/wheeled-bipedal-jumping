@@ -34,14 +34,14 @@ This project was tested on Ubuntu 18.04 and Windows 10 while the optimization fr
 ```
 ├── contrllers
 │   ├── my_controller_python
-│   ├── ground
-│   └── linear
+│   └── ...
 ├── advisor_config
 │   ├── config.json
 │   ├── min_function.py
-│   ├── quick_start.md
-│   └── sdk.md
+│   └── ...
 ├── worlds
+│   ├── world_jump.wbt
+│   ├── world_pure.wbt
 │   └── ...
 ├── utils
 │   ├── plot_result.py
@@ -65,9 +65,8 @@ This project was tested on Ubuntu 18.04 and Windows 10 while the optimization fr
 	|Backward|S|
 	|Left Turn|A|
 	|Right Turn|D|
-	|Halt Turn|F|
-	|Squat Down|↓|
 	|Stand Up|↑|
+	|Squat Down|↓|
 
 ## Optimization Setup
 1. Open `<worlds/world_jump.wbt>`
