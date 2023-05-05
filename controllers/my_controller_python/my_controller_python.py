@@ -133,8 +133,8 @@ while robot.step(TIME_STEP) != -1:
     vel.isPrint = False
     vel.isPointPos = False
     vel.isScreenShot = False
-    if TIME > 3:
-        break
+    # if TIME > 3:
+    #     break
     if 0 < TIME < 0.5:
         if vel.W_SLIP_Model_Jump:
             l_low = vel.obtain_delta_L_for_W_SLIP(height)

@@ -5,21 +5,21 @@ from PID_control import *
 import math
 import sys
 
+t0 = 0.09  # desire time
+m = 7.8  # total mass
+mb = 5.6  # body mass
+l_leg = 0.22  # leg length
+g = 9.81
+k = 1036.34
+alpha_i = 2.2822  # setHeight(0.4)
+alpha_f = 0
+# alpha_f = 0.9439  # setHeight(0.2)
+    # setHeight(0.2)
+alpha_low = 0
+l0 = 0.4
 
 class velocity_controller:
     global t0, m, mb, l_leg, g, k, alpha_i, alpha_f, alpha_low, l0
-    t0 = 0.09  # desire time
-    m = 7.8  # total mass
-    mb = 5.6  # body mass
-    l_leg = 0.22  # leg length
-    g = 9.81
-    k = 1036.34
-    alpha_i = 2.2822  # setHeight(0.4)
-    alpha_f = 0
-    # alpha_f = 0.9439  # setHeight(0.2)
-      # setHeight(0.2)
-    # alpha_low = 0
-    l0 = 0.4
 
     def __init__(self, motors, panel, robot):
         self.Ev = 0.0
@@ -27,7 +27,7 @@ class velocity_controller:
         self.motors = motors
         self.factor1 = 1
         self.factor2 = 1
-        # 平衡小车之家说还要乘0.6,我没乘
+
         # 角度
         self.pitch_Kp = 10.0  # 2.8  # 4 的时候平衡车，kp越大越稳 10
         self.pitch_Kd = 0.0  # 再大就会抖
@@ -56,8 +56,8 @@ class velocity_controller:
         self.rotation_u = 0.0
 
         self.rotation_Kp = 50.0
-        self.rotation_Ki = 2.5
-        self.rotation_Kd = 5.0
+        self.rotation_Ki = 0.
+        self.rotation_Kd = 1.0
 
         self.rotation_pid = PID_Controller(self.rotation_Kp, self.rotation_Kd, self.rotation_Ki)
 
@@ -155,10 +155,10 @@ class velocity_controller:
         self.translation_pid.feedback(translation_err)
         self.translation_u = self.translation_pid.get_u()
 
-        self.motors[4].setTorque(
-            -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u + 0.028 * self.rotation_u)
-        self.motors[5].setTorque(
-            -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u - 0.028 * self.rotation_u)
+        left_torque = -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u + 0.028 * self.rotation_u * 30
+        right_torque = -self.blance_u - self.omgz_u + self.translation_Kp1 * self.translation_u - 0.028 * self.rotation_u * 30
+        self.motors[4].setTorque(left_torque if abs(left_torque) <= 35 else math.copysign(35, left_torque))
+        self.motors[5].setTorque(right_torque if abs(right_torque) <= 35 else math.copysign(35, right_torque))
 
     def setAVel(self, key, vel):
         rotation_err = vel - self.panel.omega_y
@@ -172,6 +172,7 @@ class velocity_controller:
         elif key == 70:
             self.rotation_u = 0.0
             self.panel.rotation = 0
+        self.setXVel(0.0)
 
     def savePointPos(self):
         # WEBOTS_HOME/projects/robots/neuronics/ipr/worlds/ipr_cube.wbt
@@ -204,7 +205,7 @@ class velocity_controller:
             self.screenShotCount += 1
         self.savePointPos()
 
-    def jump(self, params, desire_h):  # desire_h
+    def jump(self, params, desire_h=0.4):  # desire_h
         a = params["jump_a"]
         b = params["jump_b"]
         c = params["jump_c"]
@@ -226,8 +227,8 @@ class velocity_controller:
         # take off phase
         # startTime = self.robot.getTime()
         h_ref = self.panel.WheelPos[1]  # height, when jump starts
-        init_torque = math.fabs(self.torque)
-        t_start = math.log(35/init_torque-1)/(-10*a)
+        init_torque = self.torque
+        t_start = math.log(35/init_torque-1 if 35/init_torque-1 > 0 else 1e-6)/(-10*a)
         while 1:
             count += 1
             t = count * self.TIME_STEP * 0.001
@@ -236,9 +237,9 @@ class velocity_controller:
             self.screenShot("2Jump")
             alpha = math.pi - self.panel.encoder[2]  # angle between two legs
 
-            if self.robot.getTime() > 3:
-                # self.printX("timeout 3 take-off")
-                break
+            # if self.robot.getTime() > 3:
+            #     # self.printX("timeout 3 take-off")
+            #     break
 
             if self.Bayes_Jump:
                 alpha_f = 0.9439
@@ -316,9 +317,15 @@ class velocity_controller:
 
         # flight phase
         while 1:
-            if self.robot.getTime() > 4:
-                # self.printX("timeout 4 flight")
-                break
+            if self.Bayes_Jump:
+                alpha_f = 0.9439
+            elif self.W_SLIP_Model_Jump:
+                alpha_f = 1.3
+            else:
+                alpha_f = 0.0
+            # if self.robot.getTime() > 4:
+            #     # self.printX("timeout 4 flight")
+            #     break
             self.robot.step(self.TIME_STEP)
             self.sensor_update()
             self.screenShot("2Jump")
@@ -337,7 +344,7 @@ class velocity_controller:
         delta_h = h_max - h_ref  # max delta_height, should be compared with desire_h
         self.highestIndex = self.indexCount
         print("wheel delta h: %.5f " % delta_h, 'h_ref: ', h_ref, 'h_max: ', h_max)
-        print("highest point: %.5f" % self.panel.WheelPos[0])
+        print("highest point: %.5f" % self.panel.WheelPos[1])
         delta_w_h = (mb * offSpeed * 5 / 7.8 * offSpeed / 9.81 - 5 * delta_h) / 2
         # self.printX('Actual delta height: %3f' % delta_h)
         # self.printX('Actual wheel delta height: %3f' % delta_w_h)
@@ -359,9 +366,9 @@ class velocity_controller:
             line_x = self.panel.BodyHeight[0]-self.panel.WheelPos[0]
             line_angle = math.atan2(line_y,line_x)
 
-            if self.robot.getTime() > 5:
-                # self.printX("timeout 5 landing")
-                break
+            # if self.robot.getTime() > 5:
+            #     # self.printX("timeout 5 landing")
+            #     break
             if self.panel.pitch > 0.15 * math.pi:
                 penalties[5] += 10 * square_penalize(self.panel.pitch - 0.15 * math.pi)
             if self.panel.pitch > 0.25 * math.pi:
@@ -441,8 +448,7 @@ class velocity_controller:
         self.printX('-----------------')
         self.printX("b_u: %.5f" % self.blance_u)
         self.printX("t_u: %.5f" % (self.translation_Kp1 * self.translation_u))
-        self.printX("w_u: %.5f" % (self.wheel_Kp1 * self.wheel_u))
-        self.printX("pitch_err: %.3f" % self.pitch_err)
+        # self.printX("pitch_err: %.3f" % self.pitch_err)
         self.printX("pitch: %.5f" % self.panel.pitch)
         self.printX("omgz_u: %.3f" % (0.01 * self.omgz_u))
         self.printX("EV: %.3f" % (self.Ev))
@@ -453,9 +459,9 @@ class velocity_controller:
         self.printX("omega_y: %.5f" % self.panel.omega_y)
         self.printX("omega_x: %.5f" % self.panel.omega_x)
         self.printX("omega_z: %.5f" % self.panel.omega_z)
-        self.printX("期望速度： %.5f" % self.Ev)
-        self.printX("与期望速度差： %.5f" % (self.Ev - self.panel.rightWheelVel * 0.05))
-        self.printX("预期倾角：%.5f" % self.pitch_exp)
+        # self.printX("期望速度： %.5f" % self.Ev)
+        # self.printX("与期望速度差： %.5f" % (self.Ev - self.panel.rightWheelVel * 0.05))
+        # self.printX("预期倾角：%.5f" % self.pitch_exp)
         self.printX("Displacement: %.2f" % (self.panel.gps_dd))
         self.printX("rWheelVel: %.5f" % (self.panel.rightWheelVel))
         self.printX("rWheelVelSP: %.3f" % (self.panel.samplingPeriod))
@@ -478,32 +484,27 @@ class velocity_controller:
         elif key == 68:  # 'd' 右转
             self.setAVel(key, -0.6)
             # self.printX('right')
-        elif key == 70:  # 'f' 停止旋转
-            self.setAVel(key, 0.0)
+        # elif key == 70:  # 'f' 停止旋转
+        #     self.setAVel(key, 0.0)
         elif key == 315:  # '↑' 升高
-            if self.cur_height < 0.43:
-                self.cur_height += 0.01
-            self.setHeight(self.cur_height)
+            if self.cur_height < 0.37:
+                self.cur_height += 0.005
+                self.setHeight(self.cur_height)
         elif key == 317:  # '↓' 下降
-            if self.cur_height > 0.2:
-                self.cur_height -= 0.01
-            self.setHeight(self.cur_height)
-        elif key == 32:  # '空格' 跳跃  # 原key ==19
+            if self.cur_height > 0.18:
+                self.cur_height -= 0.005
+                self.setHeight(self.cur_height)
+        elif key == 32:  # '空格' 跳跃
+            self.torque = self.motors[2].getTorqueFeedback()
             self.jump(param_dic)
-        elif key == 82:  # 'r' 重置
-            self.robot.worldReload()
+        # elif key == 82:  # 'r' 重置
+        #     self.robot.worldReload()
         else:
             # self.printInfo()
-            self.setXVel(0.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
-
-        rotation = self.panel.getRotation()
-        if rotation == 1:
-            self.setAVel(65, 0.6)
-        elif rotation == -1:
-            self.setAVel(68, -0.6)
-        elif rotation == 0:
+            # self.setXVel(0.0)  # 0就是直立平衡；当前参数下，Ev=10时，实际速度仅为0.08
             self.setAVel(70, 0.0)
-        # self.printInfo()
+
+        self.printInfo()
 
     def printInfo(self):
         self.printX("GPS_height: %.3f" % self.panel.gps_y)
